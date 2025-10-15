@@ -90,9 +90,14 @@ class ProductRepository extends EntityRepository {
         return false;
     }
 
+    /**
+     * Find all products by category
+     * @param int $categoryId The category ID
+     * @return array Array of products
+     */
     public function findAllByCategory($categoryId): array {
-        $requete = $this->cnx->prepare("select * from Product where category=:cat");
-        $requete->bindParam(':cat', $categoryId);
+        $requete = $this->cnx->prepare("select * from Product where category=:categoryId");
+        $requete->bindParam(':categoryId', $categoryId);
         $requete->execute();
         $answer = $requete->fetchAll(PDO::FETCH_OBJ);
 
@@ -108,7 +113,6 @@ class ProductRepository extends EntityRepository {
        
         return $res;
     }
-
    
     
 }

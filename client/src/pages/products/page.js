@@ -1,11 +1,16 @@
 import { ProductData } from "../../data/product.js";
-import { BigCardView } from "../../ui/bigcard/index.js";
+import { CategoryData } from "../../data/category.js";
+import { SmallCardView } from "../../ui/smallcard/index.js";
+import { SideNavView } from "../../ui/sidenav/index.js";
 import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 
 let M = {
-    products: []
+    products: [],
+    categories: [],
+    selectedCategoryId: null,
+    totalProductsCount: 0
 };
 
 
@@ -18,26 +23,67 @@ C.handler_clickOnProduct = function(ev){
     }
 }
 
-C.init = async function(){
-    M.products = await ProductData.fetchAll(); 
-    return V.init( M.products );
+C.handler_clickAllProducts = function(ev) {
+    if (ev.target.hasAttribute('data-all-products')) {
+        ev.preventDefault();
+        // Navigate to products page without category filter
+        window.history.pushState({}, '', '/products');
+        // Trigger route change
+        window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+}
+
+C.init = async function(categoryId = null){
+    M.selectedCategoryId = categoryId;
+    
+    // Fetch categories
+    M.categories = await CategoryData.fetchAll();
+    
+    // Fetch products based on category filter
+    if (categoryId) {
+        M.products = await ProductData.fetchByCategory(categoryId);
+    } else {
+        M.products = await ProductData.fetchAll();
+    }
+    
+    M.totalProductsCount = M.products.length;
+    
+    return V.init(M.products, M.categories, M.selectedCategoryId, M.totalProductsCount);
 }
 
 
 let V = {};
 
-V.init = function(data){
-    let fragment = V.createPageFragment(data);
+V.init = function(products, categories, selectedCategoryId, productCount){
+    let fragment = V.createPageFragment(products, categories, selectedCategoryId, productCount);
     V.attachEvents(fragment);
     return fragment;
 }
 
-V.createPageFragment = function( data ){
+V.createPageFragment = function(products, categories, selectedCategoryId, productCount){
    // Créer le fragment depuis le template
    let pageFragment = htmlToFragment(template);
    
-   // Générer les produits
-   let productsDOM = BigCardView.dom(data);
+   // Update product count
+   let countElement = pageFragment.querySelector('[data-product-count]');
+   if (countElement) {
+       countElement.textContent = `${productCount} PRODUIT${productCount > 1 ? 'S' : ''}`;
+   }
+   
+   // Générer la sidenav
+   let sidenavDOM = SideNavView.dom(categories, selectedCategoryId);
+   let sidenavSlot = pageFragment.querySelector('slot[name="sidenav"]');
+   if (sidenavSlot) {
+       sidenavSlot.replaceWith(sidenavDOM);
+       // Attach sidenav events after inserting it
+       let sidenavElement = pageFragment.querySelector('.flex.flex-col.gap-\\[8px\\]');
+       if (sidenavElement) {
+           SideNavView.attachEvents(sidenavElement);
+       }
+   }
+   
+   // Générer les produits avec SmallCardView
+   let productsDOM = SmallCardView.dom(products);
    
    // Remplacer le slot par les produits
    pageFragment.querySelector('slot[name="products"]').replaceWith(productsDOM);
@@ -48,10 +94,16 @@ V.createPageFragment = function( data ){
 V.attachEvents = function(pageFragment) {
     let root = pageFragment.firstElementChild;
     root.addEventListener("click", C.handler_clickOnProduct);
+    root.addEventListener("click", C.handler_clickAllProducts);
     return pageFragment;
 }
 
 export function ProductsPage(params) {
     console.log("ProductsPage", params);
-    return C.init();
+    
+    // Get category from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get('category');
+    
+    return C.init(categoryId);
 }

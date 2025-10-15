@@ -1,6 +1,21 @@
-<div class="max-w-[1400px] mx-auto px-6 py-12">
-  <h1 class="font-['Instrument_Sans',_sans-serif] font-normal text-[32px] md:text-[48px] text-black tracking-[5px] uppercase leading-[1.2] mb-16 text-center">
-    Tous nos produits
-  </h1>
-  <slot name="products"></slot>
+<div class="bg-[#efefef] min-h-screen">
+  <!-- Product count header -->
+  <div class="border-t-2 border-b-2 border-[#cfcfcf] h-[89px] flex items-center justify-center">
+    <p class="font-['Instrument_Sans',_sans-serif] font-medium text-[18px] text-[#5f6368] tracking-[0.17em] leading-[28.8px]" data-product-count style="font-variation-settings: 'wdth' 100">
+      0 PRODUITS
+    </p>
+  </div>
+  
+  <!-- Main content with sidenav and products -->
+  <div class="max-w-[1440px] mx-auto px-[44px] py-[102px] flex gap-[87px]">
+    <!-- Sidenav -->
+    <aside class="w-[124px] flex-shrink-0">
+      <slot name="sidenav"></slot>
+    </aside>
+    
+    <!-- Products grid -->
+    <main class="flex-1">
+      <slot name="products"></slot>
+    </main>
+  </div>
 </div>

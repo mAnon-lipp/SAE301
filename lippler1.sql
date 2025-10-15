@@ -37,7 +37,7 @@ CREATE TABLE `Category` (
 --
 
 INSERT INTO `Category` (`id`, `name`) VALUES
-(1, 'Baskets\r\n'),
+(1, 'Baskets'),
 (2, 'Talons'),
 (3, 'Sacs');
 
