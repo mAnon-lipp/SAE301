@@ -1,6 +1,7 @@
 <?php
 require_once "src/Controller/ProductController.php";
 require_once "src/Controller/CategoryController.php";
+require_once "src/Controller/ProductImageController.php";
 require_once "src/Class/HttpRequest.php";
 
 
@@ -27,7 +28,8 @@ require_once "src/Class/HttpRequest.php";
  */
 $router = [
     "products" => new ProductController(),
-    "categories" => new CategoryController()
+    "categories" => new CategoryController(),
+    "productimages" => new ProductImageController()
 ];
 
 // objet HttpRequest qui contient toutes les infos utiles sur la requêtes (voir class/HttpRequest.php)

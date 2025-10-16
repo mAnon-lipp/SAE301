@@ -101,9 +101,8 @@ V.attachEvents = function(pageFragment) {
 export function ProductsPage(params) {
     console.log("ProductsPage", params);
     
-    // Get category from URL params
-    const urlParams = new URLSearchParams(window.location.search);
-    const categoryId = urlParams.get('category');
+    // Get category ID from route params (for /products/category/:id/:slug)
+    const categoryId = params?.id || null;
     
     return C.init(categoryId);
 }

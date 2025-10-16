@@ -4,3 +4,107 @@
    LUKURË Design System - Couleurs & Typographie
    ============================================ */
 
+@theme inline {
+  /* Couleurs principales en OKLCH */
+  --color-primary: oklch(50% 0.2 250);
+  --color-secondary: oklch(70% 0.15 180);
+  --color-accent: oklch(65% 0.25 30);
+  
+  /* Couleurs de fond */
+  --color-background: oklch(98% 0 0);
+  --color-surface: oklch(95% 0 0);
+  
+  /* Couleurs de texte */
+  --color-foreground: oklch(20% 0 0);
+  --color-muted: oklch(50% 0 0);
+  
+  /* États */
+  --color-success: oklch(60% 0.15 140);
+  --color-error: oklch(55% 0.2 25);
+  --color-warning: oklch(70% 0.15 80);
+  
+  /* Neutrals */
+  --color-neutral-50: oklch(98% 0 0);
+  --color-neutral-100: oklch(95% 0 0);
+  --color-neutral-200: oklch(90% 0 0);
+  --color-neutral-300: oklch(80% 0 0);
+  --color-neutral-400: oklch(70% 0 0);
+  --color-neutral-500: oklch(60% 0 0);
+  --color-neutral-600: oklch(50% 0 0);
+  --color-neutral-700: oklch(40% 0 0);
+  --color-neutral-800: oklch(30% 0 0);
+  --color-neutral-900: oklch(20% 0 0);
+}
+
+@layer base {
+  /* ============================================
+     Primitives de couleur
+     ============================================ */
+  :root {
+    /* Couleurs primaires */
+    --clr-primary: var(--color-primary);
+    --clr-secondary: var(--color-secondary);
+    --clr-accent: var(--color-accent);
+    
+    /* Neutrals */
+    --clr-neutral-50: var(--color-neutral-50);
+    --clr-neutral-100: var(--color-neutral-100);
+    --clr-neutral-200: var(--color-neutral-200);
+    --clr-neutral-300: var(--color-neutral-300);
+    --clr-neutral-400: var(--color-neutral-400);
+    --clr-neutral-500: var(--color-neutral-500);
+    --clr-neutral-600: var(--color-neutral-600);
+    --clr-neutral-700: var(--color-neutral-700);
+    --clr-neutral-800: var(--color-neutral-800);
+    --clr-neutral-900: var(--color-neutral-900);
+  }
+
+  /* ============================================
+     Couleurs sémantiques
+     ============================================ */
+  :root {
+    --background: var(--color-background);
+    --foreground: var(--color-foreground);
+    --primary: var(--color-primary);
+    --secondary: var(--color-secondary);
+    --muted: var(--color-muted);
+    --accent: var(--color-accent);
+  }
+
+  /* ============================================
+     Typographie
+     ============================================ */
+  :root {
+    /* Font family */
+    --font-sans: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+    
+    /* Font sizes */
+    --text-xs: 0.75rem;      /* 12px */
+    --text-sm: 0.875rem;     /* 14px */
+    --text-base: 1rem;       /* 16px */
+    --text-lg: 1.125rem;     /* 18px */
+    --text-xl: 1.25rem;      /* 20px */
+    --text-2xl: 1.5rem;      /* 24px */
+    --text-3xl: 1.875rem;    /* 30px */
+    --text-4xl: 2.25rem;     /* 36px */
+    
+    /* Line heights */
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.75;
+    
+    /* Letter spacing */
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0em;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
+  }
+
+  /* Application de la font par défaut */
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}

@@ -4,7 +4,7 @@ import template from "./template.html?raw";
 // Template pour un élément de catégorie
 const categoryItemTemplate = `
 <a 
-  href="/products?category={{id}}" 
+  href="/products/category/{{id}}/{{slug}}" 
   data-link 
   data-category-id="{{id}}"
   class="font-['Instrument_Sans',_sans-serif] font-normal text-[14px] text-black leading-[23.1px] hover:underline cursor-pointer block category-link"
@@ -21,7 +21,14 @@ let SideNavView = {
     let dropdownList = fragment.querySelector('[data-dropdown-list]');
     
     categories.forEach(category => {
-      let categoryHTML = genericRenderer(categoryItemTemplate, category);
+      // Créer un slug simple à partir du nom
+      const slug = category.slug || category.name.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Enlever les accents
+        .replace(/[^a-z0-9]+/g, '-') // Remplacer les espaces et caractères spéciaux par des tirets
+        .replace(/^-+|-+$/g, ''); // Enlever les tirets au début et à la fin
+      
+      const categoryWithSlug = { ...category, slug };
+      let categoryHTML = genericRenderer(categoryItemTemplate, categoryWithSlug);
       let categoryFragment = htmlToFragment(categoryHTML);
       
       // Marquer la catégorie active avec un soulignement

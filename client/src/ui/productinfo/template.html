@@ -1,0 +1,46 @@
+<div class="flex flex-col gap-6 max-w-[280px]">
+  <!-- Catégorie -->
+  <div class="text-xs uppercase tracking-wider text-gray-600">
+    LUKURË
+  </div>
+
+  <!-- Nom du produit -->
+  <h1 class="text-2xl font-semibold text-black">
+    {{name}}
+  </h1>
+
+  <!-- Prix -->
+  <div class="text-xl font-medium text-black">
+    ${{prix}}
+  </div>
+
+  <!-- Message Shop Pay -->
+  <div class="text-sm text-gray-600">
+    4 interest-free installments, or from $5.25/mo with <span class="text-[#5A31F4]">Shop Pay</span><br>
+    Check your purchasing power
+  </div>
+
+  <!-- Description -->
+  <div class="text-sm text-gray-700 leading-relaxed">
+    {{description}}
+  </div>
+
+  <!-- Caractéristiques sous forme de bullets -->
+  {{features}}
+
+  <!-- Quantité selector -->
+  <div class="flex items-center gap-4 border border-gray-300 rounded w-fit">
+    <button class="px-4 py-2 hover:bg-gray-100 transition-colors" data-quantity-action="decrease">
+      −
+    </button>
+    <span class="px-4 py-2 min-w-[40px] text-center" data-quantity-display>1</span>
+    <button class="px-4 py-2 hover:bg-gray-100 transition-colors" data-quantity-action="increase">
+      +
+    </button>
+  </div>
+
+  <!-- Bouton Ajouter au panier -->
+  <button class="w-full bg-black text-white py-3 px-6 rounded hover:bg-gray-800 transition-colors text-sm font-medium uppercase tracking-wider" data-add-to-cart>
+    Ajouter au panier
+  </button>
+</div>

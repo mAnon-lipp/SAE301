@@ -1,4 +1,13 @@
-<div>
-<h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 2rem; color: #111; text-align: center;">Allez, click click ! On achète !</h1>
-   <slot name="detail"></slot>
+<div class="container mx-auto px-4 max-w-7xl">
+  <!-- Breadcrumb -->
+  <slot name="breadcrumb"></slot>
+  
+  <!-- Layout principal : Gallery + Info -->
+  <div class="flex items-start gap-12 mb-16">
+    <!-- Galerie d'images -->
+    <slot name="gallery"></slot>
+    
+    <!-- Informations produit -->
+    <slot name="productinfo"></slot>
+  </div>
 </div>
