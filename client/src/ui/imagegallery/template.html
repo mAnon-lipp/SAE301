@@ -1,11 +1,11 @@
-<div class="flex gap-6">
+<div class="flex gap-6 w-full h-full items-stretch">
   <!-- Thumbnails à gauche -->
   <div class="flex flex-col gap-4">
     {{thumbnails}}
   </div>
 
   <!-- Image principale à droite -->
-  <div class="bg-gray-100 rounded-lg overflow-hidden" style="width: 468px; min-height: 468px;">
+  <div class="overflow-hidden h-full bg-surface">
     <img id="mainImage" src="{{mainImage}}" alt="{{productName}}" class="w-full h-full object-cover">
   </div>
 </div>

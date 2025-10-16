@@ -37,7 +37,7 @@ export const ProductInfoView = {
             const item = items[i];
             featuresHTML += `
               <li class="flex items-start gap-2">
-                <span class="inline-block w-1 h-1 bg-black rounded-full mt-2"></span>
+                <span class="inline-block w-1 h-1 bg-black mt-2"></span>
                 <span>${item}</span>
               </li>
             `;

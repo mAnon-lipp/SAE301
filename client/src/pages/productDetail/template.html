@@ -1,13 +1,17 @@
-<div class="container mx-auto px-4 max-w-7xl">
+<div class="container mx-auto px-4 max-w-7xl bg-background py-16">
   <!-- Breadcrumb -->
   <slot name="breadcrumb"></slot>
   
   <!-- Layout principal : Gallery + Info -->
-  <div class="flex items-start gap-12 mb-16">
-    <!-- Galerie d'images -->
-    <slot name="gallery"></slot>
-    
-    <!-- Informations produit -->
-    <slot name="productinfo"></slot>
+  <div class="flex items-stretch gap-12 mb-16">
+    <!-- Galerie d'images (colonne gauche fixe) -->
+    <div class="flex-shrink-0 w-[468px] h-full">
+      <slot name="gallery"></slot>
+    </div>
+
+    <!-- Informations produit (colonne droite flexible) -->
+    <div class="flex-1">
+      <slot name="productinfo"></slot>
+    </div>
   </div>
 </div>

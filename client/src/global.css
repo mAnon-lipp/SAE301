@@ -1,110 +1,132 @@
 @import "tailwindcss";
 
 /* ============================================
-   LUKURË Design System - Couleurs & Typographie
+   Couche 1 : Déclaration pour Tailwind (@theme inline)
+   Ces variables sont consommées par Tailwind (ex: bg-primary) et
+   doivent pointer vers nos primitives CSS (--clr-*).
    ============================================ */
-
 @theme inline {
-  /* Couleurs principales en OKLCH */
-  --color-primary: oklch(50% 0.2 250);
-  --color-secondary: oklch(70% 0.15 180);
-  --color-accent: oklch(65% 0.25 30);
+  /* Couleurs sémantiques */
+  --color-primary: var(--clr-primary);
+  --color-secondary: var(--clr-secondary);
+  --color-accent: var(--clr-accent);
+  --color-background: var(--clr-background);
+  --color-surface: var(--clr-surface);
+  --color-foreground: var(--clr-foreground);
+  --color-muted: var(--clr-muted);
   
-  /* Couleurs de fond */
-  --color-background: oklch(98% 0 0);
-  --color-surface: oklch(95% 0 0);
-  
-  /* Couleurs de texte */
-  --color-foreground: oklch(20% 0 0);
-  --color-muted: oklch(50% 0 0);
-  
-  /* États */
-  --color-success: oklch(60% 0.15 140);
-  --color-error: oklch(55% 0.2 25);
-  --color-warning: oklch(70% 0.15 80);
+  /* Couleurs d'état */
+  --color-success: var(--clr-success);
+  --color-error: var(--clr-error);
+  --color-warning: var(--clr-warning);
   
   /* Neutrals */
-  --color-neutral-50: oklch(98% 0 0);
-  --color-neutral-100: oklch(95% 0 0);
-  --color-neutral-200: oklch(90% 0 0);
-  --color-neutral-300: oklch(80% 0 0);
-  --color-neutral-400: oklch(70% 0 0);
-  --color-neutral-500: oklch(60% 0 0);
-  --color-neutral-600: oklch(50% 0 0);
-  --color-neutral-700: oklch(40% 0 0);
-  --color-neutral-800: oklch(30% 0 0);
-  --color-neutral-900: oklch(20% 0 0);
+  --color-neutral-50: var(--clr-neutral-50);
+  --color-neutral-100: var(--clr-neutral-100);
+  --color-neutral-200: var(--clr-neutral-200);
+  --color-neutral-300: var(--clr-neutral-300);
+  --color-neutral-400: var(--clr-neutral-400);
+  --color-neutral-500: var(--clr-neutral-500);
+  --color-neutral-600: var(--clr-neutral-600);
+  --color-neutral-700: var(--clr-neutral-700);
+  --color-neutral-800: var(--clr-neutral-800);
+  --color-neutral-900: var(--clr-neutral-900);
+  
+  /* Typographie */
+  --font-sans: var(--ff-sans);
 }
 
+/* ============================================
+   Couche 2 : Déclaration des primitives CSS (:root)
+   Ces variables contiennent les valeurs OKLCH réelles et la police.
+   ============================================ */
 @layer base {
-  /* ============================================
-     Primitives de couleur
-     ============================================ */
   :root {
-    /* Couleurs primaires */
-    --clr-primary: var(--color-primary);
-    --clr-secondary: var(--color-secondary);
-    --clr-accent: var(--color-accent);
+    /* Couleurs principales (valeurs OKLCH extraites de votre projet) */
+    --clr-primary: oklch(50% 0.2 250);
+    --clr-secondary: oklch(70% 0.15 180);
+    --clr-accent: oklch(65% 0.25 30);
+    
+    /* Couleurs de fond/texte */
+    --clr-background: oklch(98% 0 0);
+    --clr-surface: oklch(95% 0 0);
+    --clr-foreground: oklch(20% 0 0);
+    --clr-muted: oklch(50% 0 0);
+    
+    /* États */
+    --clr-success: oklch(60% 0.15 140);
+    --clr-error: oklch(55% 0.2 25);
+    --clr-warning: oklch(70% 0.15 80);
     
     /* Neutrals */
-    --clr-neutral-50: var(--color-neutral-50);
-    --clr-neutral-100: var(--color-neutral-100);
-    --clr-neutral-200: var(--color-neutral-200);
-    --clr-neutral-300: var(--color-neutral-300);
-    --clr-neutral-400: var(--color-neutral-400);
-    --clr-neutral-500: var(--color-neutral-500);
-    --clr-neutral-600: var(--color-neutral-600);
-    --clr-neutral-700: var(--color-neutral-700);
-    --clr-neutral-800: var(--color-neutral-800);
-    --clr-neutral-900: var(--color-neutral-900);
-  }
+    --clr-neutral-50: oklch(98% 0 0);
+    --clr-neutral-100: oklch(95% 0 0);
+    --clr-neutral-200: oklch(90% 0 0);
+    --clr-neutral-300: oklch(80% 0 0);
+    --clr-neutral-400: oklch(70% 0 0);
+    --clr-neutral-500: oklch(60% 0 0);
+    --clr-neutral-600: oklch(50% 0 0);
+    --clr-neutral-700: oklch(40% 0 0);
+    --clr-neutral-800: oklch(30% 0 0);
+    --clr-neutral-900: oklch(20% 0 0);
 
-  /* ============================================
-     Couleurs sémantiques
-     ============================================ */
-  :root {
-    --background: var(--color-background);
-    --foreground: var(--color-foreground);
-    --primary: var(--color-primary);
-    --secondary: var(--color-secondary);
-    --muted: var(--color-muted);
-    --accent: var(--color-accent);
+    /* Typographie (sans tailles ni poids) */
+    --ff-sans: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  /* Brand / payment icon colors (kept as hex to preserve brand look) */
+  --brand-016FD0: #016FD0;
+  --brand-000000: #000000;
+  --brand-FF6000: #FF6000;
+  --brand-00579F: #00579F;
+  --brand-4285F4: #4285F4;
+  --brand-EB001B: #EB001B;
+  --brand-5A31F4: #5A31F4;
+  --brand-003087: #003087;
+  --brand-142688: #142688;
   }
+  
+  
+}
 
-  /* ============================================
-     Typographie
-     ============================================ */
-  :root {
-    /* Font family */
-    --font-sans: 'Instrument Sans', system-ui, -apple-system, sans-serif;
-    
-    /* Font sizes */
-    --text-xs: 0.75rem;      /* 12px */
-    --text-sm: 0.875rem;     /* 14px */
-    --text-base: 1rem;       /* 16px */
-    --text-lg: 1.125rem;     /* 18px */
-    --text-xl: 1.25rem;      /* 20px */
-    --text-2xl: 1.5rem;      /* 24px */
-    --text-3xl: 1.875rem;    /* 30px */
-    --text-4xl: 2.25rem;     /* 36px */
-    
-    /* Line heights */
-    --leading-tight: 1.25;
-    --leading-normal: 1.5;
-    --leading-relaxed: 1.75;
-    
-    /* Letter spacing */
-    --tracking-tight: -0.025em;
-    --tracking-normal: 0em;
-    --tracking-wide: 0.025em;
-    --tracking-wider: 0.05em;
-    --tracking-widest: 0.1em;
-  }
+@layer base, components, utilities;
 
-  /* Application de la font par défaut */
-  body {
-    font-family: var(--font-sans);
-    background-color: var(--background);
-    color: var(--foreground);
-  }
+/* ============================================
+   Utilities mapping semantic names to CSS variables
+   These provide simple classes to use in templates (no [] syntax).
+   ============================================ */
+@layer utilities {
+  /* Text colors */
+  .text-primary { color: var(--color-primary); }
+  .text-secondary { color: var(--color-secondary); }
+  .text-accent { color: var(--color-accent); }
+  .text-background { color: var(--color-background); }
+  .text-surface { color: var(--color-surface); }
+  .text-foreground { color: var(--color-foreground); }
+  .text-muted { color: var(--color-muted); }
+  .text-neutral-50 { color: var(--color-neutral-50); }
+  .text-neutral-100 { color: var(--color-neutral-100); }
+  .text-neutral-200 { color: var(--color-neutral-200); }
+
+  /* Backgrounds */
+  .bg-primary { background: var(--color-primary); }
+  .bg-secondary { background: var(--color-secondary); }
+  .bg-accent { background: var(--color-accent); }
+  .bg-background { background: var(--color-background); }
+  .bg-surface { background: var(--color-surface); }
+  .bg-foreground { background: var(--color-foreground); }
+
+  /* Borders */
+  .border-neutral-50 { border-color: var(--color-neutral-50); }
+  .border-neutral-100 { border-color: var(--color-neutral-100); }
+  .border-neutral-200 { border-color: var(--color-neutral-200); }
+
+  /* Muted variants using color-mix where used in templates */
+  .text-muted-65 { color: color-mix(in srgb, var(--color-foreground) 65%, transparent); }
+  .text-muted-60 { color: color-mix(in srgb, var(--color-foreground) 60%, transparent); }
+
+  /* Hover helpers (use alongside base classes) */
+  .hover-bg-foreground-dark { transition: background .12s ease; }
+  .hover-bg-foreground-dark:hover { background: color-mix(in srgb, var(--color-foreground) 80%, black); }
+
+  .hover-text-foreground { transition: color .12s ease; }
+  .hover-text-foreground:hover { color: var(--color-foreground); }
 }

@@ -64,6 +64,7 @@ class ProductRepository extends EntityRepository {
                 $p->setDescription($obj->description);
             }
             array_push($res, $p);
+            
         }
        
         return $res;

@@ -17,7 +17,7 @@ export const ImageGalleryView = {
       const url = img.url || img;
       const activeClass = index === 0 ? 'ring-2 ring-black' : '';
       thumbnailsHTML += `
-        <div class="w-[100px] h-[100px] bg-gray-200 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all ${activeClass}" data-thumbnail-index="${index}">
+        <div class="w-[100px] h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all ${activeClass}" data-thumbnail-index="${index}">
           <img src="${url}" alt="Thumbnail ${index}" class="w-full h-full object-cover">
         </div>
       `;
