@@ -13,7 +13,7 @@ let SmallCardView = {
         .replace(/(^-|-$)/g, '');
       
       // Gérer l'image : utiliser le champ image ou la première image du tableau images
-      let imageUrl = obj.image || (obj.images && obj.images.length > 0 ? obj.images[0].image_url : 'https://via.placeholder.com/520x520/CCCCCC/000000?text=No+Image');
+      let imageUrl = obj.image || (obj.images && obj.images.length > 0 ? obj.images[0].image_url : '');
       
       const productData = {
         ...obj,

@@ -7,37 +7,41 @@ export const ProductInfoView = {
     let description = "";
     let featuresHTML = "";
 
-    console.log("ProductInfo data:", data);
-    console.log("Description brute:", data.description);
+  // debug logs removed
 
     if (data.description) {
       // Séparer par double saut de ligne pour avoir description principale + features
       const parts = data.description.split(/\r\n\r\n|\n\n/);
-      console.log("Description parts:", parts);
+  // debug logs removed
       description = parts[0] || "";
       
       // Si il y a des parties suivantes, les splitter par simple saut de ligne
       if (parts.length > 1) {
         // Joindre toutes les parties après la première (au cas où il y aurait plusieurs doubles sauts)
         const featuresText = parts.slice(1).join('\n');
-        // Splitter chaque ligne pour faire un bullet point
-        const items = featuresText
-          .split(/\r\n|\n/)
-          .filter(line => line.trim())
-          .map(line => line.trim());
+        // Splitter chaque ligne pour faire un bullet point (sans utiliser .map)
+        const rawLines = featuresText.split(/\r\n|\n/);
+        const items = [];
+        for (let i = 0; i < rawLines.length; i++) {
+          const line = rawLines[i].trim();
+          if (line) {
+            items.push(line);
+          }
+        }
         
-        console.log("Feature items:", items);
+  // debug logs removed
         
         if (items.length > 0) {
           featuresHTML = '<ul class="text-sm text-gray-700 space-y-2">';
-          items.forEach(item => {
+          for (let i = 0; i < items.length; i++) {
+            const item = items[i];
             featuresHTML += `
               <li class="flex items-start gap-2">
                 <span class="inline-block w-1 h-1 bg-black rounded-full mt-2"></span>
                 <span>${item}</span>
               </li>
             `;
-          });
+          }
           featuresHTML += '</ul>';
         }
       }
@@ -50,7 +54,7 @@ export const ProductInfoView = {
       features: featuresHTML
     };
     
-    console.log("Rendered data:", renderedData);
+  // debug logs removed
 
     return genericRenderer(template, renderedData);
   },
@@ -66,7 +70,9 @@ export const ProductInfoView = {
     const quantityDisplay = fragment.querySelector('[data-quantity-display]');
     
     // Gestion des boutons + et -
-    fragment.querySelectorAll('[data-quantity-action]').forEach(btn => {
+    const qtyButtons = fragment.querySelectorAll('[data-quantity-action]');
+    for (let i = 0; i < qtyButtons.length; i++) {
+      const btn = qtyButtons[i];
       btn.addEventListener('click', (e) => {
         const action = e.currentTarget.dataset.quantityAction;
         
@@ -78,14 +84,16 @@ export const ProductInfoView = {
         
         quantityDisplay.textContent = quantity;
       });
-    });
+    }
 
     // Gestion du bouton ajouter au panier
     const addToCartBtn = fragment.querySelector('[data-add-to-cart]');
-    addToCartBtn.addEventListener('click', () => {
-      // Placeholder pour US006
-      alert(`Ajouté au panier : ${quantity}x ${data.name}`);
-      console.log('Add to cart:', { productId: data.id, quantity, name: data.name });
-    });
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener('click', () => {
+        // Placeholder pour US006
+        alert(`Ajouté au panier : ${quantity}x ${data.name}`);
+  // debug logs removed
+      });
+    }
   }
 };

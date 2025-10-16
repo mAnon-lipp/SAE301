@@ -36,8 +36,7 @@ C.init = async function(params) {
     // Charger les images du produit
     M.productImages = await ProductImageData.fetchByProductId(productId);
     
-    console.log("Product loaded:", product);
-    console.log("Product images loaded:", M.productImages);
+    // debug logs removed
     
     return V.init(product, M.productImages);
 }
@@ -74,10 +73,11 @@ V.createPageFragment = function(data, productImages = []) {
     
     // Ajouter les images de la galerie ProductImage
     if (productImages && productImages.length > 0) {
-        productImages.forEach(img => {
+        for (let k = 0; k < productImages.length; k++) {
+            const img = productImages[k];
             const imageUrl = normalizeImagePath(img.image_path || img.image || img.image_url);
             images.push({ url: imageUrl, alt: data.name });
-        });
+        }
     }
     
     // Préparer les données pour la galerie
@@ -111,6 +111,5 @@ V.createPageFragment = function(data, productImages = []) {
 }
 
 export function ProductDetailPage(params) {
-    console.log("ProductDetailPage", params);
     return C.init(params);
 }

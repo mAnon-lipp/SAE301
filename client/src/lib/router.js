@@ -98,9 +98,10 @@ class Router {
     if (!matches) return {};
     
     const params = {};
-    route.keys.forEach((key, i) => {
+    for (let i = 0; i < route.keys.length; i++) {
+      const key = route.keys[i];
       params[key] = matches[i + 1];
-    });
+    }
     return params;
   }
   

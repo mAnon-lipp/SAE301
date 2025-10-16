@@ -20,25 +20,26 @@ let SideNavView = {
     // Générer les éléments de catégorie
     let dropdownList = fragment.querySelector('[data-dropdown-list]');
     
-    categories.forEach(category => {
+    for (let idx = 0; idx < categories.length; idx++) {
+      const category = categories[idx];
       // Créer un slug simple à partir du nom
       const slug = category.slug || category.name.toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Enlever les accents
         .replace(/[^a-z0-9]+/g, '-') // Remplacer les espaces et caractères spéciaux par des tirets
         .replace(/^-+|-+$/g, ''); // Enlever les tirets au début et à la fin
-      
+
       const categoryWithSlug = { ...category, slug };
       let categoryHTML = genericRenderer(categoryItemTemplate, categoryWithSlug);
       let categoryFragment = htmlToFragment(categoryHTML);
-      
+
       // Marquer la catégorie active avec un soulignement
       if (selectedCategoryId && category.id == selectedCategoryId) {
         let link = categoryFragment.querySelector('a');
         link.classList.add('underline');
       }
-      
+
       dropdownList.appendChild(categoryFragment);
-    });
+    }
     
     return fragment.firstElementChild.outerHTML;
   },
@@ -71,7 +72,8 @@ let SideNavView = {
 
     // Handle category link clicks - use the router's navigation
     const categoryLinks = element.querySelectorAll('.category-link');
-    categoryLinks.forEach(link => {
+    for (let m = 0; m < categoryLinks.length; m++) {
+      const link = categoryLinks[m];
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const href = link.getAttribute('href');
@@ -79,7 +81,7 @@ let SideNavView = {
         window.history.pushState({}, '', href);
         window.dispatchEvent(new PopStateEvent('popstate'));
       });
-    });
+    }
   }
 };
 
