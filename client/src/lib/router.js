@@ -14,7 +14,9 @@ class Router {
     this.layouts = {};
     this.currentRoute = null;
     this.isAuthenticated = false;
+    this.user = null; // NOUVEAU : Stocker l'objet utilisateur
     this.loginPath = options.loginPath || '/login';
+    this.apiUrl = options.apiUrl || '/api/'; // NOUVEAU : URL de l'API
     
     // Écouter les changements d'URL
     window.addEventListener('popstate', () => this.handleRoute());
@@ -28,9 +30,18 @@ class Router {
     });
   }
   
-  // Définir l'état d'authentification
-  setAuth(isAuth) {
+  // Définir l'état d'authentification et les données utilisateur
+  setAuth(isAuth, user = null) {
     this.isAuthenticated = isAuth;
+    this.user = user;
+    
+    if (isAuth && user) {
+      sessionStorage.setItem('auth_user', JSON.stringify(user));
+      sessionStorage.setItem('is_authenticated', 'true');
+    } else {
+      sessionStorage.removeItem('auth_user');
+      sessionStorage.removeItem('is_authenticated');
+    }
   }
   
   // Enregistrer un layout pour un segment de route
@@ -118,6 +129,12 @@ class Router {
     // Trouver la route correspondante
     for (const route of this.routes) {
       if (route.regex.test(path)) {
+        // Si l'utilisateur est déjà connecté et essaie d'accéder à login/signup
+        if (this.isAuthenticated && (path === '/login' || path === '/signup')) {
+          this.navigate('/account');
+          return;
+        }
+        
         // Vérifier l'authentification si nécessaire
         if (route.requireAuth && !this.isAuthenticated) {
           sessionStorage.setItem('redirectAfterLogin', path);
@@ -128,8 +145,8 @@ class Router {
         this.currentRoute = path;
         const params = this.getParams(route, path);
         
-        // Générer le contenu de la page
-        const content = route.handler(params);
+        // MODIFIÉ : Le handler reçoit le paramètre 'router'
+        const content = route.handler(params, this);
         
         if (content instanceof Promise) {
           // Le handler retourne une promesse
@@ -233,14 +250,57 @@ class Router {
     this.navigate(redirect || '/dashboard');
   }
   
-  // Se déconnecter
+  // Se déconnecter avec appel API (Critère 3)
   logout() {
-    this.setAuth(false);
-    this.navigate(this.loginPath);
+    this.setAuth(false); // Déconnexion optimiste côté client
+    
+    // Appel API pour détruire la session côté serveur
+    fetch(this.apiUrl + 'auth', {
+      method: 'DELETE',
+      credentials: 'include' // Important pour envoyer le cookie de session
+    }).then(() => {
+      // Naviguer vers la page de connexion après la déconnexion
+      this.navigate(this.loginPath);
+    }).catch(error => {
+      console.error('Erreur lors de la déconnexion API:', error);
+      this.navigate(this.loginPath);
+    });
   }
   
-  // Démarrer le routeur
-  start() {
+  // Démarrer le routeur et vérifier le statut de session
+  async start() {
+    // Toujours vérifier avec le serveur si une session existe
+    try {
+      const response = await fetch(this.apiUrl + 'auth', {
+        method: 'GET',
+        credentials: 'include' // Important pour envoyer le cookie de session
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.is_authenticated && data.user) {
+          // Session valide côté serveur
+          this.setAuth(true, data.user);
+        } else {
+          // Pas de session côté serveur
+          this.setAuth(false);
+        }
+      } else {
+        // Erreur de réponse
+        this.setAuth(false);
+      }
+    } catch (error) {
+      // Erreur réseau - fallback sur sessionStorage
+      const storedUser = sessionStorage.getItem('auth_user');
+      const isAuthenticated = sessionStorage.getItem('is_authenticated') === 'true';
+      if (isAuthenticated && storedUser) {
+        this.isAuthenticated = true;
+        this.user = JSON.parse(storedUser);
+      } else {
+        this.setAuth(false);
+      }
+    }
+    
     this.handleRoute();
   }
 }

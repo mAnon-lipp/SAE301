@@ -1,7 +1,48 @@
 <?php
+// Configuration de la session pour l'authentification cross-origin
+if (session_status() === PHP_SESSION_NONE) {
+    // Configurer les paramètres de cookie de session pour CORS
+    session_set_cookie_params([
+        'lifetime' => 86400, // 24 heures
+        'path' => '/',
+        'domain' => '', // Laisser vide pour le domaine actuel
+        'secure' => true, // HTTPS uniquement (mettre false en dev local si HTTP)
+        'httponly' => true, // Protection XSS
+        'samesite' => 'None' // Nécessaire pour cross-origin avec credentials
+    ]);
+    session_start();
+}
+
+// Headers CORS pour permettre les requêtes cross-origin avec credentials
+// Déterminer l'origine autorisée dynamiquement
+$allowedOrigins = [
+    'https://mmi.unilim.fr',
+    'http://localhost:5173',
+    'http://localhost:5174',  // Port Vite alternatif
+    'http://localhost:3000',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174'
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowedOrigins)) {
+    header("Access-Control-Allow-Origin: $origin");
+} else {
+    // Par défaut, autoriser mmi.unilim.fr
+    header("Access-Control-Allow-Origin: https://mmi.unilim.fr");
+}
+
+header("Access-Control-Allow-Methods: GET, POST, DELETE, PATCH, PUT, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Max-Age: 3600");
+
 require_once "src/Controller/ProductController.php";
 require_once "src/Controller/CategoryController.php";
 require_once "src/Controller/ProductImageController.php";
+require_once "src/Controller/UserController.php";
+require_once "src/Controller/AuthController.php";
 require_once "src/Class/HttpRequest.php";
 
 
@@ -30,6 +71,8 @@ $router = [
     "products" => new ProductController(),
     "categories" => new CategoryController(),
     "productimages" => new ProductImageController(),
+    "users" => new UserController(),
+    "auth" => new AuthController(),
 ];
 
 // objet HttpRequest qui contient toutes les infos utiles sur la requêtes (voir class/HttpRequest.php)
