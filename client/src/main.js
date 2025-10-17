@@ -6,6 +6,7 @@ import { ProductsPage } from "./pages/products/page.js";
 import { ProductDetailPage } from "./pages/productDetail/page.js";
 
 import { RootLayout } from "./layouts/root/layout.js";
+import { AccountLayout } from "./layouts/account/layout.js";
 import { The404Page } from "./pages/404/page.js";
 
 // Exemple d'utilisation avec authentification
@@ -13,6 +14,7 @@ import { The404Page } from "./pages/404/page.js";
 const router = new Router('app');
 
 router.addLayout("/", RootLayout);
+router.addLayout("/account", AccountLayout);
 
 router.addRoute("/", ProductsPage);
 router.addRoute("/about", AboutPage);

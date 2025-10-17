@@ -4,7 +4,7 @@ import template from "./template.html?raw";
 // Template pour un élément de catégorie
 const categoryItemTemplate = `
 <a 
-  href="/products/category/{{id}}/{{slug}}" 
+  href="/products/category/{{id}}/{{name}}" 
   data-link 
   data-category-id="{{id}}"
   class="font-sans font-normal text-[14px] text-foreground leading-[23.1px] hover:underline cursor-pointer block category-link"
@@ -22,14 +22,7 @@ let SideNavView = {
     
     for (let idx = 0; idx < categories.length; idx++) {
       const category = categories[idx];
-      // Créer un slug simple à partir du nom
-      const slug = category.slug || category.name.toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Enlever les accents
-        .replace(/[^a-z0-9]+/g, '-') // Remplacer les espaces et caractères spéciaux par des tirets
-        .replace(/^-+|-+$/g, ''); // Enlever les tirets au début et à la fin
-
-      const categoryWithSlug = { ...category, slug };
-      let categoryHTML = genericRenderer(categoryItemTemplate, categoryWithSlug);
+      let categoryHTML = genericRenderer(categoryItemTemplate, category);
       let categoryFragment = htmlToFragment(categoryHTML);
 
       // Marquer la catégorie active avec un soulignement
@@ -70,18 +63,9 @@ let SideNavView = {
       dropdownIcon.style.transform = 'rotate(180deg)';
     }
 
-    // Handle category link clicks - use the router's navigation
-    const categoryLinks = element.querySelectorAll('.category-link');
-    for (let m = 0; m < categoryLinks.length; m++) {
-      const link = categoryLinks[m];
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const href = link.getAttribute('href');
-        // Use window.location to navigate and trigger router
-        window.history.pushState({}, '', href);
-        window.dispatchEvent(new PopStateEvent('popstate'));
-      });
-    }
+    // Category click events are now handled by the parent page
+    // using event delegation (see C.handler_clickOnCategory in products/page.js)
+    // This follows the pattern from script.js where events bubble up
   }
 };
 

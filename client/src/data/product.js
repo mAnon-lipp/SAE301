@@ -142,25 +142,7 @@ ProductData.fetchAll = async function(){
     return normalizedProducts;
 }
 
-ProductData.fetchByCategory = async function(categoryId){
-    let data = await getRequest('products?category='+categoryId);
-    if (data == false) {
-        // Filter fake products by category
-        let filteredProducts = [];
-        for (let i = 0; i < fakeProducts.length; i++) {
-            if (fakeProducts[i].category == categoryId) {
-                filteredProducts.push(fakeProducts[i]);
-            }
-        }
-        return filteredProducts;
-    }
-    // Normaliser tous les produits
-    let normalizedProducts = [];
-    for (let i = 0; i < data.length; i++) {
-        normalizedProducts.push(ProductData.normalizeProduct(data[i]));
-    }
-    return normalizedProducts;
-}
+
 
 
 export {ProductData};

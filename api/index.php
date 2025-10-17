@@ -29,7 +29,7 @@ require_once "src/Class/HttpRequest.php";
 $router = [
     "products" => new ProductController(),
     "categories" => new CategoryController(),
-    "productimages" => new ProductImageController()
+    "productimages" => new ProductImageController(),
 ];
 
 // objet HttpRequest qui contient toutes les infos utiles sur la requêtes (voir class/HttpRequest.php)

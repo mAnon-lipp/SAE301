@@ -1,0 +1,47 @@
+<nav class="bg-white relative w-full h-[82px] border-b border-gray-200">
+  <div class="flex items-center h-full px-8">
+    <!-- Logo à gauche -->
+    <div class="h-[42px] w-[140px] mr-16">
+      <a href="/" data-link class="block w-full h-full overflow-hidden">
+        <img src="/logo.svg" alt="LUKURË" class="w-full h-full object-contain" />
+      </a>
+    </div>
+    
+    <!-- Navigation links -->
+    <div class="flex gap-8 items-center">
+      <a href="/products" data-link class="text-[14px] font-normal text-black hover:underline">
+        Shop
+      </a>
+      <a href="/commandes" data-link class="text-[14px] font-normal text-black underline">
+        Commandes
+      </a>
+    </div>
+    
+    <!-- User menu à droite -->
+    <div class="ml-auto relative">
+      <button id="account-menu-toggle" class="flex items-center gap-2 focus:outline-none">
+        <div class="w-[42px] h-[42px]">
+          <img src="/icon-user.svg" alt="User" class="w-full h-full object-contain" />
+        </div>
+        <div class="w-[18px] h-[18px] transform rotate-90">
+          <img src="/icon-arrow-down.svg" alt="Menu" class="w-full h-full object-contain" />
+        </div>
+      </button>
+      
+      <!-- Dropdown menu -->
+      <div id="account-dropdown" class="hidden absolute right-0 top-[50px] bg-white border border-gray-200 rounded-lg shadow-lg w-[213px] z-50">
+        <div class="border-b border-gray-200 px-[10px] py-[12px]">
+          <p class="text-[14px] font-bold text-zinc-900">Mon compte</p>
+        </div>
+        <div class="p-[10px] h-[35px] flex items-center justify-between hover:bg-gray-50 cursor-pointer">
+          <a href="/logout" data-link class="flex items-center gap-[6px] w-full">
+            <div class="w-[15px] h-[15px]">
+              <img src="/icon-logout.svg" alt="Logout" class="w-full h-full object-contain" />
+            </div>
+            <span class="text-[12px] font-medium text-zinc-900">Se déconnecter</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
