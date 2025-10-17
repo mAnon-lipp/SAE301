@@ -4,10 +4,10 @@ import template from "./template.html?raw";
 // Template pour un élément de catégorie
 const categoryItemTemplate = `
 <a 
-  href="/products?category={{id}}" 
+  href="#" 
   data-link 
   data-category-id="{{id}}"
-  class="font-['Instrument_Sans',_sans-serif] font-normal text-[14px] text-black leading-[23.1px] hover:underline cursor-pointer block category-link"
+  class="font-['Instrument_Sans',_sans-serif] font-normal text-[14px] text-foreground leading-[23.1px] hover:underline cursor-pointer block"
   style="font-variation-settings: 'wdth' 100">
   {{name}}
 </a>
@@ -40,7 +40,8 @@ let SideNavView = {
     return htmlToFragment(SideNavView.html(categories, selectedCategoryId));
   },
 
-  // Attach event handlers for dropdown toggle and category navigation
+  // Attach event handlers for dropdown toggle only
+  // Category click events are handled by the parent page (delegation pattern)
   attachEvents: function(element) {
     const toggle = element.querySelector('[data-category-toggle]');
     const dropdownList = element.querySelector('[data-dropdown-list]');
@@ -62,17 +63,8 @@ let SideNavView = {
       dropdownIcon.style.transform = 'rotate(180deg)';
     }
 
-    // Handle category link clicks - use the router's navigation
-    const categoryLinks = element.querySelectorAll('.category-link');
-    categoryLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const href = link.getAttribute('href');
-        // Use window.location to navigate and trigger router
-        window.history.pushState({}, '', href);
-        window.dispatchEvent(new PopStateEvent('popstate'));
-      });
-    });
+    // Category click events are now handled by the parent page
+    // using event delegation (see C.handler_clickOnCategory in products/page.js)
   }
 };
 

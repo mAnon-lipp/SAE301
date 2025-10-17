@@ -88,14 +88,5 @@ ProductData.fetchAll = async function(){
     return data==false ? fakeProducts : data;
 }
 
-ProductData.fetchByCategory = async function(categoryId){
-    let data = await getRequest('products?category='+categoryId);
-    if (data == false) {
-        // Filter fake products by category
-        return fakeProducts.filter(p => p.category == categoryId);
-    }
-    return data;
-}
-
 
 export {ProductData};
