@@ -1,0 +1,17 @@
+<div class="bg-[#efefef] min-h-screen">
+  <!-- Title -->
+  <div class="pt-[166px] pb-[89px] px-[85px]">
+    <h1 class="font-['Instrument_Sans',_sans-serif] font-medium text-[36px] text-black leading-[28.8px]" style="font-variation-settings: 'wdth' 100">
+      Bienvenue dans votre espace personnel
+    </h1>
+  </div>
+  
+  <!-- Cards Container -->
+  <div class="flex gap-[256px] justify-center px-[85px] pb-[100px]">
+    <!-- Profile Card Slot -->
+    <slot name="profile-card"></slot>
+    
+    <!-- Orders Card Slot -->
+    <slot name="orders-card"></slot>
+  </div>
+</div>

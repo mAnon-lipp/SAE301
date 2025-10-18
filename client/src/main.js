@@ -13,6 +13,7 @@ import { The404Page } from "./pages/404/page.js";
 import { LoginPage } from "./pages/login/page.js";
 import { SignupPage } from "./pages/signup/page.js";
 import { AccountPage } from "./pages/account/page.js";
+import { ProfilePage } from "./pages/profile/page.js";
 // ---
 
 // URL de l'API (doit correspondre à votre configuration)
@@ -25,6 +26,8 @@ const router = new Router('app', {
 
 router.addLayout("/", RootLayout);
 router.addLayout("/account", AccountLayout); // Layout spécifique avec menu utilisateur
+router.addLayout("/profil", AccountLayout); // Layout account pour la page profil
+router.addLayout("/commandes", AccountLayout); // Layout account pour la page commandes
 
 // Routes publiques
 router.addRoute("/", ProductsPage);
@@ -42,6 +45,7 @@ router.addRoute("/logout", (params, r) => r.logout(), { useLayout: false }); // 
 // Routes protégées (Critère 6)
 router.addRoute("/commandes", AccountPage, { requireAuth: true });
 router.addRoute("/account", AccountPage, { requireAuth: true });
+router.addRoute("/profil", ProfilePage, { requireAuth: true });
 
 router.addRoute("*", The404Page);
 
