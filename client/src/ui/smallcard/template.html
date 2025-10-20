@@ -1,6 +1,10 @@
 <a href="/products/{{id}}/{{name}}" data-link class="flex flex-col gap-[26px] w-full cursor-pointer group transition-all duration-300 hover:transform hover:translate-y-[-4px]">
-  <div class="bg-gray-300 h-[382px] w-full overflow-hidden">
+  <div class="relative bg-gray-300 h-[382px] w-full overflow-hidden">
     <img src="{{image}}" alt="{{name}}" class="w-full h-full object-cover" />
+    <!-- add-to-cart icon shown on hover -->
+    <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <img src="/add-sharp.svg" alt="ajouter" class="w-10 h-10" />
+    </div>
   </div>
   <div class="flex flex-col items-start">
     <h3 class="font-sans font-normal text-[18px] text-foreground tracking-[3.06px] uppercase leading-[28.8px]">

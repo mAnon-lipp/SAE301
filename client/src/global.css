@@ -129,4 +129,6 @@
 
   .hover-text-foreground { transition: color .12s ease; }
   .hover-text-foreground:hover { color: var(--color-foreground); }
+
+  /* Card add-to-cart icon helper removed (icons shown without circular background) */
 }
