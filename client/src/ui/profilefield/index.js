@@ -9,7 +9,7 @@ let ProfileFieldView = {
     return template;
   },
 
-  dom: function (label, value, isPassword = false, hasValue = true) {
+  dom: function (label, value, isPassword = false, hasValue = true, fieldName = '') {
     const fragment = htmlToFragment(template);
     
     // Replace label slot
@@ -26,6 +26,13 @@ let ProfileFieldView = {
     
     if (labelSlot) {
       labelSlot.replaceWith(labelText);
+    }
+    
+    // Add data-field attribute to edit icon
+    const editIcon = fragment.querySelector('img[alt="Edit"]');
+    if (editIcon && fieldName) {
+      editIcon.setAttribute('data-field', fieldName);
+      editIcon.style.cursor = 'pointer';
     }
     
     // Replace value slot

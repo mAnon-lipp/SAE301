@@ -1,4 +1,8 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 // Configuration de la session pour l'authentification cross-origin
 if (session_status() === PHP_SESSION_NONE) {
     // Configurer les paramètres de cookie de session pour CORS
@@ -71,7 +75,8 @@ $router = [
     "products" => new ProductController(),
     "categories" => new CategoryController(),
     "productimages" => new ProductImageController(),
-    "users" => new UserController(),
+    "user" => new UserController(), // Singulier pour le profil de l'utilisateur connecté
+    "users" => new UserController(), // Garder le pluriel pour compatibilité (inscription)
     "auth" => new AuthController(),
 ];
 

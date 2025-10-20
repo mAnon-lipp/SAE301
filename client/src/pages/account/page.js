@@ -4,12 +4,24 @@ import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 let M = {
-    // No dynamic data for now
+    user: null
 };
 
 let C = {};
 
-C.init = async function(){
+C.init = async function(router){
+    // Charger les données de l'utilisateur depuis sessionStorage ou l'API
+    try {
+        const userData = sessionStorage.getItem('auth_user');
+        if (userData) {
+            M.user = JSON.parse(userData);
+        } else if (router && router.user) {
+            M.user = router.user;
+        }
+    } catch (error) {
+        console.error('Error loading user data:', error);
+    }
+    
     return V.init();
 }
 
@@ -24,6 +36,14 @@ V.init = function(){
 V.createPageFragment = function(){
    // Create page fragment from template
    let pageFragment = htmlToFragment(template);
+   
+   // Update welcome message with user's name
+   const welcomeTitle = pageFragment.querySelector('h1');
+   if (welcomeTitle && M.user) {
+       // Utiliser le nom complet (name) ou l'email si pas de nom
+       const displayName = M.user.name || M.user.email || 'Utilisateur';
+       welcomeTitle.textContent = `Bienvenue ${displayName}`;
+   }
    
    // Generate profile card
    let profileCardDOM = ProfileCardView.dom();
@@ -54,5 +74,6 @@ V.attachEvents = function(pageFragment) {
  */
 export function AccountPage(params, router) {
     console.log("AccountPage", params);
-    return C.init();
+    return C.init(router);
 }
+

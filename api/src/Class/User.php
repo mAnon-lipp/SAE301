@@ -10,6 +10,7 @@ class User extends Entity {
     private ?string $email = null;
     private ?string $password_hash = null;
     private ?string $username = null;
+    private ?string $name = null;
 
     public function __construct(int $id){
         $this->id = $id;
@@ -20,7 +21,8 @@ class User extends Entity {
         return [
             "id" => $this->id,
             "email" => $this->email,
-            "username" => $this->username
+            "username" => $this->username,
+            "name" => $this->name
         ];
     }
 
@@ -29,11 +31,13 @@ class User extends Entity {
     public function getEmail(): ?string { return $this->email; }
     public function getPasswordHash(): ?string { return $this->password_hash; }
     public function getUsername(): ?string { return $this->username; }
+    public function getName(): ?string { return $this->name; }
 
     // Setters
     public function setId(int $id): self { $this->id = $id; return $this; }
     public function setEmail(string $email): self { $this->email = $email; return $this; }
     public function setPasswordHash(string $password_hash): self { $this->password_hash = $password_hash; return $this; }
     public function setUsername(string $username): self { $this->username = $username; return $this; }
+    public function setName(string $name): self { $this->name = $name; return $this; }
 }
 ?>

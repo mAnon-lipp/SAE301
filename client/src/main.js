@@ -14,6 +14,7 @@ import { LoginPage } from "./pages/login/page.js";
 import { SignupPage } from "./pages/signup/page.js";
 import { AccountPage } from "./pages/account/page.js";
 import { ProfilePage } from "./pages/profile/page.js";
+import { OrdersPage } from "./pages/orders/page.js";
 // ---
 
 // URL de l'API (doit correspondre à votre configuration)
@@ -43,9 +44,9 @@ router.addRoute("/signup", SignupPage, { useLayout: false }); // Page d'inscript
 router.addRoute("/logout", (params, r) => r.logout(), { useLayout: false }); // Déconnexion (Critère 3)
 
 // Routes protégées (Critère 6)
-router.addRoute("/commandes", AccountPage, { requireAuth: true });
-router.addRoute("/account", AccountPage, { requireAuth: true });
-router.addRoute("/profil", ProfilePage, { requireAuth: true });
+router.addRoute("/account", AccountPage, { requireAuth: true }); // Page d'accueil du compte (avec les cartes)
+router.addRoute("/commandes", OrdersPage, { requireAuth: true }); // Page de la liste des commandes
+router.addRoute("/profil", ProfilePage, { requireAuth: true }); // Page de modification du profil
 
 router.addRoute("*", The404Page);
 

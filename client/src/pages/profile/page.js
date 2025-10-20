@@ -6,24 +6,103 @@ import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 let M = {
-    // User data will be loaded here
-    user: null
+    user: null,
+    router: null
 };
 
 let C = {};
 
-C.init = async function(){
-    // Get user from sessionStorage
+C.init = async function(router){
+    M.router = router;
+    
+    // Charger les données de l'utilisateur depuis sessionStorage ou l'API
     try {
         const userData = sessionStorage.getItem('auth_user');
         if (userData) {
             M.user = JSON.parse(userData);
+        } else if (router && router.user) {
+            M.user = router.user;
+        }
+        
+        // Si pas de données utilisateur, recharger depuis l'API
+        if (!M.user && router && router.isAuthenticated) {
+            await C.loadUserData();
         }
     } catch (error) {
         console.error('Error loading user data:', error);
     }
     
     return V.init();
+}
+
+C.loadUserData = async function() {
+    try {
+        const response = await fetch(M.router.apiUrl + 'user', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            M.user = data;
+            sessionStorage.setItem('auth_user', JSON.stringify(data));
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des données utilisateur:', error);
+    }
+}
+
+C.updateUserData = async function(fieldName, newValue, oldPassword = null) {
+    try {
+        const body = {};
+        
+        if (fieldName === 'name') {
+            body.name = newValue;
+        } else if (fieldName === 'email') {
+            body.email = newValue;
+        } else if (fieldName === 'password') {
+            body.old_password = oldPassword;
+            body.new_password = newValue;
+        }
+        
+        const response = await fetch(M.router.apiUrl + 'user', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(body)
+        });
+        
+        // Vérifier si la réponse est OK avant de parser le JSON
+        if (!response.ok) {
+            // Tenter de parser le JSON pour récupérer le message d'erreur
+            let errorMessage = 'Erreur lors de la mise à jour';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.error || errorMessage;
+            } catch (e) {
+                // Si la réponse n'est pas du JSON, utiliser le statut HTTP
+                errorMessage = `Erreur ${response.status}: ${response.statusText}`;
+            }
+            return { success: false, error: errorMessage };
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Mettre à jour les données locales
+            M.user = data.user;
+            sessionStorage.setItem('auth_user', JSON.stringify(data.user));
+            M.router.user = data.user;
+            return { success: true };
+        } else {
+            return { success: false, error: data.error || 'Erreur lors de la mise à jour' };
+        }
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour:', error);
+        return { success: false, error: 'Erreur de connexion au serveur' };
+    }
 }
 
 let V = {};
@@ -38,109 +117,167 @@ V.createPageFragment = function(){
    // Create page fragment from template
    let pageFragment = htmlToFragment(template);
    
-   // Generate name field (no value shown initially)
-   let nameFieldDOM = ProfileFieldView.dom('Nom', M.user?.name || '', false, false);
-   let nameWrapper = document.createElement('div');
-   nameWrapper.dataset.field = 'name'; // Add identifier
-   nameWrapper.appendChild(nameFieldDOM);
+   // Generate name field (with value if available)
+   // Utiliser le champ name (nom complet) ou email comme fallback
+   const displayName = M.user?.name || '';
+   let nameFieldDOM = ProfileFieldView.dom('Nom', displayName, false, !!displayName, 'name');
    let nameSlot = pageFragment.querySelector('slot[name="name-field"]');
    if (nameSlot) {
-       nameSlot.replaceWith(nameWrapper);
+       nameSlot.replaceWith(nameFieldDOM);
    }
    
    // Generate email field (with value)
-   let emailFieldDOM = ProfileFieldView.dom('Adresse mail', M.user?.email || '', false, true);
-   let emailWrapper = document.createElement('div');
-   emailWrapper.dataset.field = 'email'; // Add identifier
-   emailWrapper.appendChild(emailFieldDOM);
+   let emailFieldDOM = ProfileFieldView.dom('Adresse mail', M.user?.email || '', false, true, 'email');
    let emailSlot = pageFragment.querySelector('slot[name="email-field"]');
    if (emailSlot) {
-       emailSlot.replaceWith(emailWrapper);
+       emailSlot.replaceWith(emailFieldDOM);
    }
    
    // Generate password field (with dots)
-   let passwordFieldDOM = ProfileFieldView.dom('Mot de passe', '', true, true);
-   let passwordWrapper = document.createElement('div');
-   passwordWrapper.dataset.field = 'password'; // Add identifier
-   passwordWrapper.appendChild(passwordFieldDOM);
+   let passwordFieldDOM = ProfileFieldView.dom('Mot de passe', '', true, true, 'password');
    let passwordSlot = pageFragment.querySelector('slot[name="password-field"]');
    if (passwordSlot) {
-       passwordSlot.replaceWith(passwordWrapper);
+       passwordSlot.replaceWith(passwordFieldDOM);
    }
    
    return pageFragment;
 }
 
 V.attachEvents = function(fragment){
-    // Get all profile fields
-    const fields = fragment.querySelectorAll('[data-field]');
+    // Add click events on all edit icons
+    const editIcons = fragment.querySelectorAll('img[data-field]');
     
-    fields.forEach(field => {
-        const fieldType = field.dataset.field;
-        const editButton = field.querySelector('img[alt="Edit"]');
-        
-        if (editButton) {
-            editButton.style.cursor = 'pointer';
-            editButton.addEventListener('click', () => {
-                V.openModal(fieldType, fragment);
-            });
-        }
+    editIcons.forEach(icon => {
+        icon.style.cursor = 'pointer';
+        icon.addEventListener('click', () => {
+            const field = icon.getAttribute('data-field');
+            V.openEditModal(field);
+        });
     });
 }
 
-V.openModal = function(fieldType, pageFragment) {
-    let modalDOM;
+V.openEditModal = function(fieldName) {
+    let modalFragment;
+    let modalOverlay;
     
-    switch(fieldType) {
-        case 'name':
-            modalDOM = EditNameModalView.dom(M.user?.name || '');
-            break;
-        case 'email':
-            modalDOM = EditEmailModalView.dom(M.user?.email || '');
-            break;
-        case 'password':
-            modalDOM = EditPasswordModalView.dom();
-            break;
-        default:
-            return;
+    if (fieldName === 'name') {
+        modalFragment = EditNameModalView.dom(M.user?.name || M.user?.username || '');
+        modalOverlay = V.createModalOverlay(modalFragment, fieldName);
+        
+        // Attach save event for name
+        const saveBtn = modalOverlay.querySelector('#save-button');
+        const input = modalOverlay.querySelector('#name-input');
+        
+        if (saveBtn && input) {
+            saveBtn.addEventListener('click', async () => {
+                const newName = input.value.trim();
+                if (!newName) {
+                    alert('Le nom ne peut pas être vide');
+                    return;
+                }
+                
+                const result = await C.updateUserData('name', newName);
+                if (result.success) {
+                    modalOverlay.remove();
+                    // Refresh the page to show updated data
+                    M.router.handleRoute();
+                } else {
+                    alert(result.error || 'Erreur lors de la mise à jour');
+                }
+            });
+        }
+    } else if (fieldName === 'email') {
+        modalFragment = EditEmailModalView.dom(M.user?.email || '');
+        modalOverlay = V.createModalOverlay(modalFragment, fieldName);
+        
+        // Attach save event for email
+        const saveBtn = modalOverlay.querySelector('#save-button');
+        const input = modalOverlay.querySelector('#email-input');
+        
+        if (saveBtn && input) {
+            saveBtn.addEventListener('click', async () => {
+                const newEmail = input.value.trim();
+                if (!newEmail) {
+                    alert('L\'email ne peut pas être vide');
+                    return;
+                }
+                
+                // Basic email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(newEmail)) {
+                    alert('Format d\'email invalide');
+                    return;
+                }
+                
+                const result = await C.updateUserData('email', newEmail);
+                if (result.success) {
+                    modalOverlay.remove();
+                    // Refresh the page to show updated data
+                    M.router.handleRoute();
+                } else {
+                    alert(result.error || 'Erreur lors de la mise à jour');
+                }
+            });
+        }
+    } else if (fieldName === 'password') {
+        modalFragment = EditPasswordModalView.dom();
+        modalOverlay = V.createModalOverlay(modalFragment, fieldName);
+        
+        // Attach save event for password
+        const saveBtn = modalOverlay.querySelector('#save-button');
+        const oldPasswordInput = modalOverlay.querySelector('#old-password-input');
+        const newPasswordInput = modalOverlay.querySelector('#new-password-input');
+        
+        if (saveBtn && oldPasswordInput && newPasswordInput) {
+            saveBtn.addEventListener('click', async () => {
+                const oldPassword = oldPasswordInput.value;
+                const newPassword = newPasswordInput.value;
+                
+                if (!oldPassword || !newPassword) {
+                    alert('Veuillez remplir tous les champs');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    alert('Le nouveau mot de passe doit contenir au moins 6 caractères');
+                    return;
+                }
+                
+                const result = await C.updateUserData('password', newPassword, oldPassword);
+                if (result.success) {
+                    modalOverlay.remove();
+                    alert('Mot de passe modifié avec succès');
+                } else {
+                    alert(result.error || 'Erreur lors de la mise à jour');
+                }
+            });
+        }
     }
     
-    // Create a container for the modal
-    const modalContainer = document.createElement('div');
-    modalContainer.appendChild(modalDOM);
-    document.body.appendChild(modalContainer);
+    document.body.appendChild(modalOverlay);
+}
+
+V.createModalOverlay = function(modalFragment, fieldName) {
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
+    overlay.appendChild(modalFragment);
     
-    // Add close functionality
-    const closeButton = modalContainer.querySelector('#close-modal');
-    const backdrop = modalContainer.querySelector('.fixed.inset-0.bg-zinc-900');
-    
-    const closeModal = () => {
-        modalContainer.remove();
-    };
-    
-    if (closeButton) {
-        closeButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeModal();
+    // Close button
+    const closeBtn = overlay.querySelector('#close-modal');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            overlay.remove();
         });
     }
     
-    if (backdrop) {
-        backdrop.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeModal();
-        });
-    }
+    // Close on backdrop click
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.remove();
+        }
+    });
     
-    // Prevent modal from closing when clicking inside the dialog
-    const modalDialog = modalContainer.querySelectorAll('.fixed')[1]; // Second fixed element is the dialog
-    if (modalDialog) {
-        modalDialog.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    }
+    return overlay;
 }
 
 /**
@@ -150,5 +287,6 @@ V.openModal = function(fieldType, pageFragment) {
  */
 export function ProfilePage(params, router) {
     console.log("ProfilePage", params);
-    return C.init();
+    return C.init(router);
 }
+
