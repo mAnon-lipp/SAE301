@@ -1,0 +1,83 @@
+<!-- Modal Overlay (backdrop with opacity) -->
+<div class="fixed inset-0 bg-zinc-900 opacity-90 z-40"></div>
+
+<!-- Modal Dialog -->
+<div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-[24px] py-[20px] z-50">
+  <div class="flex flex-col gap-[27px] items-end justify-end relative">
+    <div class="flex flex-col gap-[27px] items-start justify-center relative">
+      <!-- Header with title, description and close button -->
+      <div class="flex flex-col gap-[16px] items-start relative">
+        <div class="flex gap-[10px] items-center justify-center relative">
+          <p class="font-['Inter',_sans-serif] font-bold text-[18px] text-zinc-900 whitespace-nowrap">
+            Modifier le mot de passe
+          </p>
+        </div>
+        <div class="flex gap-[10px] items-center justify-center relative">
+          <div class="font-['Inter',_sans-serif] font-medium text-[12px] text-zinc-500">
+            <p class="mb-0">Modifiez votre adresse mail ici. </p>
+            <p>Cliquez sur Enregistrer lorsque vous avez terminé.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Form Fields -->
+      <div class="flex gap-[27px] items-center justify-end relative">
+        <div class="flex flex-col gap-[12px] items-end justify-center relative">
+          <!-- Old Password Field -->
+          <div class="flex gap-[16px] items-center justify-end relative">
+            <p class="font-['Inter',_sans-serif] font-semibold text-[14px] text-zinc-900 whitespace-nowrap">
+              Ancien mot de passe
+            </p>
+            <div class="border border-solid border-zinc-200 w-[250px] relative">
+              <div class="flex items-center justify-between px-[13px] py-[11px] w-full">
+                <input 
+                  type="password" 
+                  id="old-password-input"
+                  class="font-['Inter',_sans-serif] font-medium text-[14px] text-zinc-900 outline-none border-none flex-1"
+                  placeholder="Entrez votre ancien mot de passe"
+                />
+                <button type="button" class="w-[15px] h-[15px] shrink-0 ml-2" id="toggle-old-password">
+                  <img src="/icon-eye.svg" alt="Afficher" class="w-full h-full">
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- New Password Field -->
+          <div class="flex gap-[16px] items-center justify-end relative">
+            <p class="font-['Inter',_sans-serif] font-semibold text-[14px] text-zinc-900 whitespace-nowrap">
+              Nouveau mot de passe
+            </p>
+            <div class="border border-solid border-zinc-200 w-[250px] relative">
+              <div class="flex items-center justify-between px-[13px] py-[11px] w-full">
+                <input 
+                  type="password" 
+                  id="new-password-input"
+                  class="font-['Inter',_sans-serif] font-medium text-[14px] text-zinc-900 outline-none border-none flex-1"
+                  placeholder="Entrez votre nouveau mot de passe"
+                />
+                <button type="button" class="w-[15px] h-[15px] shrink-0 ml-2" id="toggle-new-password">
+                  <img src="/icon-eye.svg" alt="Afficher" class="w-full h-full">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Close button (X) -->
+      <button class="absolute right-0 top-[0.5px] w-[12px] h-[12px]" id="close-modal">
+        <img src="/icon-close.svg" alt="Fermer" class="w-full h-full">
+      </button>
+    </div>
+    
+    <!-- Action Button -->
+    <div class="flex gap-[8px] items-start relative">
+      <button class="bg-zinc-900 flex gap-[10px] items-center justify-center px-[16px] py-[12px]" id="save-button">
+        <p class="font-['Inter',_sans-serif] font-medium text-[14px] text-white whitespace-nowrap">
+          Enregistrer
+        </p>
+      </button>
+    </div>
+  </div>
+</div>
