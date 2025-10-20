@@ -1,4 +1,4 @@
-<div class="flex gap-[22px] mb-8">
+<div class="flex gap-[22px] mb-8" data-cart-item>
   <!-- Image -->
   <div class="w-[139px] h-[172.74px] flex-shrink-0 bg-[#d9d9d9] overflow-hidden">
     <img src="{{image}}" alt="{{name}}" class="w-full h-full object-cover object-center" />
@@ -25,7 +25,7 @@
             <path d="M6 12H18" stroke="#5F6368" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <span class="px-4 py-2 min-w-[40px] text-center" data-quantity-display>1</span>
+  <span class="px-4 py-2 min-w-[40px] text-center" data-quantity-display>{{quantity}}</span>
         <button class="bg-transparent border-0 cursor-pointer p-0 w-6 h-6 flex items-center justify-center transition-opacity hover:opacity-70" data-quantity-action="increase" aria-label="Augmenter la quantité">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 5V19M5 12H19" stroke="#5F6368" stroke-width="1.5"/>

@@ -10,7 +10,20 @@ let NavView = {
   },
 
   dom: function () {
-    return htmlToFragment(template);
+    const fragment = htmlToFragment(template);
+    // Mettre à jour explicitement le compteur du panier quand le nav est (re)créé.
+    // Utiliser un import dynamique pour éviter tout risque de dépendance circulaire.
+    import("../../data/cart.js")
+      .then((m) => {
+        if (m && m.CartModel && typeof m.CartModel.updateGlobalCount === 'function') {
+          m.CartModel.updateGlobalCount();
+        }
+      })
+      .catch(() => {
+        // silent fail: si le modèle n'est pas disponible, on ne bloque pas le rendu
+      });
+
+    return fragment;
   }
 };
 

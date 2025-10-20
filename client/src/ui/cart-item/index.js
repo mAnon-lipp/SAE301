@@ -39,24 +39,26 @@ export const CartItemView = {
   },
 
   attachEvents(fragment, data) {
-    // Si c'est un tableau, attacher les événements pour chaque item
+    // Si c'est un tableau, attacher les événements pour chaque item en utilisant data-cart-item
     if (Array.isArray(data)) {
-      const itemElements = fragment.querySelectorAll('[data-quantity-display]');
+      const itemElements = fragment.querySelectorAll('[data-cart-item]');
       for (let i = 0; i < itemElements.length; i++) {
-        const itemElement = itemElements[i].closest('.flex.gap-\\[22px\\]');
-        if (itemElement) {
-          this.attachItemEvents(itemElement, data[i]);
-        }
+        const itemElement = itemElements[i];
+        const itemDatum = data[i];
+        this.attachItemEvents(itemElement, itemDatum);
       }
     } else {
-      // Pour un seul item
-      this.attachItemEvents(fragment, data);
+      // Pour un seul item: trouver l'élément data-cart-item ou utiliser le fragment
+      const itemElement = fragment.querySelector('[data-cart-item]') || fragment;
+      this.attachItemEvents(itemElement, data);
     }
   },
 
   attachItemEvents(element, itemData) {
-    let quantity = itemData.quantity || 1;
+    // Synchroniser la quantité initiale depuis itemData (ou depuis CartModel si présent)
+    let quantity = itemData && itemData.quantity ? itemData.quantity : 1;
     const quantityDisplay = element.querySelector('[data-quantity-display]');
+    if (quantityDisplay) quantityDisplay.textContent = quantity;
     
     // Gestion des boutons + et -
     const qtyButtons = element.querySelectorAll('[data-quantity-action]');
@@ -67,12 +69,23 @@ export const CartItemView = {
         
         if (action === 'increase') {
           quantity++;
-        } else if (action === 'decrease' && quantity > 1) {
+        } else if (action === 'decrease') {
           quantity--;
         }
-        
-        quantityDisplay.textContent = quantity;
-        
+
+        // Si quantity est <= 0 -> supprimer l'item
+        if (quantity <= 0) {
+          const removeEvent = new CustomEvent('cart-item-remove', {
+            detail: { itemId: itemData.id },
+            bubbles: true
+          });
+          element.dispatchEvent(removeEvent);
+          return;
+        }
+
+        // Mettre à jour l'affichage
+        if (quantityDisplay) quantityDisplay.textContent = quantity;
+
         // Dispatcher un événement personnalisé pour mettre à jour le panier
         const event = new CustomEvent('cart-quantity-change', {
           detail: {

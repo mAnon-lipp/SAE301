@@ -38,9 +38,27 @@ M.getProductById = function(id) {
 let C = {};
 
 C.handler_clickOnProduct = function(ev){
-    if (ev.target.dataset.buy !== undefined){
-        let id = ev.target.dataset.buy;
-        alert(`Le produit d'identifiant ${id} ? Excellent choix !`);
+    // Supporter le bouton d'ajout rapide (data-buy) présent sur la smallcard
+    const buyBtn = ev.target.closest('[data-buy]');
+    if (buyBtn) {
+        ev.preventDefault();
+        const id = parseInt(buyBtn.dataset.buy, 10);
+        (async () => {
+            try {
+                const { CartModel } = await import('../../data/cart.js');
+                const { CartPanelView } = await import('../../ui/cart-panel/index.js');
+                const success = await CartModel.addItem(id, 1);
+                if (success) {
+                    CartModel.updateGlobalCount();
+                    CartPanelView.open();
+                } else {
+                    alert('Erreur lors de l\'ajout au panier.');
+                }
+            } catch (e) {
+                console.error('Erreur add-to-cart depuis catalogue:', e);
+            }
+        })();
+        return;
     }
 }
 

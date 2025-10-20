@@ -11,8 +11,9 @@
     <a href="/login" data-link class="block w-[30px] h-[30px] flex items-center justify-center">
       <img src="/icon-user.svg" alt="User" class="w-full h-full object-contain" />
     </a>
-    <a href="/cart" data-link class="block w-[30px] h-[30px] flex items-center justify-center">
+    <button id="open-cart-panel" class="relative block w-[30px] h-[30px] flex items-center justify-center cursor-pointer p-0 border-0 bg-transparent">
       <img src="/icon-cart.svg" alt="Cart" class="w-full h-full object-contain" />
-    </a>
+      <span data-cart-count class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
+    </button>
   </div>
 </nav>

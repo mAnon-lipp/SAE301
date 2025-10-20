@@ -3,7 +3,9 @@
     <img src="{{image}}" alt="{{name}}" class="w-full h-full object-cover" />
     <!-- add-to-cart icon shown on hover -->
     <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-      <img src="/add-sharp.svg" alt="ajouter" class="w-10 h-10" />
+      <button type="button" data-buy="{{id}}"  class="w-10 h-10 p-0 border-0 bg-white rounded-full shadow-md flex items-center justify-center" aria-label="Ajouter au panier">
+        <img src="/add-sharp.svg" alt="ajouter" class="w-6 h-6" />
+      </button>
     </div>
   </div>
   <div class="flex flex-col items-start">

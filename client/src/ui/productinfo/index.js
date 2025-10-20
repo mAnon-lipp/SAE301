@@ -89,10 +89,22 @@ export const ProductInfoView = {
     // Gestion du bouton ajouter au panier
     const addToCartBtn = fragment.querySelector('[data-add-to-cart]');
     if (addToCartBtn) {
-      addToCartBtn.addEventListener('click', () => {
-        // Placeholder pour US006
-        alert(`Ajouté au panier : ${quantity}x ${data.name}`);
-  // debug logs removed
+      addToCartBtn.addEventListener('click', async () => {
+        // Appel au modèle CartModel
+        try {
+          const { CartModel } = await import("../../data/cart.js");
+          const { CartPanelView } = await import("../../ui/cart-panel/index.js");
+          const success = await CartModel.addItem(data.id, quantity);
+          if (success) {
+            // Mettre à jour le compteur et ouvrir le panneau
+            CartModel.updateGlobalCount();
+            CartPanelView.open();
+          } else {
+            alert('Erreur lors de l\'ajout au panier.');
+          }
+        } catch (e) {
+          console.error('Erreur lors de l\'ajout au panier :', e);
+        }
       });
     }
   }

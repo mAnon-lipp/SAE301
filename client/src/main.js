@@ -53,5 +53,52 @@ router.addRoute("*", The404Page);
 // Démarrer le routeur (async pour attendre la vérification de session)
 (async () => {
     await router.start();
+    // --- Initialisation du Panier (overlay + panel) ---
+    try {
+        const { CartOverlayView } = await import("./ui/cart-overlay/index.js");
+        const { CartPanelView } = await import("./ui/cart-panel/index.js");
+        const { CartModel } = await import("./data/cart.js");
+
+        const cartOverlayFragment = CartOverlayView.dom();
+        const cartPanelFragment = CartPanelView.dom();
+
+        const cartContainer = document.createElement('div');
+        cartContainer.appendChild(cartOverlayFragment);
+        cartContainer.appendChild(cartPanelFragment);
+        document.body.appendChild(cartContainer);
+
+        // Attacher l'événement d'ouverture (si bouton présent dans le nav)
+        const openCartBtn = document.getElementById('open-cart-panel');
+        if (openCartBtn) {
+            openCartBtn.addEventListener('click', () => {
+                CartPanelView.open();
+            });
+        }
+
+        // Listener délégué : au cas où le nav est inséré dynamiquement après
+        // l'initialisation, écouter sur le document pour tout clic sur
+        // l'icône du panier (id ou data-open-cart)
+        document.addEventListener('click', (ev) => {
+            const target = ev.target;
+            const btn = target.closest('#open-cart-panel, [data-open-cart]');
+            if (btn) {
+                CartPanelView.open();
+            }
+        });
+
+        // Fermer le panier en cliquant sur l'overlay
+        const cartOverlay = document.querySelector('[data-cart-overlay]');
+        if (cartOverlay) {
+            cartOverlay.classList.add('hidden');
+            cartOverlay.addEventListener('click', () => {
+                CartPanelView.close();
+            });
+        }
+
+        // Mettre à jour le compteur après le démarrage
+        CartModel.updateGlobalCount();
+    } catch (e) {
+        console.warn('Impossible d\'initialiser le panier :', e);
+    }
 })();
 
