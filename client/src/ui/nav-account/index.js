@@ -132,7 +132,13 @@ let NavAccountView = {
       return words[0].substring(0, 2).toUpperCase();
     } else {
       // Plusieurs mots : prendre la première lettre de chaque mot (max 2)
-      return words.slice(0, 2).map(word => word[0]).join('').toUpperCase();
+      const taken = words.slice(0, 2);
+      let initials = '';
+      for (let i = 0; i < taken.length; i++) {
+        const w = taken[i];
+        if (w && w.length > 0) initials += w[0];
+      }
+      return initials.toUpperCase();
     }
   }
 };

@@ -62,10 +62,10 @@ let postRequest = async function(uri, data){
     let options = {
         credentials: 'include', // inclure les cookies dans la requête
         method: 'POST',
-        header: {
-            Content_Type: 'multipart/form-data' // type de données envoyées (nécessaire si upload fichier)
+        headers: {
+            'Content-Type': 'application/json' // type de données envoyées en JSON
         },
-        body: data
+        body: JSON.stringify(data) // Convertir l'objet JavaScript en JSON
     }
 
     try{
@@ -75,8 +75,18 @@ let postRequest = async function(uri, data){
         console.error("Echec de la requête : " + e); // affichage de l'erreur dans la console
         return false;
     }
-    if (response.status != 200){
+    // Accepter 200 (OK) et 201 (Created) comme succès
+    if (response.status != 200 && response.status != 201){
         console.error("Erreur de requête : " + response.status); // affichage de l'erreur dans la console
+        
+        // Essayer de lire le message d'erreur du serveur
+        try {
+            const errorData = await response.json();
+            console.error("Détails de l'erreur:", errorData);
+        } catch (e) {
+            console.error("Impossible de lire les détails de l'erreur");
+        }
+        
         return false; // si le serveur a renvoyé une erreur, on retourne false
     }
     let $obj = await response.json(); // extraction du json retourné par le serveur (opération asynchrone aussi)

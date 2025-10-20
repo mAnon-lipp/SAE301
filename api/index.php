@@ -47,6 +47,7 @@ require_once "src/Controller/CategoryController.php";
 require_once "src/Controller/ProductImageController.php";
 require_once "src/Controller/UserController.php";
 require_once "src/Controller/AuthController.php";
+require_once "src/Controller/OrderController.php";
 require_once "src/Class/HttpRequest.php";
 
 
@@ -78,6 +79,7 @@ $router = [
     "user" => new UserController(), // Singulier pour le profil de l'utilisateur connecté
     "users" => new UserController(), // Garder le pluriel pour compatibilité (inscription)
     "auth" => new AuthController(),
+    "orders" => new OrderController(), // US007 - Gestion des commandes
 ];
 
 // objet HttpRequest qui contient toutes les infos utiles sur la requêtes (voir class/HttpRequest.php)

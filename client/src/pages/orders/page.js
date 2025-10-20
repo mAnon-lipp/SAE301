@@ -1,17 +1,25 @@
 import { EmptyOrdersView } from "../../ui/empty-orders/index.js";
+import { OrdersCardView } from "../../ui/orderscard/index.js";
 import { htmlToFragment } from "../../lib/utils.js";
+import { OrderData } from "../../data/order.js";
 import template from "./template.html?raw";
 
 let M = {
-    // Orders data will be loaded here in the future
     orders: []
 };
 
 let C = {};
 
 C.init = async function(){
-    // TODO: Charger les commandes depuis l'API
-    // Pour l'instant, orders reste vide
+    try {
+        // Charger les commandes depuis l'API (US007)
+        M.orders = await OrderData.fetchAll();
+        console.log('Commandes chargées:', M.orders);
+    } catch (error) {
+        console.error('Erreur lors du chargement des commandes:', error);
+        M.orders = [];
+    }
+    
     return V.init();
 }
 
@@ -26,9 +34,16 @@ V.createPageFragment = function(){
    // Create page fragment from template
    let pageFragment = htmlToFragment(template);
    
-   // Pour l'instant, toujours afficher le message vide
-   // Plus tard, on pourra vérifier si M.orders.length === 0
-   let ordersContentDOM = EmptyOrdersView.dom();
+   let ordersContentDOM;
+   
+   // Si aucune commande, afficher le message vide
+   if (!M.orders || M.orders.length === 0) {
+       ordersContentDOM = EmptyOrdersView.dom();
+   } else {
+       // Sinon, afficher les cartes de commandes
+       ordersContentDOM = OrdersCardView.dom(M.orders);
+   }
+   
    let ordersSlot = pageFragment.querySelector('slot[name="orders-content"]');
    if (ordersSlot) {
        ordersSlot.replaceWith(ordersContentDOM);

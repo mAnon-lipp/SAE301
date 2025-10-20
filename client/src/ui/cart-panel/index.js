@@ -63,11 +63,11 @@ let CartPanelView = {
     const checkoutBtn = fragment.querySelector('[data-checkout]');
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
-        alert('Paiement simulé ! Panier vidé.');
-        CartModel.items = [];
-        CartModel.save();
-        this.updatePanel(panel);
+        // Fermer le panneau du panier
         this.close();
+        // Naviguer vers la page de checkout
+        window.history.pushState(null, null, '/checkout');
+        window.dispatchEvent(new PopStateEvent('popstate'));
       });
     }
   },

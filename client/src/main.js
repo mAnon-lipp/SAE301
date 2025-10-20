@@ -7,6 +7,7 @@ import { ProductDetailPage } from "./pages/productDetail/page.js";
 
 import { RootLayout } from "./layouts/root/layout.js";
 import { AccountLayout } from "./layouts/account/layout.js";
+import { CheckoutLayout } from "./layouts/checkout/layout.js";
 import { The404Page } from "./pages/404/page.js";
 
 // NOUVELLES PAGES
@@ -15,6 +16,8 @@ import { SignupPage } from "./pages/signup/page.js";
 import { AccountPage } from "./pages/account/page.js";
 import { ProfilePage } from "./pages/profile/page.js";
 import { OrdersPage } from "./pages/orders/page.js";
+import { CheckoutPage } from "./pages/checkout/page.js";
+import { OrderConfirmationPage } from "./pages/order-confirmation/page.js";
 // ---
 
 // URL de l'API (doit correspondre à votre configuration)
@@ -25,10 +28,15 @@ const router = new Router('app', {
     apiUrl: API_URL 
 });
 
+// Rendre le routeur accessible globalement pour certaines pages
+window.router = router;
+
 router.addLayout("/", RootLayout);
 router.addLayout("/account", AccountLayout); // Layout spécifique avec menu utilisateur
 router.addLayout("/profil", AccountLayout); // Layout account pour la page profil
 router.addLayout("/commandes", AccountLayout); // Layout account pour la page commandes
+router.addLayout("/checkout", CheckoutLayout); // Layout checkout avec nav simplifiée
+router.addLayout("/order-confirmation", CheckoutLayout); // Layout checkout pour la page de confirmation
 
 // Routes publiques
 router.addRoute("/", ProductsPage);
@@ -37,6 +45,11 @@ router.addRoute("/about", AboutPage);
 router.addRoute("/products", ProductsPage);
 router.addRoute("/products/category/:id/:slug", ProductsPage);
 router.addRoute("/products/:id/:slug", ProductDetailPage);
+
+// Route checkout
+router.addRoute("/checkout", CheckoutPage, { requireAuth: true }); // Requiert l'authentification
+router.addRoute("/order-confirmation", OrderConfirmationPage);
+router.addRoute("/order-confirmation/:orderNumber", OrderConfirmationPage);
 
 // Routes d'authentification
 router.addRoute("/login", LoginPage, { useLayout: false }); // Page de connexion sans layout

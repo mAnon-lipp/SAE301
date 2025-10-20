@@ -1,0 +1,26 @@
+<div class="bg-white w-full px-[30px] py-[16px] flex items-center gap-[22px]">
+  <!-- Image -->
+  <div class="w-[139px] h-[191px] flex-shrink-0 bg-[#d9d9d9] overflow-hidden">
+    <img src="{{image}}" alt="{{name}}" class="w-full h-full object-cover object-center" />
+  </div>
+  
+  <!-- Quantity Badge -->
+  <div class="relative">
+    <div class="w-[41px] h-[41px] rounded-full bg-black flex items-center justify-center">
+      <span class="font-sans font-bold text-[14px] tracking-[2.1px] leading-[41.6px] text-white">{{quantity}}</span>
+    </div>
+  </div>
+  
+  <!-- Content -->
+  <div class="flex-1 flex flex-col gap-[49px]">
+    <!-- Product Name -->
+    <h3 class="font-sans font-normal text-[16px] tracking-[2.4px] leading-[41.6px] text-black m-0 uppercase">
+      {{name}}
+    </h3>
+    
+    <!-- Price -->
+    <p class="font-sans font-normal text-[14px] tracking-[2.1px] leading-[41.6px] text-[#5f6368] m-0">
+      ${{prix}}
+    </p>
+  </div>
+</div>

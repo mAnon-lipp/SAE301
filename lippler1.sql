@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : lun. 20 oct. 2025 à 08:20
+-- Généré le : lun. 20 oct. 2025 à 17:09
 -- Version du serveur : 10.11.14-MariaDB-0+deb12u2
 -- Version de PHP : 8.3.24
 
@@ -40,6 +40,34 @@ INSERT INTO `Category` (`id`, `name`) VALUES
 (1, 'Baskets'),
 (2, 'Talons'),
 (3, 'Sacs');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Commandes`
+--
+
+CREATE TABLE `Commandes` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `date_commande` datetime NOT NULL DEFAULT current_timestamp(),
+  `statut` varchar(50) NOT NULL DEFAULT 'Validée',
+  `montant_total` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Order_Items`
+--
+
+CREATE TABLE `Order_Items` (
+  `id` int(11) NOT NULL,
+  `commande_id` int(11) NOT NULL,
+  `produit_id` int(11) NOT NULL,
+  `quantite` int(11) NOT NULL,
+  `prix_unitaire` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -132,7 +160,7 @@ CREATE TABLE `User` (
 --
 
 INSERT INTO `User` (`id`, `name`, `email`, `password_hash`, `username`) VALUES
-(1, '', 'manon.lippler@etu.unilim.fr', '$2y$10$dRWF/IIgEHwkD6fbArsP4Oj4pN0SIRsBN/zuo0f4BJNqIDKjKmKeG', 'Manon'),
+(1, 'Yo', 'manon.lippler3@gmail.com', '$2y$10$QtwyjVQhSfRwJxS4Oa2NBuMurkBUJOVdmUTi1mO/R8hFvOIvtHDvm', 'manon.lippler3'),
 (2, '', 'sandrinesuriano@gmail.com', '$2y$10$r3NA/Ht1MLNkKStiKouJ8.C2Xoe3bzswJBLn5p5T7ilCvMOmTKVSS', 'sandrinesuriano');
 
 --
@@ -144,6 +172,22 @@ INSERT INTO `User` (`id`, `name`, `email`, `password_hash`, `username`) VALUES
 --
 ALTER TABLE `Category`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `Commandes`
+--
+ALTER TABLE `Commandes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `client_id` (`client_id`);
+
+--
+-- Index pour la table `Order_Items`
+--
+ALTER TABLE `Order_Items`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_order_item` (`commande_id`,`produit_id`),
+  ADD KEY `fk_commande_items` (`commande_id`),
+  ADD KEY `fk_produit_items` (`produit_id`);
 
 --
 -- Index pour la table `Product`
@@ -177,6 +221,18 @@ ALTER TABLE `Category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT pour la table `Commandes`
+--
+ALTER TABLE `Commandes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `Order_Items`
+--
+ALTER TABLE `Order_Items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `Product`
 --
 ALTER TABLE `Product`
@@ -197,6 +253,19 @@ ALTER TABLE `User`
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `Commandes`
+--
+ALTER TABLE `Commandes`
+  ADD CONSTRAINT `Commandes_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `User` (`id`);
+
+--
+-- Contraintes pour la table `Order_Items`
+--
+ALTER TABLE `Order_Items`
+  ADD CONSTRAINT `fk_commande_items` FOREIGN KEY (`commande_id`) REFERENCES `Commandes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_produit_items` FOREIGN KEY (`produit_id`) REFERENCES `Product` (`id`) ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `Product`
