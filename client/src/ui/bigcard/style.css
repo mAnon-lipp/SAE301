@@ -1,0 +1,6 @@
+/* Styles générés à partir de client/src/ui/bigcard/index.js */
+.bigcard_grid_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}

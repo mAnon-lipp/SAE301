@@ -1,5 +1,6 @@
 import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
+import "./style.css";
 
 /**
  * NavAccountView est le composant de navigation pour la page compte
@@ -30,8 +31,7 @@ let NavAccountView = {
       const userIcon = accountButton.querySelector('img[alt="User"]');
       if (userIcon) {
         const initialsDiv = document.createElement('div');
-        initialsDiv.className = 'flex items-center justify-center font-[\'Instrument_Sans\',_sans-serif] font-normal text-[22px] text-black leading-[33px]';
-        initialsDiv.style.fontVariationSettings = "'wdth' 100";
+        initialsDiv.className = 'initials-display flex items-center justify-center';
         initialsDiv.textContent = initials;
         userIcon.replaceWith(initialsDiv);
       }
@@ -39,8 +39,8 @@ let NavAccountView = {
       // Dans le dropdown: nom en gras + email en dessous
       if (emailElement) {
         emailElement.innerHTML = `
-          <p class="font-['Instrument_Sans',_sans-serif] font-bold text-[12px] text-zinc-900 mb-0" style="font-variation-settings: 'wdth' 100">${userName}</p>
-          <p class="font-['Instrument_Sans',_sans-serif] font-normal text-[12px] text-zinc-900" style="font-variation-settings: 'wdth' 100">${userEmail || ''}</p>
+          <p class="navaccount_name">${userName}</p>
+          <p class="navaccount_email">${userEmail || ''}</p>
         `;
       }
     } else {
@@ -58,7 +58,7 @@ let NavAccountView = {
     
     // Set initial arrow rotation (pointing up)
     if (arrow) {
-      arrow.style.transform = 'rotate(0deg)';
+      arrow.classList.remove('dropdown-arrow-up');
     }
     
     if (toggle && dropdown) {
@@ -68,16 +68,16 @@ let NavAccountView = {
         
         // Rotate arrow
         if (dropdown.classList.contains('hidden')) {
-          arrow.style.transform = 'rotate(0deg)';
+          arrow.classList.remove('dropdown-arrow-up');
         } else {
-          arrow.style.transform = 'rotate(180deg)';
+          arrow.classList.add('dropdown-arrow-up');
         }
       });
       
       // Fermer le dropdown si on clique ailleurs
       document.addEventListener('click', () => {
         dropdown.classList.add('hidden');
-        arrow.style.transform = 'rotate(0deg)';
+        arrow.classList.remove('dropdown-arrow-up');
       });
       
       // Empêcher la fermeture si on clique dans le dropdown

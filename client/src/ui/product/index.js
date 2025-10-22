@@ -1,9 +1,10 @@
 import { genericRenderer, htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
+import "./style.css";
 
 let ProductView = {
   html: function (data) {
-    let htmlString = '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">';
+  let htmlString = '<div class="product_grid">';
     for (let obj of data) {
       htmlString  += genericRenderer(template, obj);
     }

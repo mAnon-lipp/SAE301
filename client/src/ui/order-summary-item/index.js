@@ -1,5 +1,6 @@
 import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
 import template from "./template.html?raw";
+import "./style.css";
 
 let OrderSummaryItemView = {
   html: function (data) {
@@ -19,7 +20,7 @@ let OrderSummaryItemView = {
         }
         
         if (optionsParts.length > 0) {
-          optionsHTML = `<p class="font-sans font-normal text-[12px] tracking-[1.8px] text-[#5f6368] m-0">${optionsParts.join(' • ')}</p>`;
+          optionsHTML = `<p class="order-summary-item__options">${optionsParts.join(' • ')}</p>`;
         }
         
         const renderedData = {
@@ -46,7 +47,7 @@ let OrderSummaryItemView = {
     }
     
     if (optionsParts.length > 0) {
-      optionsHTML = `<p class="font-sans font-normal text-[12px] tracking-[1.8px] text-[#5f6368] m-0">${optionsParts.join(' • ')}</p>`;
+      optionsHTML = `<p class="order-summary-item__options">${optionsParts.join(' • ')}</p>`;
     }
     
     const renderedData = {

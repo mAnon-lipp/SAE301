@@ -1,5 +1,6 @@
 import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
+import "./style.css";
 
 /**
  * ProfileFieldView est un composant pour afficher un champ de profil éditable
@@ -17,9 +18,9 @@ let ProfileFieldView = {
     const labelText = document.createElement('span');
     
     if (hasValue) {
-      labelText.className = "text-[#5f6368]";
+      labelText.className = "profilefield_label_text";
     } else {
-      labelText.className = "text-black";
+      labelText.className = "profilefield_label_text_black";
     }
     
     labelText.textContent = label;
@@ -32,7 +33,7 @@ let ProfileFieldView = {
     const editIcon = fragment.querySelector('img[alt="Edit"]');
     if (editIcon && fieldName) {
       editIcon.setAttribute('data-field', fieldName);
-      editIcon.style.cursor = 'pointer';
+      editIcon.classList.add('profilefield_edit_icon');
     }
     
     // Replace value slot
@@ -43,18 +44,18 @@ let ProfileFieldView = {
         valueSlot.parentElement.remove();
       } else if (isPassword) {
         // Display password dots (bullets)
-        const valueText = document.createElement('p');
-        valueText.className = "font-['Instrument_Sans',_sans-serif] font-normal text-[14px] text-[#5f6368] leading-[23.1px] whitespace-nowrap";
-        valueText.style.fontVariationSettings = "'wdth' 100";
-        valueText.textContent = '••••••••••';
-        valueSlot.replaceWith(valueText);
+  const valueText = document.createElement('p');
+  valueText.className = 'profilefield_value_text';
+  valueText.style.fontVariationSettings = "'wdth' 100";
+  valueText.textContent = '••••••••••';
+  valueSlot.replaceWith(valueText);
       } else {
         // Display regular text value
-        const valueText = document.createElement('p');
-        valueText.className = "font-['Instrument_Sans',_sans-serif] font-normal text-[14px] text-[#5f6368] leading-[23.1px] whitespace-nowrap";
-        valueText.style.fontVariationSettings = "'wdth' 100";
-        valueText.textContent = value;
-        valueSlot.replaceWith(valueText);
+  const valueText = document.createElement('p');
+  valueText.className = 'profilefield_value_text';
+  valueText.style.fontVariationSettings = "'wdth' 100";
+  valueText.textContent = value;
+  valueSlot.replaceWith(valueText);
       }
     }
     

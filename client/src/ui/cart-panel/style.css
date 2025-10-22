@@ -1,0 +1,30 @@
+/* Translated styles extracted from index.js (cart-panel) */
+
+/* .cart-panel__empty replaces: text-center py-12 text-lg text-muted */
+.cart-panel__empty {
+  /* text-center */
+  text-align: center;
+
+  /* py-12 (Tailwind spacing 12 = 3rem) */
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+
+  /* text-lg (Tailwind default = 1.125rem) */
+  font-size: 1.125rem;
+
+  /* text-muted -> resolved to raw color (no CSS variables per requirement) */
+  color: oklch(50% 0 0);
+
+  /* keep margin consistent with other text elements (none) */
+  margin: 0;
+}
+
+/* Utility rules that may be toggled by the component JS (kept explicit) */
+/* translate-x-full: element translated fully to the right (used to hide the panel) */
+.translate-x-full {
+  transform: translateX(100%);
+}
+
+.hidden {
+  display: none !important;
+}

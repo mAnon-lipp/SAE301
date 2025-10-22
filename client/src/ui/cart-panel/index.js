@@ -1,5 +1,6 @@
 import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
+import "./style.css";
 import { CartModel } from "../../data/cart.js";
 import { CartItemView } from "../cart-item/index.js";
 
@@ -23,7 +24,7 @@ let CartPanelView = {
     itemsContainer.innerHTML = '';
     const items = CartModel.items;
     if (!items || items.length === 0) {
-      itemsContainer.innerHTML = `\n        <div class="text-center py-12 text-lg text-muted">Votre panier est vide.</div>\n      `;
+      itemsContainer.innerHTML = `\n        <div class="cart-panel__empty">Votre panier est vide.</div>\n      `;
       totalElement.textContent = '$0.00';
       return;
     }

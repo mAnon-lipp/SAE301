@@ -3,7 +3,7 @@ import template from "./template.html?raw";
 
 let BigCardView = {
   html: function (data) {
-    let htmlString = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">';
+  let htmlString = '<div class="bigcard_grid_container">';
     for (let obj of data) {
       htmlString += genericRenderer(template, obj);
     }

@@ -1,0 +1,103 @@
+.size-option-button {
+  width: 2.25rem; /* w-9 */
+  height: 2.25rem; /* h-9 */
+  border: 1px solid black;
+  transition-property: all;
+  transition-duration: 150ms;
+}
+
+.size-option-button.active,
+.size-option-button:hover.active {
+  background-color: black;
+  color: white;
+  border-color: black;
+}
+
+/* Stock badge for product detail */
+.stock-badge-product {
+  background-color: rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+  height: 27px;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 7px;
+  flex-shrink: 0;
+  width: fit-content;
+}
+
+.stock-badge-product .stock-badge-text {
+  font-family: 'Instrument Sans', sans-serif;
+  font-weight: normal;
+  font-size: 12px;
+  color: black;
+  letter-spacing: 2.04px;
+  line-height: 28.8px;
+  white-space: pre;
+}
+
+.features-list {
+  font-size: 0.875rem; /* text-sm */
+  color: #4a5568; /* text-gray-700 */
+  margin-top: 0.5rem; /* space-y-2 */
+}
+
+.features-list-item {
+  display: flex;
+  align-items: start;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.color-option {
+  width: 2.5rem; /* w-10 */
+  height: 2.5rem; /* h-10 */
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+
+
+/* Features list bullet (replaces inline-block w-1 h-1 bg-black mt-2) */
+.features-bullet {
+  display: inline-block;
+  width: 0.25rem; /* w-1 */
+  height: 0.25rem; /* h-1 */
+  background-color: #000; /* bg-black */
+  margin-top: 0.5rem; /* mt-2 */
+  border-radius: 50%;
+}
+
+/* Size selector wrappers */
+.productinfo_size_container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.productinfo_label {
+  font-size: 0.875rem; /* text-sm */
+  color: #000; /* text-black */
+}
+
+.productinfo_size_wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem; /* gap-2 */
+}
+
+/* Color selector wrappers */
+.productinfo_color_container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.productinfo_color_wrap {
+  display: flex;
+  gap: 0.75rem; /* gap-3 */
+}

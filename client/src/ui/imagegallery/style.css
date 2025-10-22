@@ -1,0 +1,35 @@
+/* Translated styles for ImageGallery (no CSS variables, no @apply) */
+
+/* Thumbnail wrapper (replaces: w-[100px] h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all) */
+.imagegallery_thumbnail {
+  width: 100px; /* w-[100px] */
+  height: 100px; /* h-[100px] */
+  background-color: oklch(90% 0 0); /* approx gray-200 */
+  overflow: hidden; /* overflow-hidden */
+  cursor: pointer; /* cursor-pointer */
+  transition: all 150ms ease; /* transition-all (approx 150ms) */
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Image inside thumbnail (replaces: w-full h-full object-cover) */
+.imagegallery_img {
+  width: 100%; /* w-full */
+  height: 100%; /* h-full */
+  object-fit: cover; /* object-cover */
+  display: block;
+}
+
+/* Hover visual (replaces hover:ring-2 hover:ring-black) */
+.imagegallery_thumbnail:hover {
+  box-shadow: 0 0 0 2px #000; /* ring-black on hover */
+}
+
+/* Active ring variants (replaces ring-2 ring-black and ring-2 ring-[var(--primary)]) */
+.imagegallery_ring_black {
+  box-shadow: 0 0 0 2px #000; /* black ring */
+}
+
+.imagegallery_ring_primary {
+  box-shadow: 0 0 0 2px oklch(50% 0.2 250); /* primary color (hard-coded, no var) */
+}

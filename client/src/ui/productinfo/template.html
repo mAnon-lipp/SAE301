@@ -1,16 +1,21 @@
 <div class="flex flex-col gap-6 p-6 h-full">
+  <!-- Badge de stock (affiché dynamiquement) -->
+  <div data-stock-badge style="display: none;">
+    <div></div>
+  </div>
+
   <!-- Catégorie -->
-  <div class="text-xs uppercase tracking-wider text-gray-600">
+  <div class="text-xs uppercase tracking-wider text-muted">
     LUKURË
   </div>
 
   <!-- Nom du produit -->
-  <h1 class="text-2xl font-semibold text-black">
+  <h1 class="text-2xl font-semibold text-foreground">
     {{name}}
   </h1>
 
   <!-- Prix -->
-  <div class="text-xl font-medium text-black">
+  <div class="text-xl font-medium text-foreground">
     $<span data-price>{{prix}}</span>
   </div>
 
@@ -21,7 +26,7 @@
   </div>
 
   <!-- Ligne de séparation -->
-  <div class="border-t border-gray-400"></div>
+  <div class="border-t border-neutral-200"></div>
 
   <!-- Description -->
   <div class="text-sm text-foreground leading-relaxed">
@@ -38,18 +43,18 @@
   {{colorSelector}}
 
   <!-- Quantité selector -->
-  <div class="flex items-center gap-4 border border-gray-300 w-fit">
-    <button class="px-4 py-2 hover:bg-gray-100 transition-colors" data-quantity-action="decrease">
+  <div class="flex items-center gap-4 border border-neutral-200 w-fit">
+    <button class="px-4 py-2 hover:bg-surface transition-colors" data-quantity-action="decrease">
       −
     </button>
     <span class="px-4 py-2 min-w-[40px] text-center" data-quantity-display>1</span>
-    <button class="px-4 py-2 hover:bg-gray-100 transition-colors" data-quantity-action="increase">
+    <button class="px-4 py-2 hover:bg-surface transition-colors" data-quantity-action="increase">
       +
     </button>
   </div>
 
   <!-- Bouton Ajouter au panier -->
-  <button class="w-full bg-foreground text-white py-3 px-6 hover-bg-foreground-dark transition-colors text-sm font-medium uppercase tracking-wider" data-add-to-cart>
+  <button class="w-full bg-foreground text-background py-3 px-6 hover-bg-foreground-dark transition-colors text-sm font-medium uppercase tracking-wider" data-add-to-cart>
     Ajouter au panier
   </button>
 </div>

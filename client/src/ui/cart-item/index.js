@@ -1,5 +1,6 @@
 import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
 import template from "./template.html?raw";
+import "./style.css";
 
 let CartItemView = {
   html: function (data) {
@@ -81,19 +82,17 @@ let CartItemView = {
       console.log('Génération dropdown avec tailles:', availableSizes, 'currentSize:', currentSize);
       
       sizeDropdownHTML = `
-        <div class="relative inline-block">
-          <select 
-            class="appearance-none bg-white border-[0.5px] border-[#cfcfcf] px-2 py-1 pr-6 text-xs tracking-[1.8px] leading-[41.6px] text-[#5f6368] cursor-pointer font-sans"
-            data-size-select
-            style="min-width: 36px;"
-          >
+        <div class="dropdown-container">
+          <select class="dropdown-select-size" data-size-select>
             ${availableSizes.map(size => `
               <option value="${size}" ${size === currentSize ? 'selected' : ''}>${size}</option>
             `).join('')}
           </select>
-          <svg class="absolute right-1 top-1/2 transform -translate-y-1/2 pointer-events-none" width="6" height="11" viewBox="0 0 6 11" fill="none">
-            <path d="M0.5 0.5L5.5 5.5L0.5 10.5" stroke="#5f6368" stroke-width="1"/>
-          </svg>
+          <div class="dropdown-arrow">
+            <svg width="5.49" height="10.98" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.5 0.5L5.5 5.5L0.5 10.5" stroke="#5f6368" stroke-width="1"/>
+            </svg>
+          </div>
         </div>
       `;
     } else {
@@ -107,21 +106,19 @@ let CartItemView = {
       const availableColors = item.colors || [currentColor];
       
       colorDropdownHTML = `
-        <div class="relative inline-block">
-          <select 
-            class="appearance-none bg-white border-[0.5px] border-[#cfcfcf] px-2 py-1 pr-6 text-xs tracking-[1.8px] leading-[41.6px] text-[#5f6368] uppercase cursor-pointer font-sans"
-            data-color-select
-            style="min-width: 65px;"
-          >
+        <div class="dropdown-container">
+          <select class="dropdown-select-color" data-color-select>
             ${availableColors.map(color => {
               const colorValue = typeof color === 'string' ? color : color.name;
               const isSelected = (typeof currentColor === 'string' ? currentColor : currentColor.name) === colorValue;
               return `<option value="${colorValue}" ${isSelected ? 'selected' : ''}>${colorValue}</option>`;
             }).join('')}
           </select>
-          <svg class="absolute right-1 top-1/2 transform -translate-y-1/2 pointer-events-none" width="6" height="11" viewBox="0 0 6 11" fill="none">
-            <path d="M0.5 0.5L5.5 5.5L0.5 10.5" stroke="#5f6368" stroke-width="1"/>
-          </svg>
+          <div class="dropdown-arrow">
+            <svg width="5.49" height="10.98" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.5 0.5L5.5 5.5L0.5 10.5" stroke="#5f6368" stroke-width="1"/>
+            </svg>
+          </div>
         </div>
       `;
     }

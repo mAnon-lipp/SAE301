@@ -1,0 +1,6 @@
+/* Product grid styles translated from inline styles in index.js */
+.product_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; /* spacing between items */
+}

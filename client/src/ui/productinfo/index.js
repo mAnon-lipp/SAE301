@@ -1,6 +1,8 @@
 import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
 import { VariantData } from "../../data/variant.js";
+import { getVariantStockStatus, getColorStockStatus, getProductStockStatus, getStockMessage, getStockBadgeClasses } from "../../lib/stock-status.js";
 import template from "./template.html?raw";
+import "./style.css";
 
 let ProductInfoView = {
   html: function (data) {
@@ -26,10 +28,15 @@ let ProductInfoView = {
         }
 
         if (items.length > 0) {
-          featuresHTML = '<ul class="text-sm text-gray-700 space-y-2">';
+          featuresHTML = '<ul class="features-list">';
           for (let i = 0; i < items.length; i++) {
             const item = items[i];
-            featuresHTML += `\n              <li class="flex items-start gap-2">\n                <span class="inline-block w-1 h-1 bg-black mt-2"></span>\n                <span>${item}</span>\n              </li>\n            `;
+            featuresHTML += `
+              <li class="features-list-item">
+                <span class="features-bullet"></span>
+                <span>${item}</span>
+              </li>
+            `;
           }
           featuresHTML += '</ul>';
         }
@@ -40,9 +47,9 @@ let ProductInfoView = {
     let sizeSelectorHTML = "";
     if (data && data.variants && data.variants.length > 0) {
       sizeSelectorHTML = `
-        <div class="flex flex-col gap-3">
-          <label class="text-sm text-black">Shoe size:</label>
-          <div class="flex flex-wrap gap-2" data-size-selector>
+        <div class="productinfo_size_container">
+          <label class="productinfo_label">Shoe size:</label>
+          <div class="productinfo_size_wrap" data-size-selector>
             <!-- Les tailles seront insérées dynamiquement en fonction de la couleur sélectionnée -->
           </div>
         </div>
@@ -56,14 +63,14 @@ let ProductInfoView = {
       const defaultColor = data.colors[0];
       
       colorSelectorHTML = `
-        <div class="flex flex-col gap-3">
-          <div class="text-sm text-black">
+        <div class="productinfo_color_container">
+          <div class="productinfo_label">
             Color : <span data-selected-color-name>${defaultColor.name}</span>
           </div>
-          <div class="flex gap-3" data-color-selector>
+          <div class="productinfo_color_wrap" data-color-selector>
             ${data.colors.map((color, index) => `
               <button 
-                class="color-option w-10 h-10 border border-black flex items-center justify-center transition-all ${index === 0 ? 'ring-2 ring-black ring-offset-2' : ''}"
+                class="color-option ${index === 0 ? 'selected' : ''}"
                 data-color-name="${color.name}"
                 data-color-hex="${color.code}"
                 data-option-value-id="${color.optionValueId || ''}"
@@ -104,9 +111,69 @@ let ProductInfoView = {
     
     const quantityDisplay = fragment.querySelector('[data-quantity-display]');
     const priceDisplay = fragment.querySelector('[data-price]');
+    const stockBadge = fragment.querySelector('[data-stock-badge]');
+    const stockBadgeText = stockBadge ? stockBadge.querySelector('div') : null;
+    const addToCartBtn = fragment.querySelector('[data-add-to-cart]');
     
     // Stocker la référence au sizeSelector pour l'utiliser plus tard
     const sizeSelector = fragment.querySelector('[data-size-selector]');
+    
+    // Fonction pour mettre à jour le badge de stock
+    const updateStockBadge = () => {
+      if (!stockBadge || !data.variants || data.variants.length === 0) {
+        if (stockBadge) stockBadge.style.display = 'none';
+        return;
+      }
+      
+      let status, message, classes;
+      
+      if (selectedVariant) {
+        // Un variant spécifique est sélectionné
+        const stock = selectedVariant.stock || 0;
+        status = getVariantStockStatus(stock);
+        message = getStockMessage(status, 'detail', data.variants);
+      } else if (selectedColor) {
+        // Seulement la couleur est sélectionnée
+        status = getColorStockStatus(data.variants, selectedColor);
+        message = getStockMessage(status, 'list', data.variants);
+      } else {
+        // Aucune option sélectionnée
+        status = getProductStockStatus(data.variants);
+        message = getStockMessage(status, 'list', data.variants);
+      }
+      
+      // Obtenir les classes CSS appropriées
+      classes = getStockBadgeClasses(status);
+      
+      // Mettre à jour le badge
+      if (message) {
+        stockBadge.className = classes;
+        if (stockBadgeText) stockBadgeText.textContent = message;
+        stockBadge.style.display = 'flex';
+      } else {
+        stockBadge.style.display = 'none';
+      }
+    };
+    
+    // Fonction pour mettre à jour l'état du bouton "Ajouter au panier"
+    const updateAddToCartButton = () => {
+      if (!addToCartBtn || !data.variants || data.variants.length === 0) {
+        return;
+      }
+      
+      // Vérifier si un variant est sélectionné et son stock
+      if (selectedVariant) {
+        if (selectedVariant.stock <= 0) {
+          addToCartBtn.disabled = true;
+          addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          addToCartBtn.textContent = 'Épuisé';
+        } else {
+          addToCartBtn.disabled = false;
+          addToCartBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          addToCartBtn.textContent = 'Ajouter au panier';
+        }
+      }
+    };
     
     // Fonction pour mettre à jour le prix et la disponibilité
     const updateVariantInfo = () => {
@@ -130,6 +197,12 @@ let ProductInfoView = {
           priceDisplay.textContent = selectedVariant.price.toFixed(2);
         }
       }
+      
+      // Mettre à jour le badge de stock
+      updateStockBadge();
+      
+      // Mettre à jour le bouton ajouter au panier
+      updateAddToCartButton();
     };
     
     // Fonction pour mettre à jour les tailles disponibles en fonction de la couleur sélectionnée
@@ -157,7 +230,7 @@ let ProductInfoView = {
       // Créer les boutons de taille uniquement pour les tailles disponibles (en stock)
       availableSizes.forEach(size => {
         const btn = document.createElement('button');
-        btn.className = 'size-option w-9 h-9 border border-black flex items-center justify-center text-sm hover:bg-gray-100 transition-colors';
+        btn.className = 'size-option-button';
         btn.dataset.size = size;
         btn.textContent = size;
         
@@ -168,16 +241,27 @@ let ProductInfoView = {
         
         // Ajouter l'event listener
         btn.addEventListener('click', (e) => {
-          // Retirer la sélection de tous les boutons
-          const allSizeButtons = sizeSelector.querySelectorAll('.size-option');
-          allSizeButtons.forEach(b => b.classList.remove('bg-black', 'text-white'));
+          const clickedBtn = e.currentTarget;
+          const clickedSize = clickedBtn.dataset.size;
           
-          // Ajouter la sélection au bouton cliqué
-          e.currentTarget.classList.add('bg-black', 'text-white');
-          selectedSize = e.currentTarget.dataset.size;
+          // Vérifier si la taille cliquée est déjà sélectionnée
+          if (selectedSize === clickedSize) {
+            // Désélectionner
+            clickedBtn.classList.remove('bg-black', 'text-white');
+            selectedSize = null;
+          } else {
+            // Retirer la sélection de tous les boutons
+            const allSizeButtons = sizeSelector.querySelectorAll('.size-option-button');
+            allSizeButtons.forEach(b => b.classList.remove('bg-black', 'text-white'));
+            
+            // Ajouter la sélection au bouton cliqué
+            clickedBtn.classList.add('bg-black', 'text-white');
+            selectedSize = clickedSize;
+          }
           
           // Mettre à jour le variant
           updateVariantInfo();
+          updateAvailableOptions();
         });
         
         sizeSelector.appendChild(btn);
@@ -252,6 +336,11 @@ let ProductInfoView = {
       updateAvailableSizes();
       updateVariantInfo();
       updateAvailableOptions();
+      // Initialiser le badge de stock
+      updateStockBadge();
+    } else if (data.variants && data.variants.length > 0) {
+      // Si pas de couleurs mais des variants, initialiser quand même le badge
+      updateStockBadge();
     }
     
     for (let i = 0; i < colorButtons.length; i++) {
@@ -362,7 +451,6 @@ let ProductInfoView = {
     }
 
     // Gestion du bouton ajouter au panier
-    const addToCartBtn = fragment.querySelector('[data-add-to-cart]');
     if (addToCartBtn) {
       addToCartBtn.addEventListener('click', async () => {
         // Vérifier si le produit a des variants et si toutes les options sont sélectionnées

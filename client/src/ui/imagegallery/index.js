@@ -1,5 +1,6 @@
 import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
 import template from "./template.html?raw";
+import "./style.css";
 
 let ImageGalleryView = {
   html: function (data) {
@@ -13,10 +14,10 @@ let ImageGalleryView = {
     for (let index = 0; index < images.length; index++) {
       const img = images[index];
       const url = img.url || img;
-      const activeClass = index === 0 ? 'ring-2 ring-black' : '';
+      const activeClass = index === 0 ? 'imagegallery_ring_black' : '';
       thumbnailsHTML += `
-        <div class="w-[100px] h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all ${activeClass}" data-thumbnail-index="${index}">
-          <img data-thumbnail data-image="${url}" src="${url}" alt="Thumbnail ${index}" class="w-full h-full object-cover">
+        <div class="imagegallery_thumbnail ${activeClass}" data-thumbnail-index="${index}">
+          <img data-thumbnail data-image="${url}" src="${url}" alt="Thumbnail ${index}" class="imagegallery_img">
         </div>
       `;
     }
@@ -51,12 +52,12 @@ let ImageGalleryView = {
         // Mettre à jour l'image principale
         mainImage.src = images[index].url || images[index];
 
-        // Mettre à jour les styles actifs
+        // Mettre à jour les styles actifs en utilisant nos classes CSS migrées
         for (let j = 0; j < thumbnails.length; j++) {
           const t = thumbnails[j];
-          t.classList.remove('ring-2', 'ring-[var(--primary)]');
+          t.classList.remove('imagegallery_ring_black', 'imagegallery_ring_primary');
         }
-        e.currentTarget.classList.add('ring-2', 'ring-[var(--primary)]');
+        e.currentTarget.classList.add('imagegallery_ring_primary');
       });
     }
   }
