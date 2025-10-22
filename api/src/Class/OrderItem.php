@@ -12,7 +12,7 @@ require_once ('Entity.php');
 class OrderItem extends Entity {
     private int $id;
     private int $commande_id;
-    private int $produit_id;
+    private int $variant_id; // Changé de produit_id à variant_id
     private int $quantite;
     private float $prix_unitaire;
     private ?array $product_details = null; // Détails du produit (optionnel)
@@ -28,7 +28,7 @@ class OrderItem extends Entity {
         $data = [
             "id" => $this->id,
             "commande_id" => $this->commande_id,
-            "produit_id" => $this->produit_id,
+            "variant_id" => $this->variant_id,
             "quantite" => $this->quantite,
             "prix_unitaire" => $this->prix_unitaire
         ];
@@ -76,19 +76,19 @@ class OrderItem extends Entity {
     }
 
     /**
-     * Get the value of produit_id
+     * Get the value of variant_id
      */ 
-    public function getProduitId(): int
+    public function getVariantId(): int
     {
-        return $this->produit_id;
+        return $this->variant_id;
     }
 
     /**
-     * Set the value of produit_id
+     * Set the value of variant_id
      */ 
-    public function setProduitId(int $produit_id): self
+    public function setVariantId(int $variant_id): self
     {
-        $this->produit_id = $produit_id;
+        $this->variant_id = $variant_id;
         return $this;
     }
 

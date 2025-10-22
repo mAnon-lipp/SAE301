@@ -8,7 +8,7 @@ let OrderData = {};
 
 /**
  * Crée une nouvelle commande
- * @param {Array} items - Liste des items du panier avec produit_id, quantite, prix_unitaire
+ * @param {Array} items - Liste des items du panier avec variantId, quantite, prix_unitaire
  * @param {number} montantTotal - Montant total de la commande
  * @returns {Promise<Object|boolean>} - La commande créée ou false en cas d'erreur
  */
@@ -19,17 +19,30 @@ OrderData.create = async function(items, montantTotal) {
         const mappedItems = [];
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
-            mappedItems.push({
-                produit_id: item.id,
+            
+            const mappedItem = {
                 quantite: item.quantity || 1,
                 prix_unitaire: item.prix || 0
-            });
+            };
+            
+            // Si variantId existe et n'est pas null, l'utiliser
+            // Sinon utiliser produit_id (pour les produits sans variants)
+            if (item.variantId && item.variantId !== null) {
+                mappedItem.variant_id = item.variantId;
+            } else {
+                mappedItem.produit_id = item.productId;
+            }
+            
+            console.log('Item à envoyer:', mappedItem, 'depuis:', item);
+            mappedItems.push(mappedItem);
         }
 
         const orderData = {
             items: mappedItems,
             montant_total: montantTotal
         };
+        
+        console.log('Données de commande à envoyer:', orderData);
         
         // Envoyer la requête POST à l'API
         const response = await postRequest('orders', orderData);

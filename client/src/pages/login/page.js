@@ -2,6 +2,7 @@ import { LoginView } from "../../ui/login/index.js";
 import { LoginErrorAlertView } from "../../ui/login-error-alert/index.js";
 import { LoginPasswordErrorAlertView } from "../../ui/login-password-error-alert/index.js";
 import { BreadcrumbView } from "../../ui/breadcrumb/index.js";
+import { UserData } from "../../data/user.js";
 
 /**
  * Page de connexion
@@ -82,20 +83,10 @@ export function LoginPage(params, router) {
             console.log('Login form submitted with:', { email, password: '***' });
             
             try {
-                console.log('Calling API:', router.apiUrl + 'auth');
-                const response = await fetch(router.apiUrl + 'auth', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include', // Important pour les cookies de session
-                    body: JSON.stringify({ email, password })
-                });
+                const data = await UserData.login(email, password);
+                console.log('API Response:', data);
                 
-                const data = await response.json();
-                console.log('API Response:', response.status, data);
-                
-                if (response.ok && data.success) {
+                if (data && data.success) {
                     // Connexion réussie
                     console.log('Connexion réussie:', data.user);
                     router.setAuth(true, data.user);
@@ -106,8 +97,9 @@ export function LoginPage(params, router) {
                     router.navigate(redirect || '/account');
                 } else {
                     // Afficher l'erreur appropriée
-                    console.error('Erreur connexion:', data.error);
-                    showError(data.error || 'Erreur de connexion', email);
+                    const errorMessage = data?.error || 'Erreur de connexion';
+                    console.error('Erreur connexion:', errorMessage);
+                    showError(errorMessage, email);
                 }
             } catch (error) {
                 console.error('Erreur lors de la connexion:', error);

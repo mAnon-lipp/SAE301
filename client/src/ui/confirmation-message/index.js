@@ -1,12 +1,14 @@
 import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
-export const ConfirmationMessageView = {
-  html(orderNumber = 'N/A') {
+let ConfirmationMessageView = {
+  html: function (orderNumber = 'N/A') {
     return genericRenderer(template, { orderNumber });
   },
 
-  dom(orderNumber = 'N/A') {
+  dom: function (orderNumber = 'N/A') {
     return htmlToFragment(this.html(orderNumber));
   }
 };
+
+export { ConfirmationMessageView };

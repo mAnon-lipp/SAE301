@@ -11,7 +11,7 @@
 
   <!-- Prix -->
   <div class="text-xl font-medium text-black">
-    ${{prix}}
+    $<span data-price>{{prix}}</span>
   </div>
 
   <!-- Message Shop Pay -->
@@ -20,6 +20,9 @@
     Check your purchasing power
   </div>
 
+  <!-- Ligne de séparation -->
+  <div class="border-t border-gray-400"></div>
+
   <!-- Description -->
   <div class="text-sm text-foreground leading-relaxed">
     {{description}}
@@ -27,6 +30,12 @@
 
   <!-- Caractéristiques sous forme de bullets -->
   {{features}}
+
+  <!-- Sélecteur de taille -->
+  {{sizeSelector}}
+
+  <!-- Sélecteur de couleur -->
+  {{colorSelector}}
 
   <!-- Quantité selector -->
   <div class="flex items-center gap-4 border border-gray-300 w-fit">

@@ -2,6 +2,7 @@
 
 require_once("src/Repository/EntityRepository.php");
 require_once("src/Class/Product.php");
+require_once("src/Repository/ProductVariantRepository.php");
 
 
 /**
@@ -18,9 +19,12 @@ require_once("src/Class/Product.php");
  */
 class ProductRepository extends EntityRepository {
 
+    private $variantRepository;
+
     public function __construct(){
         // appel au constructeur de la classe mère (va ouvrir la connexion à la bdd)
         parent::__construct();
+        $this->variantRepository = new ProductVariantRepository();
     }
 
     public function find($id): ?Product{
@@ -45,6 +49,11 @@ class ProductRepository extends EntityRepository {
         if (isset($answer->description)) {
             $p->setDescription($answer->description);
         }
+        
+        // Charger les variants associés au produit
+        $variants = $this->variantRepository->findByProductId($id);
+        $p->setVariants($variants);
+        
         return $p;
     }
 
@@ -63,6 +72,11 @@ class ProductRepository extends EntityRepository {
             if (isset($obj->description)) {
                 $p->setDescription($obj->description);
             }
+            
+            // Charger les variants associés à chaque produit
+            $variants = $this->variantRepository->findByProductId($obj->id);
+            $p->setVariants($variants);
+            
             array_push($res, $p);
             
         }

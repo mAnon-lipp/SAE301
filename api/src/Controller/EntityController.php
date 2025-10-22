@@ -51,7 +51,7 @@ abstract class EntityController {
                 break;
         }
 
-        if ($data) { $json = json_encode($data); }
+        if ($data !== false) { $json = json_encode($data); }
         return $json;
     }
 

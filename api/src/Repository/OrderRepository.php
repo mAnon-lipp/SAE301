@@ -121,6 +121,7 @@ class OrderRepository extends EntityRepository {
             $answer = $requete->execute();
             
             if (!$answer) {
+                error_log("Erreur lors de l'insertion de la commande");
                 $this->cnx->rollBack();
                 return false;
             }
@@ -134,23 +135,63 @@ class OrderRepository extends EntityRepository {
             $items = $order->getItems();
             if ($items && count($items) > 0) {
                 foreach ($items as $item) {
+                    // Gérer variant_id ou produit_id (pour rétrocompatibilité)
+                    $variantId = isset($item['variant_id']) ? $item['variant_id'] : null;
+                    
+                    // Si produit_id fourni mais pas variant_id, trouver le variant par défaut
+                    if (!$variantId && isset($item['produit_id'])) {
+                        // Récupérer le premier variant du produit (ou créer une logique pour variant par défaut)
+                        $variantQuery = $this->cnx->prepare(
+                            "SELECT id FROM ProductVariant WHERE product_id=:product_id LIMIT 1"
+                        );
+                        $productId = $item['produit_id'];
+                        $variantQuery->bindParam(':product_id', $productId);
+                        $variantQuery->execute();
+                        $variantResult = $variantQuery->fetch(PDO::FETCH_OBJ);
+                        
+                        if ($variantResult) {
+                            $variantId = $variantResult->id;
+                        } else {
+                            // Si pas de variant, erreur
+                            error_log("Aucun variant trouvé pour product_id: " . $productId);
+                            $this->cnx->rollBack();
+                            return false;
+                        }
+                    }
+                    
+                    if (!$variantId) {
+                        error_log("variant_id manquant pour un item");
+                        $this->cnx->rollBack();
+                        return false;
+                    }
+                    
+                    // Vérifier que le variant existe
+                    $checkVariant = $this->cnx->prepare("SELECT id FROM ProductVariant WHERE id=:variant_id");
+                    $checkVariant->bindParam(':variant_id', $variantId);
+                    $checkVariant->execute();
+                    if (!$checkVariant->fetch()) {
+                        error_log("Variant inexistant: " . $variantId);
+                        $this->cnx->rollBack();
+                        return false;
+                    }
+                    
                     $itemRequete = $this->cnx->prepare(
-                        "INSERT INTO Order_Items (commande_id, produit_id, quantite, prix_unitaire) 
-                         VALUES (:commande_id, :produit_id, :quantite, :prix_unitaire)"
+                        "INSERT INTO Order_Items (commande_id, variant_id, quantite, prix_unitaire) 
+                         VALUES (:commande_id, :variant_id, :quantite, :prix_unitaire)"
                     );
                     
-                    $produitId = $item['produit_id'];
                     $quantite = $item['quantite'];
                     $prixUnitaire = $item['prix_unitaire'];
                     
                     $itemRequete->bindParam(':commande_id', $orderId);
-                    $itemRequete->bindParam(':produit_id', $produitId);
+                    $itemRequete->bindParam(':variant_id', $variantId);
                     $itemRequete->bindParam(':quantite', $quantite);
                     $itemRequete->bindParam(':prix_unitaire', $prixUnitaire);
                     
                     $itemAnswer = $itemRequete->execute();
                     
                     if (!$itemAnswer) {
+                        error_log("Erreur lors de l'insertion de l'item: " . print_r($this->cnx->errorInfo(), true));
                         $this->cnx->rollBack();
                         return false;
                     }
@@ -163,6 +204,7 @@ class OrderRepository extends EntityRepository {
             
         } catch (Exception $e) {
             // En cas d'erreur, annuler la transaction
+            error_log("Exception dans OrderRepository::save(): " . $e->getMessage());
             $this->cnx->rollBack();
             return false;
         }
@@ -216,13 +258,16 @@ class OrderRepository extends EntityRepository {
     }
 
     /**
-     * Méthode privée pour charger les items d'une commande avec détails produit
+     * Méthode privée pour charger les items d'une commande avec détails produit et variant
      */
     private function findItemsByOrderId($orderId): array {
         $requete = $this->cnx->prepare(
-            "SELECT oi.*, p.name, p.image, p.description 
+            "SELECT oi.*, 
+                    pv.product_id, pv.sku, pv.price as variant_price, pv.stock,
+                    p.name, p.image, p.description 
              FROM Order_Items oi 
-             LEFT JOIN Product p ON oi.produit_id = p.id 
+             LEFT JOIN ProductVariant pv ON oi.variant_id = pv.id 
+             LEFT JOIN Product p ON pv.product_id = p.id 
              WHERE oi.commande_id=:orderId"
         );
         $requete->bindParam(':orderId', $orderId);
@@ -233,16 +278,18 @@ class OrderRepository extends EntityRepository {
         foreach($answer as $obj){
             $item = new OrderItem($obj->id);
             $item->setCommandeId($obj->commande_id);
-            $item->setProduitId($obj->produit_id);
+            $item->setVariantId($obj->variant_id);
             $item->setQuantite($obj->quantite);
             $item->setPrixUnitaire($obj->prix_unitaire);
             
-            // Ajouter les détails du produit si disponibles
+            // Ajouter les détails du produit et du variant si disponibles
             if (isset($obj->name)) {
                 $item->setProductDetails([
                     'name' => $obj->name,
                     'image' => $obj->image ?? null,
-                    'description' => $obj->description ?? null
+                    'description' => $obj->description ?? null,
+                    'sku' => $obj->sku ?? null,
+                    'product_id' => $obj->product_id ?? null
                 ]);
             }
             

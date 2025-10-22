@@ -2,6 +2,7 @@ import { SignupView } from "../../ui/signup/index.js";
 import { EmailErrorAlertView } from "../../ui/email-error-alert/index.js";
 import { PasswordErrorAlertView } from "../../ui/password-error-alert/index.js";
 import { BreadcrumbView } from "../../ui/breadcrumb/index.js";
+import { UserData } from "../../data/user.js";
 
 /**
  * Page d'inscription
@@ -95,38 +96,20 @@ export function SignupPage(params, router) {
             }
             
             try {
-                console.log('Calling API:', router.apiUrl + 'users');
-                const response = await fetch(router.apiUrl + 'users', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ email, password })
-                });
+                console.log('Appel API inscription');
+                const signupResponse = await UserData.create({ email, password });
+                console.log('Réponse inscription:', signupResponse);
                 
-                const data = await response.json();
-                console.log('API Response:', response.status, data);
-                
-                if (response.ok) {
+                if (signupResponse && signupResponse !== false) {
                     // Inscription réussie - connecter automatiquement l'utilisateur
                     console.log('Inscription réussie, connexion automatique...');
                     
-                    // Appeler l'API de connexion
-                    const loginResponse = await fetch(router.apiUrl + 'auth', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({ email, password })
-                    });
+                    const loginResponse = await UserData.login(email, password);
+                    console.log('Réponse connexion:', loginResponse);
                     
-                    const loginData = await loginResponse.json();
-                    
-                    if (loginResponse.ok && loginData.success) {
+                    if (loginResponse && loginResponse.success) {
                         // Connexion réussie, mettre à jour l'état
-                        router.setAuth(true, loginData.user);
+                        router.setAuth(true, loginResponse.user);
                         
                         // Rediriger vers la page de compte
                         router.navigate('/account');
@@ -136,13 +119,8 @@ export function SignupPage(params, router) {
                     }
                 } else {
                     // Afficher l'erreur
-                    console.error('Erreur inscription:', data.error);
-                    if (data.error && data.error.includes('email')) {
-                        showErrorModal(EmailErrorAlertView.dom(), '[data-email-error-close]');
-                    } else {
-                        // Créer une alerte générique
-                        alert(data.error || 'Erreur lors de l\'inscription');
-                    }
+                    console.error('Erreur inscription');
+                    showErrorModal(EmailErrorAlertView.dom(), '[data-email-error-close]');
                 }
             } catch (error) {
                 console.error('Erreur lors de l\'inscription:', error);

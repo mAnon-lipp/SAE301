@@ -58,6 +58,30 @@ let CartPanelView = {
         CartModel.removeItem(itemId);
         this.updatePanel(panel);
       });
+
+      // Gestion du changement de taille
+      panel.addEventListener('cart-size-change', async (e) => {
+        const { itemId, size } = e.detail;
+        const item = CartModel.items.find(i => i.id == itemId);
+        if (item) {
+          const success = await CartModel.updateItemOptions(itemId, size, item.color);
+          if (success) {
+            this.updatePanel(panel);
+          }
+        }
+      });
+
+      // Gestion du changement de couleur
+      panel.addEventListener('cart-color-change', async (e) => {
+        const { itemId, color } = e.detail;
+        const item = CartModel.items.find(i => i.id == itemId);
+        if (item) {
+          const success = await CartModel.updateItemOptions(itemId, item.size, color);
+          if (success) {
+            this.updatePanel(panel);
+          }
+        }
+      });
     }
 
     const checkoutBtn = fragment.querySelector('[data-checkout]');

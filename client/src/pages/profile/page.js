@@ -3,6 +3,7 @@ import { EditNameModalView } from "../../ui/editnamemodal/index.js";
 import { EditEmailModalView } from "../../ui/editemailmodal/index.js";
 import { EditPasswordModalView } from "../../ui/editpasswordmodal/index.js";
 import { htmlToFragment } from "../../lib/utils.js";
+import { UserData } from "../../data/user.js";
 import template from "./template.html?raw";
 
 let M = {
@@ -37,13 +38,8 @@ C.init = async function(router){
 
 C.loadUserData = async function() {
     try {
-        const response = await fetch(M.router.apiUrl + 'user', {
-            method: 'GET',
-            credentials: 'include'
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
+        const data = await UserData.get();
+        if (data && data !== false) {
             M.user = data;
             sessionStorage.setItem('auth_user', JSON.stringify(data));
         }
@@ -65,30 +61,16 @@ C.updateUserData = async function(fieldName, newValue, oldPassword = null) {
             body.new_password = newValue;
         }
         
-        const response = await fetch(M.router.apiUrl + 'user', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(body)
-        });
+        const data = await UserData.update(body);
         
-        // Vérifier si la réponse est OK avant de parser le JSON
-        if (!response.ok) {
-            // Tenter de parser le JSON pour récupérer le message d'erreur
-            let errorMessage = 'Erreur lors de la mise à jour';
-            try {
-                const errorData = await response.json();
-                errorMessage = errorData.error || errorMessage;
-            } catch (e) {
-                // Si la réponse n'est pas du JSON, utiliser le statut HTTP
-                errorMessage = `Erreur ${response.status}: ${response.statusText}`;
-            }
-            return { success: false, error: errorMessage };
+        // Gérer la réponse d'erreur retournée par patchRequest
+        if (data === false) {
+            return { success: false, error: 'Erreur de connexion au serveur' };
         }
         
-        const data = await response.json();
+        if (data.success === false) {
+            return { success: false, error: data.error || 'Erreur lors de la mise à jour' };
+        }
         
         if (data.success) {
             // Mettre à jour les données locales

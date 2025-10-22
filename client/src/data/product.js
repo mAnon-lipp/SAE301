@@ -11,7 +11,7 @@ let fakeProducts = [
         description: "Un marteau est un outil utilisé pour enfoncer des clous dans du bois ou d'autres matériaux. Il se compose d'une tête lourde en métal fixée à un manche en bois ou en fibre de verre.",
         prix: 9.99,
         image: "https://via.placeholder.com/520x520/CCCCCC/000000?text=Marteau",
-        category: 1
+        category: 1,
     },
     {
         id: 2,

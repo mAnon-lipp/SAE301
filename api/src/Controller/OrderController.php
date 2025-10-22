@@ -94,16 +94,28 @@ class OrderController extends EntityController {
         // Préparer les items
         $items = [];
         foreach ($obj->items as $item) {
-            if (!isset($item->produit_id) || !isset($item->quantite) || !isset($item->prix_unitaire)) {
+            // Accepter soit produit_id (ancien format) soit variant_id (nouveau format avec options)
+            $hasProductId = isset($item->produit_id);
+            $hasVariantId = isset($item->variant_id);
+            
+            if ((!$hasProductId && !$hasVariantId) || !isset($item->quantite) || !isset($item->prix_unitaire)) {
                 http_response_code(400);
                 return ["error" => "Données d'article invalides."];
             }
             
-            $items[] = [
-                'produit_id' => $item->produit_id,
+            $itemData = [
                 'quantite' => $item->quantite,
                 'prix_unitaire' => $item->prix_unitaire
             ];
+            
+            // Ajouter produit_id ou variant_id selon ce qui est fourni
+            if ($hasVariantId) {
+                $itemData['variant_id'] = $item->variant_id;
+            } else {
+                $itemData['produit_id'] = $item->produit_id;
+            }
+            
+            $items[] = $itemData;
         }
         
         $order->setItems($items);

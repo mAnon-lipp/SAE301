@@ -1,5 +1,7 @@
 import { ProductData } from "../../data/product.js";
 import { ProductImageData } from "../../data/productImage.js";
+import { VariantData } from "../../data/variant.js";
+import { OptionValueImageData } from "../../data/optionValueImage.js";
 import { htmlToFragment } from "../../lib/utils.js";
 import { BreadcrumbView } from "../../ui/breadcrumb/index.js";
 import { ImageGalleryView } from "../../ui/imagegallery/index.js";
@@ -9,7 +11,9 @@ import template from "./template.html?raw";
 
 let M = {
     products: [],
-    productImages: []
+    productImages: [],
+    variants: [],
+    optionValueImages: {} // Images par option_value_id
 };
 
 M.getProductById = function(id){
@@ -36,20 +40,34 @@ C.init = async function(params) {
     // Charger les images du produit
     M.productImages = await ProductImageData.fetchByProductId(productId);
     
-    // debug logs removed
+    // Charger les variants du produit (si disponibles dans product.variants ou via API)
+    if (product.variants && product.variants.length > 0) {
+        M.variants = product.variants;
+    } else {
+        // Fallback: charger depuis l'API variants si non inclus
+        M.variants = await VariantData.fetchByProductId(productId);
+    }
     
-    return V.init(product, M.productImages);
+    // Charger les images par option (couleurs)
+    try {
+        M.optionValueImages = await OptionValueImageData.fetchByProductId(productId);
+    } catch (error) {
+        console.warn("Impossible de charger les images d'options:", error);
+        M.optionValueImages = {}; // Tableau vide par défaut
+    }
+    
+    return V.init(product, M.productImages, M.variants, M.optionValueImages);
 }
 
 
 let V = {};
 
-V.init = function(data, productImages = []) {
-    let fragment = V.createPageFragment(data, productImages);
+V.init = function(data, productImages = [], variants = [], optionValueImages = {}) {
+    let fragment = V.createPageFragment(data, productImages, variants, optionValueImages);
     return fragment;
 }
 
-V.createPageFragment = function(data, productImages = []) {
+V.createPageFragment = function(data, productImages = [], variants = [], optionValueImages = {}) {
     // Créer le fragment depuis le template
     let pageFragment = htmlToFragment(template);
     
@@ -64,19 +82,45 @@ V.createPageFragment = function(data, productImages = []) {
         return '/' + path;
     }
     
-    // Ajouter l'image principale du produit en premier
-    // Préfixer avec / si ce n'est pas déjà une URL complète
-    if (data.image) {
-        const imageUrl = normalizeImagePath(data.image);
-        images.push({ url: imageUrl, alt: data.name });
+    // Déterminer la première couleur disponible
+    let firstColor = null;
+    let firstColorOptionValueId = null;
+    
+    if (variants && variants.length > 0) {
+        const colors = VariantData.extractColors(variants);
+        if (colors && colors.length > 0) {
+            firstColor = colors[0];
+            firstColorOptionValueId = firstColor.optionValueId;
+        }
     }
     
-    // Ajouter les images de la galerie ProductImage
-    if (productImages && productImages.length > 0) {
-        for (let k = 0; k < productImages.length; k++) {
-            const img = productImages[k];
+    // Vérifier s'il y a des images pour la première couleur
+    const hasColorImages = firstColorOptionValueId && 
+                          optionValueImages[firstColorOptionValueId] && 
+                          optionValueImages[firstColorOptionValueId].length > 0;
+    
+    if (hasColorImages) {
+        // Utiliser les images de la première couleur
+        const colorImages = optionValueImages[firstColorOptionValueId];
+        for (let k = 0; k < colorImages.length; k++) {
+            const img = colorImages[k];
             const imageUrl = normalizeImagePath(img.image_path || img.image || img.image_url);
+            images.push({ url: imageUrl, alt: `${data.name} - ${firstColor.name}` });
+        }
+    } else {
+        // Fallback : utiliser l'image principale du produit et les ProductImages
+        if (data.image) {
+            const imageUrl = normalizeImagePath(data.image);
             images.push({ url: imageUrl, alt: data.name });
+        }
+        
+        // Ajouter les images de la galerie ProductImage
+        if (productImages && productImages.length > 0) {
+            for (let k = 0; k < productImages.length; k++) {
+                const img = productImages[k];
+                const imageUrl = normalizeImagePath(img.image_path || img.image || img.image_url);
+                images.push({ url: imageUrl, alt: data.name });
+            }
         }
     }
     
@@ -92,8 +136,16 @@ V.createPageFragment = function(data, productImages = []) {
         id: data.id,
         name: data.name,
         prix: data.prix,
-        description: data.description || ''
+        description: data.description || '',
+        variants: variants, // Passer les variants au composant
+        optionValueImages: optionValueImages // Passer les images par option
     };
+    
+    // Extraire les options si des variants existent
+    if (variants && variants.length > 0) {
+        productInfoData.sizes = VariantData.extractSizes(variants);
+        productInfoData.colors = VariantData.extractColors(variants);
+    }
     
     // Insérer le breadcrumb
     const breadcrumbDOM = BreadcrumbView.dom();
@@ -104,7 +156,8 @@ V.createPageFragment = function(data, productImages = []) {
     pageFragment.querySelector('slot[name="gallery"]').replaceWith(galleryDOM);
     
     // Insérer les informations produit
-    const productInfoDOM = ProductInfoView.dom(productInfoData);
+    // Passer le pageFragment entier pour permettre la recherche des éléments de la galerie
+    const productInfoDOM = ProductInfoView.dom(productInfoData, pageFragment);
     pageFragment.querySelector('slot[name="productinfo"]').replaceWith(productInfoDOM);
     
     return pageFragment;

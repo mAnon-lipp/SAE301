@@ -132,3 +132,25 @@
 
   /* Card add-to-cart icon helper removed (icons shown without circular background) */
 }
+
+/* Styles pour le sélecteur de taille */
+[data-size-selector] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Espacement entre les tailles */
+}
+
+.size-option {
+  width: 2.5rem; /* Taille des boutons */
+  height: 2.5rem;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.size-option:hover {
+  background-color: #f3f3f3; /* Couleur de survol */
+}

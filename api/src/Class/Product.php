@@ -18,6 +18,7 @@ class Product extends Entity {
     private ?float $prix = null; // prix du produit (nullable)
     private ?string $image = null; // URL de l'image du produit (nullable)
     private ?string $description = null; // description du produit (nullable)
+    private ?array $variants = null; // tableau des variants du produit (nullable)
 
     public function __construct(int $id){
         $this->id = $id;
@@ -61,7 +62,8 @@ class Product extends Entity {
             "category" => $this->idcategory,
             "prix" => $this->prix,
             "image" => $this->image,
-            "description" => $this->description
+            "description" => $this->description,
+            "variants" => $this->variants
         ];
     }
 
@@ -168,6 +170,25 @@ class Product extends Entity {
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * Get the value of variants
+     */ 
+    public function getVariants(): ?array
+    {
+        return $this->variants;
+    }
+
+    /**
+     * Set the value of variants
+     *
+     * @return  self
+     */ 
+    public function setVariants(?array $variants): self
+    {
+        $this->variants = $variants;
         return $this;
     }
 }

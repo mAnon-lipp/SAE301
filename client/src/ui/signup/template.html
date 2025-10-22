@@ -28,6 +28,8 @@
           id="password" 
           name="password" 
           placeholder=" "
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$"
+          title="8 caractères minimum, au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial"
           class="peer w-full border border-foreground bg-transparent px-4 py-5 text-lg focus:outline-none"
           required
         />

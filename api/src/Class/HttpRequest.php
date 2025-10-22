@@ -43,7 +43,7 @@ class HttpRequest {
             if (count($tmp)==4 && $tmp[3]!="")
                 $this->id = $tmp[3];
         }
-        $this->params = $_REQUEST ?? [];
+        $this->params = array_merge($_GET ?? [], $_POST ?? []);
         $this->json = (string) file_get_contents("php://input"); // lecture des données reçues au format json (s'il y en a)
         
         if ($this->method == "POST"){

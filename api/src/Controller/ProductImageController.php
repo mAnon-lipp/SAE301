@@ -24,7 +24,7 @@ class ProductImageController extends EntityController {
             // Check for product_id parameter
             $productId = $request->getParam("product_id");
             
-            if ($productId !== false) {
+            if ($productId !== null) {
                 // Return images for a specific product
                 return $this->productImages->findByProductId($productId);
             } else {

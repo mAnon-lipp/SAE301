@@ -1,12 +1,14 @@
 import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
-export const BreadcrumbView = {
-  html() {
+let BreadcrumbView = {
+  html: function () {
     return template;
   },
 
-  dom() {
+  dom: function () {
     return htmlToFragment(this.html());
   }
 };
+
+export { BreadcrumbView };

@@ -85,17 +85,23 @@ class UserRepository extends EntityRepository {
      * Met à jour un utilisateur existant
      */
     public function update($user): bool {
+        $id = $user->getId();
+        
+        // Vérification de sécurité : l'ID doit être > 0
+        if ($id <= 0) {
+            return false;
+        }
+        
         $requete = $this->cnx->prepare(
             "UPDATE User SET email=:email, password_hash=:password_hash, username=:username, name=:name WHERE id=:id"
         );
         
-        $id = $user->getId();
         $email = $user->getEmail();
         $hash = $user->getPasswordHash();
         $username = $user->getUsername();
         $name = $user->getName() ?? '';
         
-        $requete->bindParam(':id', $id);
+        $requete->bindParam(':id', $id, PDO::PARAM_INT);
         $requete->bindParam(':email', $email);
         $requete->bindParam(':password_hash', $hash);
         $requete->bindParam(':username', $username);

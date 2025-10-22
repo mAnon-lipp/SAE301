@@ -20,12 +20,8 @@ import { CheckoutPage } from "./pages/checkout/page.js";
 import { OrderConfirmationPage } from "./pages/order-confirmation/page.js";
 // ---
 
-// URL de l'API (doit correspondre à votre configuration)
-const API_URL = "https://mmi.unilim.fr/~lippler1/SAE301/api/"; 
-
 const router = new Router('app', {
     loginPath: '/login',
-    apiUrl: API_URL 
 });
 
 // Rendre le routeur accessible globalement pour certaines pages
@@ -54,7 +50,10 @@ router.addRoute("/order-confirmation/:orderNumber", OrderConfirmationPage);
 // Routes d'authentification
 router.addRoute("/login", LoginPage, { useLayout: false }); // Page de connexion sans layout
 router.addRoute("/signup", SignupPage, { useLayout: false }); // Page d'inscription sans layout
-router.addRoute("/logout", (params, r) => r.logout(), { useLayout: false }); // Déconnexion (Critère 3)
+router.addRoute("/logout", async (params, r) => {
+    await r.logout();
+    return ''; // Retourner une chaîne vide au lieu d'undefined
+}, { useLayout: false }); // Déconnexion (Critère 3)
 
 // Routes protégées (Critère 6)
 router.addRoute("/account", AccountPage, { requireAuth: true }); // Page d'accueil du compte (avec les cartes)

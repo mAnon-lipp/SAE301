@@ -66,13 +66,17 @@ class UserController extends EntityController {
         
         $id = $request->getId();
         
-        // Si pas d'ID, retourner l'utilisateur connecté
-        if (!$id) {
+        // Si pas d'ID dans l'URL, retourner l'utilisateur connecté
+        if (empty($id)) {
             $id = $_SESSION['auth_user_id'];
         }
         
+        // Forcer la conversion en entier
+        $id = (int)$id;
+        $sessionUserId = (int)$_SESSION['auth_user_id'];
+        
         // Vérifier que l'utilisateur ne peut accéder qu'à son propre profil
-        if ($id != $_SESSION['auth_user_id']) {
+        if ($id !== $sessionUserId) {
             http_response_code(403);
             return ["error" => "Accès non autorisé."];
         }
@@ -100,15 +104,19 @@ class UserController extends EntityController {
         
         $id = $request->getId();
         
-        // Si pas d'ID, utiliser l'utilisateur connecté
-        if (!$id) {
+        // Si pas d'ID dans l'URL, utiliser l'utilisateur connecté
+        if (empty($id)) {
             $id = $_SESSION['auth_user_id'];
         }
         
+        // Forcer la conversion en entier pour éviter les problèmes de comparaison
+        $id = (int)$id;
+        $sessionUserId = (int)$_SESSION['auth_user_id'];
+        
         // Vérifier que l'utilisateur ne peut modifier que son propre profil
-        if ($id != $_SESSION['auth_user_id']) {
+        if ($id !== $sessionUserId) {
             http_response_code(403);
-            return ["error" => "Accès non autorisé."];
+            return ["error" => "Accès non autorisé. ID demandé: $id, ID session: $sessionUserId"];
         }
         
         $user = $this->users->find($id);

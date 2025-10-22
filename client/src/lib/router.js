@@ -1,4 +1,6 @@
 // Classe Router avec paramètres dynamiques, guards et layouts
+import { getRequest, deleteRequest } from './api-request.js';
+
 class Router {
   constructor(id, options = {}) {
     let root = document.getElementById(id);
@@ -251,42 +253,31 @@ class Router {
   }
   
   // Se déconnecter avec appel API (Critère 3)
-  logout() {
+  async logout() {
     this.setAuth(false); // Déconnexion optimiste côté client
     
     // Appel API pour détruire la session côté serveur
-    fetch(this.apiUrl + 'auth', {
-      method: 'DELETE',
-      credentials: 'include' // Important pour envoyer le cookie de session
-    }).then(() => {
+    try {
+      await deleteRequest('auth');
       // Naviguer vers la page de connexion après la déconnexion
       this.navigate(this.loginPath);
-    }).catch(error => {
+    } catch (error) {
       console.error('Erreur lors de la déconnexion API:', error);
       this.navigate(this.loginPath);
-    });
+    }
   }
   
   // Démarrer le routeur et vérifier le statut de session
   async start() {
     // Toujours vérifier avec le serveur si une session existe
     try {
-      const response = await fetch(this.apiUrl + 'auth', {
-        method: 'GET',
-        credentials: 'include' // Important pour envoyer le cookie de session
-      });
+      const data = await getRequest('auth');
       
-      if (response.ok) {
-        const data = await response.json();
-        if (data.is_authenticated && data.user) {
-          // Session valide côté serveur
-          this.setAuth(true, data.user);
-        } else {
-          // Pas de session côté serveur
-          this.setAuth(false);
-        }
+      if (data && data.is_authenticated && data.user) {
+        // Session valide côté serveur
+        this.setAuth(true, data.user);
       } else {
-        // Erreur de réponse
+        // Pas de session côté serveur
         this.setAuth(false);
       }
     } catch (error) {

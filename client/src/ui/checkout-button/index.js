@@ -1,13 +1,13 @@
 import { htmlToFragment } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
-export const CheckoutButtonView = {
-  html() {
+let CheckoutButtonView = {
+  html: function () {
     return template;
   },
 
-  dom() {
-    const fragment = htmlToFragment(template);
+  dom: function () {
+    const fragment = htmlToFragment(this.html());
     const button = fragment.querySelector('[data-checkout-button]');
     
     if (button) {
@@ -23,3 +23,5 @@ export const CheckoutButtonView = {
     return fragment;
   }
 };
+
+export { CheckoutButtonView };

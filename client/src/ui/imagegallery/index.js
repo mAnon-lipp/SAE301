@@ -1,15 +1,13 @@
 import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
-export const ImageGalleryView = {
-  html(data) {
+let ImageGalleryView = {
+  html: function (data) {
     // Préparer les images
     const images = data.images && data.images.length > 0 
       ? data.images 
       : [{ url: data.mainImage, alt: data.productName }];
-    
-  // debug logs removed
-    
+
     // Générer le HTML des thumbnails
     let thumbnailsHTML = '';
     for (let index = 0; index < images.length; index++) {
@@ -18,7 +16,7 @@ export const ImageGalleryView = {
       const activeClass = index === 0 ? 'ring-2 ring-black' : '';
       thumbnailsHTML += `
         <div class="w-[100px] h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all ${activeClass}" data-thumbnail-index="${index}">
-          <img src="${url}" alt="Thumbnail ${index}" class="w-full h-full object-cover">
+          <img data-thumbnail data-image="${url}" src="${url}" alt="Thumbnail ${index}" class="w-full h-full object-cover">
         </div>
       `;
     }
@@ -30,13 +28,13 @@ export const ImageGalleryView = {
     });
   },
 
-  dom(data) {
+  dom: function (data) {
     const fragment = htmlToFragment(this.html(data));
     this.attachEvents(fragment, data);
     return fragment;
   },
 
-  attachEvents(fragment, data) {
+  attachEvents: function (fragment, data) {
     const images = data.images && data.images.length > 0 
       ? data.images 
       : [{ url: data.mainImage, alt: data.productName }];
@@ -63,3 +61,5 @@ export const ImageGalleryView = {
     }
   }
 };
+
+export { ImageGalleryView };

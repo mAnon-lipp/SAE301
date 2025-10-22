@@ -11,9 +11,15 @@
       <h3 class="font-sans font-normal text-base tracking-[2.4px] leading-[41.6px] text-black m-0 uppercase">
         {{name}}
       </h3>
-      <p class="font-sans font-normal text-lg tracking-[3.06px] leading-[28.8px] text-[#5f6368] m-0">
+      <p class="font-sans font-normal text-sm tracking-[2.1px] leading-[41.6px] text-[#5f6368] m-0">
         ${{prix}}
       </p>
+    </div>
+    
+    <!-- Options (Size & Color) -->
+    <div class="flex flex-col gap-2">
+      {{sizeDropdown}}
+      {{colorDropdown}}
     </div>
     
     <!-- Actions -->
@@ -25,7 +31,7 @@
             <path d="M6 12H18" stroke="#5F6368" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-  <span class="px-4 py-2 min-w-[40px] text-center" data-quantity-display>{{quantity}}</span>
+        <span class="px-4 py-2 min-w-[40px] text-center font-sans text-xs tracking-[1.8px] leading-[41.6px] text-[#5f6368]" data-quantity-display>{{quantity}}</span>
         <button class="bg-transparent border-0 cursor-pointer p-0 w-6 h-6 flex items-center justify-center transition-opacity hover:opacity-70" data-quantity-action="increase" aria-label="Augmenter la quantité">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 5V19M5 12H19" stroke="#5F6368" stroke-width="1.5"/>
@@ -34,8 +40,8 @@
       </div>
       
       <!-- Remove Button -->
-      <button class="bg-transparent border-0 cursor-pointer font-sans font-normal text-base leading-[41.6px] text-[#3e3e3e] underline decoration-solid p-0 transition-colors hover:text-[#1c1c1c]" data-remove-item style="text-underline-position: from-font">
-        Retirer
+      <button class="bg-transparent border-0 cursor-pointer font-sans font-normal text-xs leading-[41.6px] text-[#3e3e3e] underline decoration-solid p-0 transition-colors hover:text-[#1c1c1c]" data-remove-item style="text-underline-position: from-font">
+        Remove
       </button>
     </div>
   </div>
