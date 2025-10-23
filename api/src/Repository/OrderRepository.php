@@ -134,6 +134,10 @@ class OrderRepository extends EntityRepository {
             // Insérer les items de la commande
             $items = $order->getItems();
             if ($items && count($items) > 0) {
+                // US011 - Créer une instance du repository de variants pour la décrémentation
+                require_once("src/Repository/ProductVariantRepository.php");
+                $variantRepo = new ProductVariantRepository();
+                
                 foreach ($items as $item) {
                     // Gérer variant_id ou produit_id (pour rétrocompatibilité)
                     $variantId = isset($item['variant_id']) ? $item['variant_id'] : null;
@@ -175,12 +179,23 @@ class OrderRepository extends EntityRepository {
                         return false;
                     }
                     
+                    // US011 - Décrémenter le stock pour le variant (Critère 1 & 6)
+                    // La méthode de décrémentation assure l'impossibilité des stocks négatifs
+                    $quantite = $item['quantite'];
+                    
+                    if (!$variantRepo->decrementStock((int)$variantId, (int)$quantite, (int)$orderId)) {
+                        error_log("US011 - Stock insuffisant pour variant: " . $variantId);
+                        // Cette erreur devrait déjà être gérée par le Controller (US010),
+                        // mais le rollback ici garantit l'atomicité (DoD 1, 4)
+                        $this->cnx->rollBack();
+                        return false; 
+                    }
+                    
                     $itemRequete = $this->cnx->prepare(
                         "INSERT INTO Order_Items (commande_id, variant_id, quantite, prix_unitaire) 
                          VALUES (:commande_id, :variant_id, :quantite, :prix_unitaire)"
                     );
                     
-                    $quantite = $item['quantite'];
                     $prixUnitaire = $item['prix_unitaire'];
                     
                     $itemRequete->bindParam(':commande_id', $orderId);
@@ -258,9 +273,10 @@ class OrderRepository extends EntityRepository {
     }
 
     /**
-     * Méthode privée pour charger les items d'une commande avec détails produit et variant
+     * US011 - Méthode publique pour charger les items d'une commande avec détails produit et variant
+     * Nécessaire pour le recrédit de stock lors de l'annulation
      */
-    private function findItemsByOrderId($orderId): array {
+    public function findItemsByOrderId($orderId): array {
         $requete = $this->cnx->prepare(
             "SELECT oi.*, 
                     pv.product_id, pv.sku, pv.price as variant_price, pv.stock,

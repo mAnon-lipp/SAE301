@@ -205,19 +205,68 @@ class OrderController extends EntityController {
         $json = $request->getJson();
         $obj = json_decode($json);
         
+        $oldStatut = $order->getStatut(); // Récupérer l'ancien statut
+        
         // Mettre à jour les champs autorisés
         if (isset($obj->statut)) {
-            $order->setStatut($obj->statut);
+            $newStatut = $obj->statut;
+            $order->setStatut($newStatut);
+            
+            // US011 - TEMPORAIREMENT DÉSACTIVÉ (table StockMovement non créée)
+            // TODO: Réactiver après création de la table StockMovement
+            /*
+            // US011 - Logique de recrédit du stock (Critère 2)
+            if ($newStatut === 'Annulée' && $oldStatut !== 'Annulée') {
+                $orderId = $order->getId();
+                $items = $this->orders->findItemsByOrderId($orderId);
+                
+                require_once "src/Repository/ProductVariantRepository.php";
+                $variantRepo = new ProductVariantRepository();
+                
+                try {
+                    $this->orders->cnx->beginTransaction();
+                    
+                    foreach ($items as $item) {
+                        $variantId = $item->getVariantId();
+                        $quantite = $item->getQuantite();
+                        
+                        if (!$variantRepo->incrementStock((int)$variantId, (int)$quantite, (int)$orderId)) {
+                            throw new Exception("Échec du recrédit de stock pour le variant " . $variantId);
+                        }
+                    }
+                    
+                    $success = $this->orders->update($order);
+                    
+                    if ($success) {
+                        $this->orders->cnx->commit();
+                    } else {
+                        throw new Exception("Échec de la mise à jour du statut.");
+                    }
+                } catch (Exception $e) {
+                    $this->orders->cnx->rollBack();
+                    error_log("US011 - Erreur de recrédit du stock/statut : " . $e->getMessage());
+                    http_response_code(500);
+                    return ["error" => "Erreur lors de l'annulation de la commande et du recrédit du stock."];
+                }
+                
+                return $order;
+            }
+            */
         }
         
-        $success = $this->orders->update($order);
-        
-        if ($success) {
-            return $order;
-        } else {
-            http_response_code(500);
-            return ["error" => "Erreur lors de la mise à jour."];
+        // Mise à jour standard du statut
+        if (isset($obj->statut)) {
+            $success = $this->orders->update($order);
+            if ($success) {
+                return $order;
+            } else {
+                http_response_code(500);
+                return ["error" => "Erreur lors de la mise à jour."];
+            }
         }
+        
+        // Si aucune mise à jour pertinente n'est faite
+        return $order;
     }
     
     /**

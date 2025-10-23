@@ -248,4 +248,113 @@ class ProductVariantRepository extends EntityRepository {
         
         return $requete->execute();
     }
+
+    /**
+     * US011 - Décrémente atomiquement le stock et crée une entrée de log.
+     * Critère 1, 5, 6 & DoD 3
+     * Utilise une requête atomique pour prévenir les stocks négatifs.
+     * 
+     * @param int $variantId L'ID du variant
+     * @param int $quantity La quantité à décrémenter
+     * @param int $orderId L'ID de la commande
+     * @return bool True si succès, false si stock insuffisant
+     */
+    public function decrementStock(int $variantId, int $quantity, int $orderId): bool {
+        error_log("US011 - decrementStock appelée: variantId=$variantId, quantity=$quantity, orderId=$orderId");
+        
+        // 1. Décrémentation atomique avec vérification des stocks négatifs
+        $requete = $this->cnx->prepare("
+            UPDATE ProductVariant 
+            SET stock = stock - :quantity 
+            WHERE id = :variantId AND stock >= :quantity
+        ");
+        
+        $requete->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+        $requete->bindParam(':variantId', $variantId, PDO::PARAM_INT);
+        $success = $requete->execute();
+        
+        error_log("US011 - UPDATE exécuté: success=" . ($success ? 'true' : 'false') . ", rowCount=" . $requete->rowCount());
+        
+        // Vérifier si la mise à jour a eu lieu (stock suffisant)
+        if ($success && $requete->rowCount() > 0) {
+            // 2. Récupérer le nouveau stock pour le log
+            $newVariant = $this->find($variantId);
+            $newStock = $newVariant ? $newVariant->getStock() : 0;
+            
+            error_log("US011 - Stock après décrémentation: $newStock");
+            
+            // 3. Ajouter une entrée de log (Critère 4)
+            try {
+                $this->logMovement($variantId, -$quantity, $newStock, $orderId, 'ORDER_VALIDATED');
+                error_log("US011 - Log movement créé avec succès");
+            } catch (Exception $e) {
+                error_log("US011 - Erreur lors du log movement: " . $e->getMessage());
+                // Ne pas bloquer la commande si le log échoue
+            }
+            
+            return true;
+        }
+        
+        error_log("US011 - Stock insuffisant ou variant non trouvé");
+        return false; // Stock insuffisant ou variant non trouvé
+    }
+
+    /**
+     * US011 - Incrémente atomiquement le stock et crée une entrée de log.
+     * Critère 2 & 6
+     * 
+     * @param int $variantId L'ID du variant
+     * @param int $quantity La quantité à incrémenter
+     * @param int $orderId L'ID de la commande
+     * @return bool True si succès, false sinon
+     */
+    public function incrementStock(int $variantId, int $quantity, int $orderId): bool {
+        // 1. Incrémentation atomique
+        $requete = $this->cnx->prepare("
+            UPDATE ProductVariant 
+            SET stock = stock + :quantity 
+            WHERE id = :variantId
+        ");
+        
+        $requete->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+        $requete->bindParam(':variantId', $variantId, PDO::PARAM_INT);
+        $success = $requete->execute();
+        
+        if ($success && $requete->rowCount() > 0) {
+            // 2. Récupérer le nouveau stock pour le log
+            $newVariant = $this->find($variantId);
+            $newStock = $newVariant ? $newVariant->getStock() : 0;
+            
+            // 3. Ajouter une entrée de log (Critère 4)
+            $this->logMovement($variantId, $quantity, $newStock, $orderId, 'ORDER_CANCELLED');
+            
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * US011 - Méthode privée pour insérer un mouvement de stock (Critère 4)
+     * 
+     * @param int $variantId L'ID du variant
+     * @param int $quantityChange Le changement de quantité (négatif = décrément, positif = incrément)
+     * @param int $newStock Le nouveau stock après l'opération
+     * @param int $orderId L'ID de la commande
+     * @param string $reason La raison du mouvement ('ORDER_VALIDATED', 'ORDER_CANCELLED', etc.)
+     */
+    private function logMovement(int $variantId, int $quantityChange, int $newStock, int $orderId, string $reason): void {
+        $logRequete = $this->cnx->prepare("
+            INSERT INTO StockMovement (variant_id, movement_date, quantity_change, new_stock, order_id, reason)
+            VALUES (:variant_id, NOW(), :quantity_change, :new_stock, :order_id, :reason)
+        ");
+        
+        $logRequete->bindParam(':variant_id', $variantId, PDO::PARAM_INT);
+        $logRequete->bindParam(':quantity_change', $quantityChange, PDO::PARAM_INT);
+        $logRequete->bindParam(':new_stock', $newStock, PDO::PARAM_INT);
+        $logRequete->bindParam(':order_id', $orderId, PDO::PARAM_INT);
+        $logRequete->bindParam(':reason', $reason, PDO::PARAM_STR);
+        
+        $logRequete->execute();
+    }
 }

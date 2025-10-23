@@ -1,4 +1,4 @@
-import { getRequest, postRequest } from '../lib/api-request.js';
+import { getRequest, jsonpostRequest } from '../lib/api-request.js';
 
 /**
  * OrderData - Gère les opérations liées aux commandes
@@ -45,10 +45,16 @@ OrderData.create = async function(items, montantTotal) {
         console.log('Données de commande à envoyer:', orderData);
         
         // Envoyer la requête POST à l'API
-        const response = await postRequest('orders', orderData);
+        const response = await jsonpostRequest('orders', orderData);
+        
+        console.log('Réponse brute de jsonpostRequest:', response);
+        console.log('Type de réponse:', typeof response);
+        console.log('response.error:', response?.error);
+        console.log('response.id:', response?.id);
         
         // Gérer les erreurs de stock du serveur (US010)
         if (response && response.error) {
+            console.log('Erreur détectée du serveur:', response.error);
             return {
                 error: response.error,
                 message: response.message || 'Erreur lors de la création de la commande',
@@ -57,9 +63,11 @@ OrderData.create = async function(items, montantTotal) {
         }
         
         if (response && response.id) {
+            console.log('Commande créée avec succès, ID:', response.id);
             return response;
         }
         
+        console.warn('Réponse inattendue de l\'API:', response);
         return {
             error: 'UNKNOWN_ERROR',
             message: 'Une erreur inconnue est survenue'

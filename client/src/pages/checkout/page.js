@@ -62,6 +62,8 @@ C.handler_finalizeCheckout = async function(ev) {
             console.log('Création de la commande avec:', M.cartItems, M.total);
             const order = await OrderData.create(M.cartItems, M.total);
             
+            console.log('Réponse de OrderData.create:', order);
+            
             // Vérifier si c'est une erreur (US010 - validation stock)
             if (order && order.error) {
                 if (button) {
@@ -98,6 +100,7 @@ C.handler_finalizeCheckout = async function(ev) {
                 window.dispatchEvent(new PopStateEvent('popstate'));
             } else {
                 // Erreur lors de la création
+                console.error('Réponse inattendue:', order);
                 if (button) {
                     button.disabled = false;
                     button.textContent = 'Finaliser la commande';
@@ -107,13 +110,15 @@ C.handler_finalizeCheckout = async function(ev) {
             
         } catch (error) {
             console.error('Erreur lors de la finalisation:', error);
-            alert('Une erreur est survenue. Veuillez réessayer.');
             
-            const button = ev.target.closest('[data-checkout-button]');
+            // Réactiver le bouton en cas d'erreur
+            const button = document.querySelector('[data-checkout-button]');
             if (button) {
                 button.disabled = false;
                 button.textContent = 'Finaliser la commande';
             }
+            
+            alert('Une erreur est survenue. Veuillez réessayer.');
         }
     }
 };

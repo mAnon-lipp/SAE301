@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : mer. 22 oct. 2025 à 09:42
+-- Généré le : jeu. 23 oct. 2025 à 16:11
 -- Version du serveur : 10.11.14-MariaDB-0+deb12u2
 -- Version de PHP : 8.3.24
 
@@ -62,7 +62,17 @@ CREATE TABLE `Commandes` (
 INSERT INTO `Commandes` (`id`, `client_id`, `date_commande`, `statut`, `montant_total`) VALUES
 (6, 1, '2025-10-21 13:45:30', 'Validée', '490.00'),
 (7, 1, '2025-10-22 07:04:55', 'Validée', '1190.00'),
-(8, 1, '2025-10-22 09:17:01', 'Validée', '3900.00');
+(8, 1, '2025-10-22 09:17:01', 'Validée', '3900.00'),
+(9, 1, '2025-10-22 10:00:54', 'Validée', '1440.00'),
+(11, 1, '2025-10-22 11:38:29', 'Validée', '1180.00'),
+(15, 2, '2025-10-22 11:50:05', 'Validée', '615.00'),
+(16, 2, '2025-10-22 13:20:26', 'Validée', '490.00'),
+(17, 2, '2025-10-22 13:48:12', 'Validée', '490.00'),
+(18, 1, '2025-10-23 08:14:36', 'Validée', '1190.00'),
+(20, 1, '2025-10-23 08:34:09', 'Validée', '1250.00'),
+(26, 1, '2025-10-23 16:02:38', 'Validée', '1715.00'),
+(27, 1, '2025-10-23 16:04:14', 'Validée', '250.00'),
+(28, 1, '2025-10-23 16:04:23', 'Validée', '125.00');
 
 -- --------------------------------------------------------
 
@@ -262,7 +272,22 @@ CREATE TABLE `Order_Items` (
 INSERT INTO `Order_Items` (`id`, `commande_id`, `variant_id`, `quantite`, `prix_unitaire`) VALUES
 (4, 6, 41, 1, '490.00'),
 (5, 7, 312, 1, '1190.00'),
-(6, 8, 365, 1, '3900.00');
+(6, 8, 365, 1, '3900.00'),
+(7, 9, 82, 1, '590.00'),
+(8, 9, 358, 1, '850.00'),
+(12, 11, 21, 1, '490.00'),
+(13, 11, 283, 1, '690.00'),
+(19, 15, 22, 1, '490.00'),
+(20, 15, 414, 1, '125.00'),
+(21, 16, 40, 1, '490.00'),
+(22, 17, 22, 1, '490.00'),
+(23, 18, 308, 1, '1190.00'),
+(25, 20, 414, 10, '125.00'),
+(26, 26, 19, 1, '490.00'),
+(27, 26, 355, 1, '850.00'),
+(28, 26, 414, 3, '125.00'),
+(29, 27, 414, 2, '125.00'),
+(30, 28, 414, 1, '125.00');
 
 -- --------------------------------------------------------
 
@@ -316,7 +341,7 @@ CREATE TABLE `ProductVariant` (
 --
 
 INSERT INTO `ProductVariant` (`id`, `product_id`, `sku`, `price`, `stock`) VALUES
-(19, 1, 'LBL-35', '490.00', 50),
+(19, 1, 'LBL-35', '490.00', 44),
 (20, 1, 'LTO-35', '490.00', 50),
 (21, 1, 'PWG-35', '490.00', 50),
 (22, 1, 'PWN-35', '490.00', 50),
@@ -546,7 +571,7 @@ INSERT INTO `ProductVariant` (`id`, `product_id`, `sku`, `price`, `stock`) VALUE
 (352, 6, 'BAPI-37', '850.00', 0),
 (353, 6, 'BAPI-37.5', '850.00', 0),
 (354, 6, 'BAPI-38', '850.00', 50),
-(355, 6, 'BAPI-38.5', '850.00', 50),
+(355, 6, 'BAPI-38.5', '850.00', 49),
 (356, 6, 'BAPI-39', '850.00', 0),
 (357, 6, 'BAPI-39.5', '850.00', 50),
 (358, 6, 'BAPI-40', '850.00', 50),
@@ -558,7 +583,7 @@ INSERT INTO `ProductVariant` (`id`, `product_id`, `sku`, `price`, `stock`) VALUE
 (364, 7, 'SILV', '1900.00', 50),
 (365, 8, 'BLAG', '3900.00', 50),
 (366, 9, 'DEPB', '2500.00', 50),
-(367, 9, 'RASP', '2500.00', 50),
+(367, 9, 'RASP', '2500.00', 3),
 (368, 9, 'SKYB', '3250.00', 50),
 (369, 11, 'DEPBRO-35', '1290.00', 50),
 (370, 11, 'DEPBRO-35.5', '1290.00', 50),
@@ -605,7 +630,46 @@ INSERT INTO `ProductVariant` (`id`, `product_id`, `sku`, `price`, `stock`) VALUE
 (411, 11, 'NAVY-41', '1290.00', 50),
 (412, 11, 'NAVY-41.5', '1290.00', 50),
 (413, 11, 'NAVY-42', '1290.00', 50),
-(414, 12, 'LEABL', '125.00', 50);
+(414, 12, 'LEABL', '125.00', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `StockMovement`
+--
+
+CREATE TABLE `StockMovement` (
+  `id` int(11) NOT NULL,
+  `variant_id` int(11) NOT NULL,
+  `movement_date` datetime NOT NULL,
+  `quantity_change` int(11) NOT NULL,
+  `new_stock` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `reason` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `StockThresholds`
+--
+
+CREATE TABLE `StockThresholds` (
+  `id` int(11) NOT NULL,
+  `setting_name` varchar(50) NOT NULL,
+  `setting_value` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `StockThresholds`
+--
+
+INSERT INTO `StockThresholds` (`id`, `setting_name`, `setting_value`, `description`, `updated_at`) VALUES
+(1, 'LOW_STOCK', 25, 'Seuil pour \"Bientôt épuisé\" / \"Dernières tailles disponibles\"', '2025-10-23 18:10:33'),
+(2, 'LOW_VARIANT_COUNT', 25, 'Seuil pour le nombre de tailles/variants disponibles', '2025-10-23 18:10:33'),
+(3, 'CRITICAL_VARIANT_STOCK', 25, 'Seuil critique pour un variant individuel', '2025-10-23 18:10:33');
 
 -- --------------------------------------------------------
 
@@ -1284,6 +1348,22 @@ ALTER TABLE `ProductVariant`
   ADD KEY `product_id` (`product_id`);
 
 --
+-- Index pour la table `StockMovement`
+--
+ALTER TABLE `StockMovement`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_variant` (`variant_id`),
+  ADD KEY `idx_order` (`order_id`),
+  ADD KEY `idx_date` (`movement_date`);
+
+--
+-- Index pour la table `StockThresholds`
+--
+ALTER TABLE `StockThresholds`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `setting_name` (`setting_name`);
+
+--
 -- Index pour la table `User`
 --
 ALTER TABLE `User`
@@ -1311,7 +1391,7 @@ ALTER TABLE `Category`
 -- AUTO_INCREMENT pour la table `Commandes`
 --
 ALTER TABLE `Commandes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT pour la table `OptionType`
@@ -1335,7 +1415,7 @@ ALTER TABLE `OptionValueImage`
 -- AUTO_INCREMENT pour la table `Order_Items`
 --
 ALTER TABLE `Order_Items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT pour la table `Product`
@@ -1348,6 +1428,18 @@ ALTER TABLE `Product`
 --
 ALTER TABLE `ProductVariant`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=415;
+
+--
+-- AUTO_INCREMENT pour la table `StockMovement`
+--
+ALTER TABLE `StockMovement`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `StockThresholds`
+--
+ALTER TABLE `StockThresholds`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `User`
@@ -1395,6 +1487,13 @@ ALTER TABLE `Product`
 --
 ALTER TABLE `ProductVariant`
   ADD CONSTRAINT `fk_variant_product` FOREIGN KEY (`product_id`) REFERENCES `Product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `StockMovement`
+--
+ALTER TABLE `StockMovement`
+  ADD CONSTRAINT `StockMovement_ibfk_1` FOREIGN KEY (`variant_id`) REFERENCES `ProductVariant` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `StockMovement_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `Commandes` (`id`) ON DELETE SET NULL;
 
 --
 -- Contraintes pour la table `VariantOptionValue`
