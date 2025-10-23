@@ -62,6 +62,30 @@ C.handler_finalizeCheckout = async function(ev) {
             console.log('Création de la commande avec:', M.cartItems, M.total);
             const order = await OrderData.create(M.cartItems, M.total);
             
+            // Vérifier si c'est une erreur (US010 - validation stock)
+            if (order && order.error) {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Finaliser la commande';
+                }
+                
+                // Afficher le message d'erreur détaillé du serveur
+                let errorMessage = order.message || 'Une erreur est survenue';
+                
+                // Si c'est une erreur de stock, afficher des détails clairs
+                if (order.error === 'Stock insuffisant' && order.details) {
+                    errorMessage = `⚠️ Quantité demandée supérieure au stock disponible !\n\n` +
+                                 `Quantité demandée : ${order.details.requested_quantity}\n` +
+                                 `Stock disponible : ${order.details.available_stock}\n\n` +
+                                 `Veuillez réduire la quantité dans votre panier.`;
+                } else if (order.error === 'Article épuisé') {
+                    errorMessage = `⚠️ Article épuisé !\n\nCet article n'est plus disponible.\nVeuillez le retirer de votre panier.`;
+                }
+                
+                alert(errorMessage);
+                return;
+            }
+            
             if (order && order.id) {
                 // Commande créée avec succès
                 console.log('Commande créée:', order);

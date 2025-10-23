@@ -62,6 +62,7 @@ class OrderController extends EntityController {
      * - Validation complète avant enregistrement
      * - Génération numéro unique
      * - Sauvegarde en BDD avec transaction
+     * - Vérification des stocks disponibles (US010)
      */
     protected function processPostRequest(HttpRequest $request) {
         // Vérifier l'authentification (Critère d'acceptation 1)
@@ -82,6 +83,46 @@ class OrderController extends EntityController {
         if (!isset($obj->montant_total) || $obj->montant_total <= 0) {
             http_response_code(400);
             return ["error" => "Le montant total est invalide."];
+        }
+        
+        // US010 - Vérifier les stocks disponibles pour chaque item
+        require_once "src/Repository/ProductVariantRepository.php";
+        $variantRepo = new ProductVariantRepository();
+        
+        foreach ($obj->items as $item) {
+            $hasVariantId = isset($item->variant_id);
+            
+            if ($hasVariantId) {
+                // Vérifier le stock du variant
+                $variant = $variantRepo->find($item->variant_id);
+                
+                if (!$variant) {
+                    http_response_code(400);
+                    return ["error" => "Article invalide dans la commande."];
+                }
+                
+                // Vérifier que la quantité ne dépasse pas le stock disponible
+                if ($item->quantite > $variant->getStock()) {
+                    http_response_code(400);
+                    return [
+                        "error" => "Stock insuffisant",
+                        "message" => "Seulement " . $variant->getStock() . " article(s) disponible(s) en stock.",
+                        "variant_id" => $item->variant_id,
+                        "requested_quantity" => $item->quantite,
+                        "available_stock" => $variant->getStock()
+                    ];
+                }
+                
+                // Vérifier que le produit n'est pas épuisé
+                if ($variant->getStock() <= 0) {
+                    http_response_code(400);
+                    return [
+                        "error" => "Article épuisé",
+                        "message" => "Cet article n'est plus disponible.",
+                        "variant_id" => $item->variant_id
+                    ];
+                }
+            }
         }
         
         // Créer la commande (Critère d'acceptation 4 - Numéro unique via auto_increment)

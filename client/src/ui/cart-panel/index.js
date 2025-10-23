@@ -50,6 +50,41 @@ let CartPanelView = {
     if (panel) {
       panel.addEventListener('cart-quantity-change', (e) => {
         const { itemId, quantity } = e.detail;
+        
+        // US010 - Vérifier le stock avant de mettre à jour la quantité
+        const item = CartModel.items.find(i => i.id == itemId);
+        if (item && item.variants) {
+          // Trouver le variant correspondant
+          const selectedVariant = item.variants.find(v => {
+            if (!v.options) return false;
+            
+            let matchSize = !item.size;
+            let matchColor = !item.color;
+            
+            v.options.forEach(opt => {
+              const type = opt.type.toLowerCase();
+              if ((type === 'size' || type === 'taille') && item.size) {
+                matchSize = (opt.label || opt.value) === item.size;
+              }
+              if ((type === 'color' || type === 'couleur') && item.color) {
+                matchColor = opt.label === item.color;
+              }
+            });
+            
+            return matchSize && matchColor;
+          });
+          
+          // Si la quantité demandée dépasse le stock, ajuster automatiquement
+          if (selectedVariant && quantity > selectedVariant.stock) {
+            alert(`⚠️ Stock limité !\n\n` +
+                  `Stock disponible : ${selectedVariant.stock}\n\n` +
+                  `Quantité ajustée automatiquement à ${selectedVariant.stock}.`);
+            CartModel.setQuantity(itemId, selectedVariant.stock);
+            this.updatePanel(panel);
+            return;
+          }
+        }
+        
         CartModel.setQuantity(itemId, quantity);
         this.updatePanel(panel);
       });
@@ -88,6 +123,62 @@ let CartPanelView = {
     const checkoutBtn = fragment.querySelector('[data-checkout]');
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
+        // US010 - Vérifier les stocks avant de passer au checkout
+        let stockError = false;
+        
+        for (let i = 0; i < CartModel.items.length; i++) {
+          const item = CartModel.items[i];
+          
+          // Si le produit a des variants, vérifier le stock
+          if (item.variants && item.variants.length > 0) {
+            // Trouver le variant correspondant
+            const selectedVariant = item.variants.find(v => {
+              if (!v.options) return false;
+              
+              let matchSize = !item.size;
+              let matchColor = !item.color;
+              
+              v.options.forEach(opt => {
+                const type = opt.type.toLowerCase();
+                if ((type === 'size' || type === 'taille') && item.size) {
+                  matchSize = (opt.label || opt.value) === item.size;
+                }
+                if ((type === 'color' || type === 'couleur') && item.color) {
+                  matchColor = opt.label === item.color;
+                }
+              });
+              
+              return matchSize && matchColor;
+            });
+            
+            // Vérifier si la quantité demandée dépasse le stock
+            if (selectedVariant && item.quantity > selectedVariant.stock) {
+              alert(`⚠️ Quantité demandée supérieure au stock disponible !\n\n` +
+                    `Article : ${item.name}\n` +
+                    `Quantité demandée : ${item.quantity}\n` +
+                    `Stock disponible : ${selectedVariant.stock}\n\n` +
+                    `Veuillez réduire la quantité dans votre panier.`);
+              stockError = true;
+              break;
+            }
+            
+            // Vérifier si le produit est épuisé
+            if (selectedVariant && selectedVariant.stock <= 0) {
+              alert(`⚠️ Article épuisé !\n\n` +
+                    `Article : ${item.name}\n\n` +
+                    `Cet article n'est plus disponible.\n` +
+                    `Veuillez le retirer de votre panier.`);
+              stockError = true;
+              break;
+            }
+          }
+        }
+        
+        // Si erreur de stock, ne pas continuer
+        if (stockError) {
+          return;
+        }
+        
         // Fermer le panneau du panier
         this.close();
         // Naviguer vers la page de checkout

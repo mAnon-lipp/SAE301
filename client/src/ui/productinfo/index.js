@@ -217,25 +217,30 @@ let ProductInfoView = {
       
       console.log('🔍 Couleur sélectionnée:', selectedColor);
       
-      // Obtenir les tailles disponibles pour la couleur sélectionnée
-      const availableSizes = selectedColor 
-        ? VariantData.getAvailableOptions(data.variants, { color: selectedColor }, 'size')
+      // Obtenir TOUTES les tailles (même sans stock) pour la couleur sélectionnée
+      const allSizes = selectedColor 
+        ? VariantData.getAllOptions(data.variants, { color: selectedColor }, 'size')
         : [];
       
-      console.log('📏 Tailles disponibles:', availableSizes);
+      console.log('📏 Toutes les tailles:', allSizes);
       
       // Vider le conteneur
       sizeSelector.innerHTML = '';
       
-      // Créer les boutons de taille uniquement pour les tailles disponibles (en stock)
-      availableSizes.forEach(size => {
+      // Créer les boutons de taille pour TOUTES les tailles (même sans stock)
+      allSizes.forEach(sizeInfo => {
         const btn = document.createElement('button');
         btn.className = 'size-option-button';
-        btn.dataset.size = size;
-        btn.textContent = size;
+        btn.dataset.size = sizeInfo.value;
+        btn.textContent = sizeInfo.value;
+        
+        // Si pas en stock, ajouter un style désactivé
+        if (!sizeInfo.inStock) {
+          btn.classList.add('opacity-50', 'line-through');
+        }
         
         // Si c'était la taille sélectionnée précédemment, la réappliquer
-        if (selectedSize === size) {
+        if (selectedSize === sizeInfo.value) {
           btn.classList.add('bg-black', 'text-white');
         }
         
@@ -267,11 +272,8 @@ let ProductInfoView = {
         sizeSelector.appendChild(btn);
       });
       
-      // Si la taille sélectionnée n'est plus disponible, la déselectionner
-      if (selectedSize && !availableSizes.includes(selectedSize)) {
-        selectedSize = null;
-        updateVariantInfo();
-      }
+      // Ne plus déselectionner automatiquement si la taille n'est plus disponible
+      // On garde la sélection pour montrer le badge "Épuisé"
     };
     
     // Fonction pour désactiver les options non disponibles
@@ -316,7 +318,15 @@ let ProductInfoView = {
         const action = e.currentTarget.dataset.quantityAction;
         
         if (action === 'increase') {
-          quantity++;
+          // Limiter la quantité au stock disponible
+          const maxStock = selectedVariant ? selectedVariant.stock : Infinity;
+          if (quantity < maxStock) {
+            quantity++;
+          } else {
+            // Afficher un message si on essaie de dépasser le stock
+            const stockText = maxStock === 0 ? 'Épuisé' : `Seulement ${maxStock} en stock`;
+            alert(`⚠️ Stock limité !\n\n${stockText}.`);
+          }
         } else if (action === 'decrease' && quantity > 1) {
           quantity--;
         }
@@ -463,13 +473,13 @@ let ProductInfoView = {
           
           // Vérifier le stock
           if (selectedVariant.stock <= 0) {
-            alert('Ce produit n\'est pas disponible en stock.');
+            alert('⚠️ Ce produit est épuisé et ne peut pas être ajouté au panier.\n\nVeuillez sélectionner une autre taille ou couleur.');
             return;
           }
           
           // Vérifier que la quantité ne dépasse pas le stock
           if (quantity > selectedVariant.stock) {
-            alert(`Seulement ${selectedVariant.stock} article(s) disponible(s) en stock.`);
+            alert(`⚠️ Stock insuffisant !\n\nSeulement ${selectedVariant.stock} article(s) disponible(s) en stock.`);
             return;
           }
         }

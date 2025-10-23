@@ -10,7 +10,7 @@ let OrderData = {};
  * Crée une nouvelle commande
  * @param {Array} items - Liste des items du panier avec variantId, quantite, prix_unitaire
  * @param {number} montantTotal - Montant total de la commande
- * @returns {Promise<Object|boolean>} - La commande créée ou false en cas d'erreur
+ * @returns {Promise<Object|{error: string, details: Object}>} - La commande créée ou objet erreur
  */
 OrderData.create = async function(items, montantTotal) {
     try {
@@ -47,14 +47,29 @@ OrderData.create = async function(items, montantTotal) {
         // Envoyer la requête POST à l'API
         const response = await postRequest('orders', orderData);
         
+        // Gérer les erreurs de stock du serveur (US010)
+        if (response && response.error) {
+            return {
+                error: response.error,
+                message: response.message || 'Erreur lors de la création de la commande',
+                details: response
+            };
+        }
+        
         if (response && response.id) {
             return response;
         }
         
-        return false;
+        return {
+            error: 'UNKNOWN_ERROR',
+            message: 'Une erreur inconnue est survenue'
+        };
     } catch (error) {
         console.error('Erreur lors de la création de la commande:', error);
-        return false;
+        return {
+            error: 'NETWORK_ERROR',
+            message: 'Erreur de connexion au serveur'
+        };
     }
 };
 

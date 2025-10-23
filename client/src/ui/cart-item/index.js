@@ -164,6 +164,36 @@ let CartItemView = {
     const quantityDisplay = element.querySelector('[data-quantity-display]');
     if (quantityDisplay) quantityDisplay.textContent = quantity;
     
+    // Récupérer le stock disponible depuis le variant sélectionné
+    const getAvailableStock = () => {
+      // Si pas de variants, pas de limite
+      if (!itemData.variants || itemData.variants.length === 0) {
+        return Infinity;
+      }
+      
+      // Trouver le variant correspondant à size/color
+      const selectedVariant = itemData.variants.find(v => {
+        if (!v.options) return false;
+        
+        let matchSize = !itemData.size; // Si pas de size, on match automatiquement
+        let matchColor = !itemData.color; // Si pas de color, on match automatiquement
+        
+        v.options.forEach(opt => {
+          const type = opt.type.toLowerCase();
+          if ((type === 'size' || type === 'taille') && itemData.size) {
+            matchSize = (opt.label || opt.value) === itemData.size;
+          }
+          if ((type === 'color' || type === 'couleur') && itemData.color) {
+            matchColor = opt.label === itemData.color;
+          }
+        });
+        
+        return matchSize && matchColor;
+      });
+      
+      return selectedVariant ? selectedVariant.stock : Infinity;
+    };
+    
     // Gestion des boutons + et -
     const qtyButtons = element.querySelectorAll('[data-quantity-action]');
     for (let i = 0; i < qtyButtons.length; i++) {
@@ -172,7 +202,17 @@ let CartItemView = {
         const action = e.currentTarget.dataset.quantityAction;
         
         if (action === 'increase') {
-          quantity++;
+          // US010 - Vérifier le stock disponible avant d'augmenter
+          const availableStock = getAvailableStock();
+          
+          if (quantity < availableStock) {
+            quantity++;
+          } else {
+            // Afficher un message si on essaie de dépasser le stock
+            const stockText = availableStock === 0 ? 'Épuisé' : `Seulement ${availableStock} en stock`;
+            alert(`⚠️ Stock limité !\n\n${stockText}.`);
+            return; // Ne pas continuer
+          }
         } else if (action === 'decrease') {
           quantity--;
         }

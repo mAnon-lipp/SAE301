@@ -173,4 +173,57 @@ VariantData.getAvailableOptions = function(variants, selectedOptions, optionType
     return Array.from(availableValues);
 }
 
+/**
+ * Récupère TOUTES les options (même sans stock) pour une sélection partielle
+ * @param {Array} variants - Tableau des variants
+ * @param {Object} selectedOptions - Options déjà sélectionnées
+ * @param {string} optionType - Type d'option à récupérer ('size' ou 'color')
+ * @returns {Array<{value: string, inStock: boolean}>} - Valeurs avec leur statut de stock
+ */
+VariantData.getAllOptions = function(variants, selectedOptions, optionType) {
+    const normalizedType = optionType.toLowerCase();
+    const optionsMap = new Map();
+    
+    variants.forEach(variant => {
+        if (!variant.options) return;
+        
+        // Vérifier si le variant correspond aux options déjà sélectionnées
+        let matches = true;
+        const variantOptions = {};
+        
+        variant.options.forEach(option => {
+            const type = option.type.toLowerCase();
+            const normalizedOptionType = type === 'taille' ? 'size' : (type === 'couleur' ? 'color' : type);
+            variantOptions[normalizedOptionType] = option.label;
+        });
+        
+        // Vérifier les autres options sélectionnées
+        for (let key in selectedOptions) {
+            if (key !== optionType && selectedOptions[key]) {
+                const normalizedKey = key.toLowerCase();
+                if (variantOptions[normalizedKey] !== selectedOptions[key]) {
+                    matches = false;
+                    break;
+                }
+            }
+        }
+        
+        // Si ça correspond, ajouter la valeur de l'option demandée
+        if (matches && variantOptions[normalizedType]) {
+            const value = variantOptions[normalizedType];
+            const hasStock = variant.stock > 0;
+            
+            // Si l'option existe déjà, mettre à jour son statut (si au moins un variant a du stock)
+            if (optionsMap.has(value)) {
+                const existing = optionsMap.get(value);
+                existing.inStock = existing.inStock || hasStock;
+            } else {
+                optionsMap.set(value, { value, inStock: hasStock });
+            }
+        }
+    });
+    
+    return Array.from(optionsMap.values());
+}
+
 export {VariantData};
