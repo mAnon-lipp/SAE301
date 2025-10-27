@@ -1,0 +1,36 @@
+<div class="bg-surface h-[175px] w-full border border-foreground relative">
+  <div class="flex items-center h-full px-[26px] py-[16px]">
+    <!-- Image du produit -->
+    <div class="bg-neutral-300 h-[140px] w-[110px] flex-shrink-0">
+      <img src="{{image}}" alt="{{name}}" class="w-full h-full object-cover" />
+    </div>
+    
+    <!-- Nom du produit -->
+    <div class="flex-1 px-[20px]">
+      <p class="font-sans font-normal text-[20px] leading-[28.8px] text-foreground uppercase" style="font-variation-settings: 'wdth' 100">
+        {{name}}
+      </p>
+    </div>
+    
+    <!-- Quantité -->
+    <div class="flex-shrink-0 w-[100px] text-center">
+      <p class="font-sans font-normal text-[20px] leading-[97px] text-foreground" style="font-variation-settings: 'wdth' 100">
+        {{quantite}}
+      </p>
+    </div>
+    
+    <!-- Prix unitaire -->
+    <div class="flex-shrink-0 w-[120px] text-center">
+      <p class="font-sans font-normal text-[20px] leading-[97px] text-foreground" style="font-variation-settings: 'wdth' 100">
+        ${{prix_unitaire}}
+      </p>
+    </div>
+    
+    <!-- Variant (taille / couleur) -->
+    <div class="flex-shrink-0 w-[150px] text-center">
+      <p class="font-sans font-normal text-[20px] leading-[97px] text-foreground" style="font-variation-settings: 'wdth' 100">
+        {{variant}}
+      </p>
+    </div>
+  </div>
+</div>

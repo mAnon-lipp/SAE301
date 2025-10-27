@@ -1,14 +1,32 @@
-<div class="bg-[#efefef] min-h-screen">
-  <!-- Title -->
-  <div class="pt-[166px] pb-[87px] px-[85px]">
-    <h1 class="font-['Instrument_Sans',_sans-serif] font-medium text-[36px] text-black leading-[28.8px]" style="font-variation-settings: 'wdth' 100">
-      Commandes
-    </h1>
+<div class="bg-background min-h-screen pt-[82px]">
+  <!-- Header Section with Title and Filters -->
+  <div class="pt-[84px] pb-[48px] px-[85px]">
+    <div class="flex justify-between items-center mb-[39px]">
+      <h1 class="font-sans font-medium text-[36px] text-foreground leading-[28.8px]" style="font-variation-settings: 'wdth' 100">
+        Commandes
+      </h1>
+      
+      <!-- US012 - Critère 5: Filtre par statut -->
+      <div class="flex gap-4 items-center">
+        <label for="status-filter" class="font-sans font-normal text-[14px] text-foreground">
+          Filtrer par statut:
+        </label>
+        <select 
+          id="status-filter" 
+          class="border border-foreground px-4 py-2 font-sans text-[14px] bg-surface cursor-pointer"
+        >
+          <option value="all">Tous</option>
+          <option value="Validée">Validée</option>
+          <option value="Disponible">Disponible</option>
+          <option value="Retirée">Retirée</option>
+        </select>
+      </div>
+    </div>
   </div>
   
   <!-- Orders Container -->
-  <div class="px-[85px] pb-[100px]">
-    <!-- Empty Orders Slot -->
+  <div id="orders-list-container" class="px-[85px] pb-[100px]">
+    <!-- Orders Content Slot (DoD 1: Interface claire et intuitive) -->
     <slot name="orders-content"></slot>
   </div>
 </div>

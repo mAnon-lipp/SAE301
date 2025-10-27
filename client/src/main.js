@@ -16,6 +16,7 @@ import { SignupPage } from "./pages/signup/page.js";
 import { AccountPage } from "./pages/account/page.js";
 import { ProfilePage } from "./pages/profile/page.js";
 import { OrdersPage } from "./pages/orders/page.js";
+import { OrderDetailPage } from "./pages/order-detail/page.js";
 import { CheckoutPage } from "./pages/checkout/page.js";
 import { OrderConfirmationPage } from "./pages/order-confirmation/page.js";
 // ---
@@ -36,6 +37,7 @@ router.addLayout("/", RootLayout);
 router.addLayout("/account", AccountLayout); // Layout spécifique avec menu utilisateur
 router.addLayout("/profil", AccountLayout); // Layout account pour la page profil
 router.addLayout("/commandes", AccountLayout); // Layout account pour la page commandes
+router.addLayout("/orders", AccountLayout); // Layout account pour les pages de détail de commande
 router.addLayout("/checkout", CheckoutLayout); // Layout checkout avec nav simplifiée
 router.addLayout("/order-confirmation", CheckoutLayout); // Layout checkout pour la page de confirmation
 
@@ -63,6 +65,7 @@ router.addRoute("/logout", async (params, r) => {
 // Routes protégées (Critère 6)
 router.addRoute("/account", AccountPage, { requireAuth: true }); // Page d'accueil du compte (avec les cartes)
 router.addRoute("/commandes", OrdersPage, { requireAuth: true }); // Page de la liste des commandes
+router.addRoute("/orders/:id", OrderDetailPage, { requireAuth: true }); // Page de détail d'une commande (US013)
 router.addRoute("/profil", ProfilePage, { requireAuth: true }); // Page de modification du profil
 
 router.addRoute("*", The404Page);

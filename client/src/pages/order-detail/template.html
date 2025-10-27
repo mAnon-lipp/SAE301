@@ -1,0 +1,56 @@
+<div class="bg-background min-h-screen pt-[82px]">
+  <!-- Bouton retour -->
+  <div class="pt-[66px] pb-[32px] px-[86px]">
+    <a href="/commandes" data-link class="flex items-center gap-[27px] hover:opacity-70 transition-opacity">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
+      </svg>
+      <span class="font-sans font-normal text-[18px] leading-[28.8px] text-foreground" style="font-variation-settings: 'wdth' 100">
+        Retour aux commandes
+      </span>
+    </a>
+  </div>
+  
+  <!-- Titre -->
+  <div class="text-center pb-[48px]">
+    <h1 class="font-sans font-medium text-[36px] leading-[28.8px] text-foreground uppercase" style="font-variation-settings: 'wdth' 100">
+      Détail de ma commande
+    </h1>
+  </div>
+  
+  <!-- Ligne de séparation -->
+  <div class="w-full px-[111px] mb-[41px]">
+    <div class="h-[1px] bg-foreground"></div>
+  </div>
+  
+  <!-- Informations de la commande -->
+  <div class="flex justify-center gap-[120px] pb-[105px]">
+    <!-- Numéro de commande -->
+    <div class="flex flex-col gap-[16px] items-center w-[297px]">
+      <p class="font-sans font-medium text-[24px] leading-[28.8px] text-foreground uppercase text-center" style="font-variation-settings: 'wdth' 100">
+        Numéro de commande
+      </p>
+      <p class="font-sans font-normal text-[20px] leading-[49px] text-foreground text-center uppercase" style="font-variation-settings: 'wdth' 100">
+        {{orderNumber}}
+      </p>
+    </div>
+    
+    <!-- Séparateur vertical -->
+    <div class="w-[1px] h-[122px] bg-foreground"></div>
+    
+    <!-- Date -->
+    <div class="flex flex-col gap-[16px] items-center w-[297px]">
+      <p class="font-sans font-medium text-[24px] leading-[28.8px] text-foreground uppercase text-center" style="font-variation-settings: 'wdth' 100">
+        Date
+      </p>
+      <p class="font-sans font-normal text-[20px] leading-[49px] text-foreground text-center uppercase" style="font-variation-settings: 'wdth' 100">
+        {{date}}
+      </p>
+    </div>
+  </div>
+  
+  <!-- Liste des items -->
+  <div class="px-[201px] pb-[100px]">
+    <slot name="order-items"></slot>
+  </div>
+</div>
