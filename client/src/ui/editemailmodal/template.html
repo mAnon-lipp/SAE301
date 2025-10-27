@@ -1,19 +1,19 @@
 <!-- Modal Overlay (backdrop with opacity) -->
-<div class="fixed inset-0 bg-zinc-900 opacity-90 z-40"></div>
+<div class="fixed inset-0 bg-foreground opacity-90 z-40"></div>
 
 <!-- Modal Dialog -->
-<div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-[24px] py-[20px] z-50">
-  <div class="flex flex-col gap-[27px] items-end justify-end relative">
-    <div class="flex flex-col gap-[27px] items-start justify-center relative">
+<div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-4 md:px-[24px] py-3 md:py-[20px] z-50">
+  <div class="flex flex-col gap-3 md:gap-[27px] items-end justify-end relative">
+    <div class="flex flex-col gap-3 md:gap-[27px] items-start justify-center relative">
       <!-- Header with title, description and close button -->
-      <div class="flex flex-col gap-[16px] items-start relative">
-        <div class="flex gap-[10px] items-center justify-center relative">
-          <p class="font-['Inter',_sans-serif] font-bold text-[18px] text-zinc-900 whitespace-nowrap">
+      <div class="flex flex-col gap-3 md:gap-[16px] items-start relative">
+        <div class="flex gap-3 md:gap-[10px] items-center justify-center relative">
+          <p class="font-sans font-bold text-sm md:text-[18px] text-foreground whitespace-nowrap">
             Modifier l'adresse mail
           </p>
         </div>
-        <div class="flex gap-[10px] items-center justify-center relative">
-          <div class="font-['Inter',_sans-serif] font-medium text-[12px] text-zinc-500">
+        <div class="flex gap-3 md:gap-[10px] items-center justify-center relative">
+          <div class="font-sans font-medium text-sm md:text-[12px] text-muted">
             <p class="mb-0">Modifiez votre adresse mail ici. </p>
             <p>Cliquez sur Enregistrer lorsque vous avez terminé.</p>
           </div>
@@ -21,19 +21,19 @@
       </div>
       
       <!-- Form Field -->
-      <div class="flex gap-[27px] items-center justify-end relative">
-        <div class="flex flex-col gap-[12px] items-end justify-center relative">
-          <div class="flex gap-[16px] items-center justify-end relative">
-            <p class="font-['Inter',_sans-serif] font-semibold text-[14px] text-zinc-900 whitespace-nowrap">
+      <div class="flex gap-3 md:gap-[27px] items-center justify-end relative">
+        <div class="flex flex-col gap-3 md:gap-[12px] items-end justify-center relative">
+          <div class="flex gap-3 md:gap-[16px] items-center justify-end relative">
+            <p class="font-sans font-semibold text-sm md:text-[14px] text-foreground whitespace-nowrap">
               Email
             </p>
-            <div class="border border-solid border-zinc-200 w-[250px]">
-              <div class="flex flex-col gap-[10px] items-start overflow-clip px-[3px] py-px w-[250px]">
-                <div class="flex gap-[10px] items-center justify-center p-[10px] w-full">
+            <div class="border border-solid border-muted w-full md:w-[250px]">
+              <div class="flex flex-col gap-3 md:gap-[10px] items-start overflow-clip px-4 md:px-[3px] py-px w-full md:w-[250px]">
+                <div class="flex gap-3 md:gap-[10px] items-center justify-center p-[10px] w-full">
                   <input 
                     type="email" 
                     id="email-input"
-                    class="font-['Inter',_sans-serif] font-medium text-[14px] text-zinc-900 w-full outline-none border-none"
+                    class="font-sans font-medium text-sm md:text-[14px] text-foreground w-full outline-none border-none"
                     placeholder="exemple@email.com"
                   />
                 </div>
@@ -44,15 +44,15 @@
       </div>
       
       <!-- Close button (X) -->
-      <button class="absolute right-0 top-[0.5px] w-[12px] h-[12px]" id="close-modal">
+      <button class="absolute right-0 top-[0.5px] w-full md:w-[12px] h-auto md:h-[12px]" id="close-modal">
         <img src="/icon-close.svg" alt="Fermer" class="w-full h-full">
       </button>
     </div>
     
     <!-- Action Button -->
-    <div class="flex gap-[8px] items-start relative">
-      <button class="bg-zinc-900 flex gap-[10px] items-center justify-center px-[16px] py-[12px]" id="save-button">
-        <p class="font-['Inter',_sans-serif] font-medium text-[14px] text-white whitespace-nowrap">
+    <div class="flex gap-3 md:gap-[8px] items-start relative">
+      <button class="bg-foreground flex gap-3 md:gap-[10px] items-center justify-center px-4 md:px-[16px] py-3 md:py-[12px]" id="save-button">
+        <p class="font-sans font-medium text-sm md:text-[14px] text-background whitespace-nowrap">
           Enregistrer
         </p>
       </button>

@@ -7,7 +7,7 @@ const categoryItemTemplate = `
   href="/products/category/{{id}}/{{name}}" 
   data-link 
   data-category-id="{{id}}"
-  class="font-sans font-normal text-[14px] text-foreground leading-[23.1px] hover:underline cursor-pointer block category-link"
+  class="font-sans font-normal text-sm md:text-[14px] text-foreground leading-normal md:leading-[23.1px] hover:underline cursor-pointer block category-link"
   style="font-variation-settings: 'wdth' 100">
   {{name}}
 </a>

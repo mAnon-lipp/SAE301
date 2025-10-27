@@ -1,31 +1,31 @@
 <div class="relative w-full">
-  <div class="grid grid-cols-5 items-center px-[15px] py-[19px] gap-5">
-    <p class="font-sans font-normal text-[20px] leading-[97px] text-foreground whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
+  <div class="grid grid-cols-5 gap-2 md:gap-4 items-center px-2 md:px-[15px] py-3 md:py-[19px]">
+    <p class="font-sans font-normal text-xs md:text-[16px] leading-normal text-foreground whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
       {{date}}
     </p>
-    <p class="font-sans font-normal text-[20px] leading-[97px] text-foreground whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
+    <p class="font-sans font-normal text-xs md:text-[16px] leading-normal text-foreground whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
       {{status}}
     </p>
-    <p class="font-sans font-normal text-[20px] leading-[97px] text-foreground whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
+    <p class="font-sans font-normal text-xs md:text-[16px] leading-normal text-foreground whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
       ${{amount}}
     </p>
     <div class="flex flex-col">
-      <p class="font-sans font-normal text-[20px] leading-[97px] text-foreground whitespace-nowrap m-0" style="font-variation-settings: 'wdth' 100">
+      <p class="font-sans font-normal text-xs md:text-[14px] leading-normal text-foreground whitespace-nowrap m-0" style="font-variation-settings: 'wdth' 100">
         {{variant}}
       </p>
-      <a href="/orders/{{id}}" data-link class="font-sans font-normal text-[20px] leading-[97px] text-muted underline whitespace-nowrap cursor-pointer hover-text-foreground" style="font-variation-settings: 'wdth' 100; text-underline-position: from-font;">
+      <a href="/orders/{{id}}" data-link class="font-sans font-normal text-xs md:text-[14px] leading-normal text-muted underline whitespace-nowrap cursor-pointer hover-text-foreground" style="font-variation-settings: 'wdth' 100; text-underline-position: from-font;">
         Détail de ma commande
       </a>
     </div>
     <div class="flex items-center justify-center">
       <button 
         data-reorder="{{id}}" 
-        class="font-sans font-normal text-[15px] leading-[97px] text-muted underline cursor-pointer hover-text-foreground uppercase transition-colors"
+        class="font-sans font-normal text-xs md:text-[13px] leading-normal text-muted underline cursor-pointer hover-text-foreground uppercase transition-colors"
         style="font-variation-settings: 'wdth' 100; text-underline-position: from-font;"
       >
         Recommander
       </button>
     </div>
   </div>
-  <div class="w-full h-[90px]" style="background-image: url('data:image/svg+xml,%3Csvg width=\'1197\' height=\'90\' viewBox=\'0 0 1197 90\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath fill-rule=\'evenodd\' clip-rule=\'evenodd\' d=\'M1197 0H0V1H1197V0ZM1197 89H0V90H1197V89Z\' fill=\'black\'/%3E%3C/svg%3E'); background-repeat: no-repeat; background-size: contain; background-position: center;"></div>
+  <div class="w-full h-auto md:h-[90px]" style="background-image: url('data:image/svg+xml,%3Csvg width=\'1197\' height=\'90\' viewBox=\'0 0 1197 90\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath fill-rule=\'evenodd\' clip-rule=\'evenodd\' d=\'M1197 0H0V1H1197V0ZM1197 89H0V90H1197V89Z\' fill=\'black\'/%3E%3C/svg%3E'); background-repeat: no-repeat; background-size: contain; background-position: center;"></div>
 </div>

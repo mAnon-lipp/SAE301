@@ -415,7 +415,7 @@ let ProductInfoView = {
                   const activeClass = k === 0 ? 'ring-2 ring-black' : '';
                   
                   const thumbDiv = document.createElement('div');
-                  thumbDiv.className = `w-[100px] h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all ${activeClass}`;
+                  thumbDiv.className = `w-[100px] h-auto md:h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all ${activeClass}`;
                   thumbDiv.dataset.thumbnailIndex = k;
                   
                   const thumbImg = document.createElement('img');

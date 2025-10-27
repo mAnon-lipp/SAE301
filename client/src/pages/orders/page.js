@@ -9,7 +9,7 @@ import template from "./template.html?raw";
 let M = {
     orders: [],
     filteredOrders: [],
-    currentFilter: 'all' // 'all', 'Validée', 'Disponible', 'Retirée'
+    currentFilter: 'all' // 'all', 'en cours', 'disponible', 'retirée'
 };
 
 let C = {};
@@ -222,8 +222,12 @@ C.prepareOrdersData = function(orders) {
         if (order.items && order.items.length > 0) {
             // Construire une chaîne avec tous les items et leurs détails
             const itemsInfo = order.items.map(item => {
-                if (item.product_details && item.product_details.sku) {
-                    // Utiliser le SKU qui contient les infos de variant
+                // Utiliser les options complètes au lieu du SKU
+                if (item.product_details && item.product_details.options && item.product_details.options.length > 0) {
+                    const optionsText = item.product_details.options.map(opt => opt.label).join(' / ');
+                    return optionsText;
+                } else if (item.product_details && item.product_details.sku) {
+                    // Fallback sur le SKU si pas d'options
                     return item.product_details.sku;
                 } else if (item.product_details && item.product_details.name) {
                     // Afficher au moins le nom du produit

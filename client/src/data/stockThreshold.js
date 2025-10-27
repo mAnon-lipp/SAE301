@@ -13,12 +13,11 @@ let StockThresholdData = {};
  */
 StockThresholdData.getThresholds = async function() {
     try {
-        const response = await getRequest('/api/stockthresholds');
+        const response = await getRequest('stockthresholds');
         
         if (response && !response.error) {
             return response;
         } else {
-            console.warn('Erreur lors de la récupération des seuils de stock:', response?.error);
             // Retourner des valeurs par défaut en cas d'erreur
             return {
                 LOW_STOCK: 5,
@@ -27,7 +26,6 @@ StockThresholdData.getThresholds = async function() {
             };
         }
     } catch (error) {
-        console.error('Erreur lors de la récupération des seuils de stock:', error);
         // Retourner des valeurs par défaut en cas d'erreur
         return {
             LOW_STOCK: 5,
@@ -45,7 +43,7 @@ StockThresholdData.getThresholds = async function() {
  */
 StockThresholdData.updateThreshold = async function(id, value) {
     try {
-        const response = await fetch(`/api/stockthresholds/${id}`, {
+        const response = await fetch(`stockthresholds/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -57,7 +55,6 @@ StockThresholdData.updateThreshold = async function(id, value) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Erreur lors de la mise à jour du seuil:', error);
         return { error: error.message };
     }
 };

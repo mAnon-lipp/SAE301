@@ -1,5 +1,5 @@
 <a href="/products/{{id}}/{{name}}" data-link class="flex flex-col gap-6 w-full group cursor-pointer transition-all duration-300 hover:transform hover:translate-y-[-4px]">
-  <div class="relative bg-gray-300 h-[520px] w-full overflow-hidden">
+  <div class="relative bg-neutral-300 h-auto md:h-[520px] w-full overflow-hidden">
     <img src="{{image}}" alt="{{name}}" class="w-full h-full object-cover" />
     <!-- add-to-cart icon shown on hover -->
     <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -7,12 +7,12 @@
     </div>
   </div>
   <div class="flex flex-col items-start">
-    <h3 class="font-sans font-normal text-[18px] text-foreground tracking-[3.06px] uppercase leading-[28.8px]">
+    <h3 class="font-sans font-normal text-sm md:text-[18px] text-foreground tracking-normal md:tracking-[3.06px] uppercase leading-normal md:leading-[28.8px]">
       {{name}}
     </h3>
   </div>
   <div class="flex flex-col items-start">
-    <p class="font-sans font-normal text-[18px] text-muted tracking-[3.06px] leading-[28.8px]">
+    <p class="font-sans font-normal text-sm md:text-[18px] text-muted tracking-normal md:tracking-[3.06px] leading-normal md:leading-[28.8px]">
       ${{prix}}
     </p>
   </div>

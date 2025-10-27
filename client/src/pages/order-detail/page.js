@@ -52,7 +52,11 @@ C.prepareItemsData = function(items) {
     return items.map(item => {
         // Extraire les informations de variant (taille/couleur)
         let variantInfo = '';
-        if (item.product_details && item.product_details.sku) {
+        if (item.product_details && item.product_details.options && item.product_details.options.length > 0) {
+            // Utiliser les labels complets des options
+            variantInfo = item.product_details.options.map(opt => opt.label).join(' / ');
+        } else if (item.product_details && item.product_details.sku) {
+            // Fallback sur le SKU si pas d'options
             variantInfo = item.product_details.sku;
         } else {
             variantInfo = `Variant #${item.variant_id}`;

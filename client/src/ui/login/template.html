@@ -1,11 +1,11 @@
 <div class="flex min-h-screen items-center justify-center">
-  <div class="w-[501px] bg-surface px-8 py-14">
-    <h1 class="mb-14 text-center text-[32px] font-normal leading-[41.6px] text-foreground">
+  <div class="w-full md:w-[501px] bg-surface px-8 py-14">
+    <h1 class="mb-14 text-center text-sm md:text-[32px] font-normal leading-normal md:leading-[41.6px] text-foreground">
       SE CONNECTER
     </h1>
     
     <form id="loginForm" class="flex flex-col gap-9">
-      <div class="relative mx-auto w-[435px]">
+      <div class="relative mx-auto w-full md:w-[435px]">
         <input 
           type="text" 
           id="username" 
@@ -22,7 +22,7 @@
         </label>
       </div>
       
-      <div class="relative mx-auto w-[435px]">
+      <div class="relative mx-auto w-full md:w-[435px]">
         <input 
           type="password" 
           id="password" 
@@ -45,7 +45,7 @@
       
       <button 
         type="submit" 
-        class="mx-auto mt-1 block h-[62px] w-[263px] bg-foreground text-lg text-background transition hover-bg-foreground-dark"
+        class="mx-auto mt-1 block h-auto md:h-[62px] w-full md:w-[263px] bg-foreground text-lg text-background transition hover-bg-foreground-dark"
       >
         Continuer
       </button>

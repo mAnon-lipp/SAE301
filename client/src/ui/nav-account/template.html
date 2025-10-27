@@ -1,29 +1,29 @@
-<nav class="bg-white relative w-full h-[82px] border-b border-gray-200">
+<nav class="bg-white relative w-full h-auto md:h-[82px] border-b border-gray-200">
   <div class="flex items-center h-full px-8">
     <!-- Logo à gauche -->
-    <div class="absolute left-[84px] h-[42px] w-[140px]">
+    <div class="absolute left-[84px] h-auto md:h-[42px] w-full md:w-[140px]">
       <a href="/" data-link class="block w-full h-full overflow-hidden">
         <img src="/logo.svg" alt="LUKURË" class="w-full h-full object-contain" />
       </a>
     </div>
     
     <!-- Navigation links -->
-    <div class="absolute left-[292px] flex gap-[56px] items-center">
-      <a href="/products" data-link class="font-['Instrument_Sans',_sans-serif] font-normal text-[14px] text-foreground hover:underline" style="font-variation-settings: 'wdth' 100">
+    <div class="absolute left-[292px] flex gap-3 md:gap-[56px] items-center">
+      <a href="/products" data-link class="font-['Instrument_Sans',_sans-serif] font-normal text-sm md:text-[14px] text-foreground hover:underline" style="font-variation-settings: 'wdth' 100">
         Shop
       </a>
-      <a href="/account" data-link class="font-['Instrument_Sans',_sans-serif] font-normal text-[14px] text-foreground underline" style="font-variation-settings: 'wdth' 100">
+      <a href="/account" data-link class="font-['Instrument_Sans',_sans-serif] font-normal text-sm md:text-[14px] text-foreground underline" style="font-variation-settings: 'wdth' 100">
         Commandes
       </a>
     </div>
     
     <!-- User menu à droite -->
-    <div class="absolute right-[21px] flex items-center gap-[16px]">
+    <div class="absolute right-[21px] flex items-center gap-3 md:gap-[16px]">
       <button id="account-menu-toggle" class="flex items-center gap- focus:outline-none relative">
         <!-- User icon -->
-        <img src="/icon-user.svg" alt="User" class="w-[42px] h-[42px]">
+        <img src="/icon-user.svg" alt="User" class="w-full md:w-[42px] h-auto md:h-[42px]">
         <!-- Arrow icon -->
-        <div class="w-[18px] h-[36px] transition-transform" id="dropdown-arrow">
+        <div class="w-full md:w-[18px] h-auto md:h-[36px] transition-transform" id="dropdown-arrow">
           <svg width="18" height="36" viewBox="0 0 18 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 13L9 20L16 13" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -31,10 +31,10 @@
       </button>
       
       <!-- Dropdown menu -->
-      <div id="account-dropdown" class="hidden absolute right-0 top-[62px] bg-white border border-zinc-200 rounded-[8px] w-[213px] shadow-lg z-50">
+      <div id="account-dropdown" class="hidden absolute right-0 top-[62px] bg-white border border-zinc-200 rounded-[8px] w-full md:w-[213px] shadow-lg z-50">
         <!-- Email section -->
-        <div class="border-b border-zinc-200 px-[10px] py-[12px]">
-          <p class="font-['Inter',_sans-serif] font-bold text-[12px] text-zinc-900" id="user-email">
+        <div class="border-b border-zinc-200 px-4 md:px-[10px] py-3 md:py-[12px]">
+          <p class="font-['Inter',_sans-serif] font-bold text-sm md:text-[12px] text-zinc-900" id="user-email">
             Chargement...
           </p>
         </div>
@@ -43,26 +43,26 @@
         <div class="flex flex-col">
           <!-- Profil -->
           <a href="/profil" data-link class="flex items-center justify-between p-[10px] hover:bg-gray-50 cursor-pointer">
-            <div class="flex gap-[6px] items-center">
-              <img src="/icon-person.svg" alt="Profil" class="w-[15px] h-[15px]">
-              <span class="font-['Inter',_sans-serif] font-medium text-[12px] text-zinc-900">Profil</span>
+            <div class="flex gap-3 md:gap-[6px] items-center">
+              <img src="/icon-person.svg" alt="Profil" class="w-full md:w-[15px] h-auto md:h-[15px]">
+              <span class="font-['Inter',_sans-serif] font-medium text-sm md:text-[12px] text-zinc-900">Profil</span>
             </div>
           </a>
           
           <!-- Commandes -->
           <a href="/commandes" data-link class="flex items-center justify-between p-[10px] hover:bg-gray-50 cursor-pointer">
-            <div class="flex gap-[6px] items-center">
-              <img src="/icon-archive.svg" alt="Commandes" class="w-[15px] h-[15px]">
-              <span class="font-['Inter',_sans-serif] font-medium text-[12px] text-zinc-900">Commandes</span>
+            <div class="flex gap-3 md:gap-[6px] items-center">
+              <img src="/icon-archive.svg" alt="Commandes" class="w-full md:w-[15px] h-auto md:h-[15px]">
+              <span class="font-['Inter',_sans-serif] font-medium text-sm md:text-[12px] text-zinc-900">Commandes</span>
             </div>
           </a>
           
           <!-- Separator and Logout -->
           <div class="border-t border-[#cfcfcf]">
             <button class="flex items-center justify-between p-[10px] hover:bg-gray-50 cursor-pointer w-full text-left" id="logout-button">
-              <div class="flex gap-[6px] items-center">
-                <img src="/icon-logout.svg" alt="Logout" class="w-[15px] h-[15px]">
-                <span class="font-['Inter',_sans-serif] font-medium text-[12px] text-zinc-900">Se deconnecter</span>
+              <div class="flex gap-3 md:gap-[6px] items-center">
+                <img src="/icon-logout.svg" alt="Logout" class="w-full md:w-[15px] h-auto md:h-[15px]">
+                <span class="font-['Inter',_sans-serif] font-medium text-sm md:text-[12px] text-zinc-900">Se deconnecter</span>
               </div>
             </button>
           </div>

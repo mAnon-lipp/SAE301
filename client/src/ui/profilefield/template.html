@@ -1,11 +1,11 @@
-<div class="bg-white h-[94px] w-full">
-  <div class="flex gap-[9px] items-center pt-[18px] pl-[18px]">
-    <p class="font-['Instrument_Sans',_sans-serif] font-normal text-[18px] leading-[28.8px] whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
+<div class="bg-surface h-auto md:h-[94px] w-full">
+  <div class="flex gap-2 md:gap-[9px] items-center pt-4 md:pt-[18px] pl-4 md:pl-[18px]">
+    <p class="font-sans font-normal text-sm md:text-[18px] md:leading-[28.8px] leading-normal whitespace-nowrap" style="font-variation-settings: 'wdth' 100">
       <slot name="label"></slot>
     </p>
-    <img src="/icon-pencil.svg" alt="Edit" class="w-[16px] h-[16px]">
+    <img src="/icon-pencil.svg" alt="Edit" class="w-4 h-4 md:w-[16px] md:h-[16px]">
   </div>
-  <div class="pt-[16px] pl-[18px]">
+  <div class="pt-4 md:pt-[16px] pl-4 md:pl-[18px]">
     <slot name="value"></slot>
   </div>
 </div>

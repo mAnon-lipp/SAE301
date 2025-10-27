@@ -1,7 +1,6 @@
 
 import { Router } from "./lib/router.js";
 import { AboutPage } from "./pages/about/page.js";
-import { HomePage } from "./pages/home/page.js";
 import { ProductsPage } from "./pages/products/page.js";
 import { ProductDetailPage } from "./pages/productDetail/page.js";
 
@@ -77,7 +76,7 @@ router.addRoute("*", The404Page);
         const thresholds = await StockThresholdData.getThresholds();
         configureThresholds(thresholds);
     } catch (error) {
-        console.warn('Impossible de charger les seuils de stock, utilisation des valeurs par défaut:', error);
+        // Utilisation des valeurs par défaut
     }
     
     await router.start();
@@ -126,7 +125,7 @@ router.addRoute("*", The404Page);
         // Mettre à jour le compteur après le démarrage
         CartModel.updateGlobalCount();
     } catch (e) {
-        console.warn('Impossible d\'initialiser le panier :', e);
+        // Erreur lors de l'initialisation du panier
     }
 })();
 

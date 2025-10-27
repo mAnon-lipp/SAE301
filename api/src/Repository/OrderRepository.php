@@ -110,7 +110,7 @@ class OrderRepository extends EntityRepository {
             
             $clientId = $order->getClientId();
             $dateCommande = $order->getDateCommande() ?? date('Y-m-d H:i:s');
-            $statut = $order->getStatut() ?? 'Validée';
+            $statut = $order->getStatut() ?? 'en cours';
             $montantTotal = $order->getMontantTotal();
             
             $requete->bindParam(':client_id', $clientId);
@@ -300,12 +300,16 @@ class OrderRepository extends EntityRepository {
             
             // Ajouter les détails du produit et du variant si disponibles
             if (isset($obj->name)) {
+                // Récupérer les options complètes du variant
+                $variantOptions = $this->getOptionsForVariant($obj->variant_id);
+                
                 $item->setProductDetails([
                     'name' => $obj->name,
                     'image' => $obj->image ?? null,
                     'description' => $obj->description ?? null,
                     'sku' => $obj->sku ?? null,
-                    'product_id' => $obj->product_id ?? null
+                    'product_id' => $obj->product_id ?? null,
+                    'options' => $variantOptions
                 ]);
             }
             
@@ -313,5 +317,43 @@ class OrderRepository extends EntityRepository {
         }
         
         return $items;
+    }
+
+    /**
+     * Récupère les options associées à un variant (pour l'affichage des commandes)
+     * 
+     * @param int $variantId L'ID du variant
+     * @return array Tableau d'options formatées
+     */
+    private function getOptionsForVariant(int $variantId): array {
+        $requete = $this->cnx->prepare("
+            SELECT ot.name as type_name, ov.id as option_value_id, ov.value, ov.label, ov.hex_code 
+            FROM VariantOptionValue vov
+            JOIN OptionValue ov ON vov.option_value_id = ov.id
+            JOIN OptionType ot ON ov.option_type_id = ot.id
+            WHERE vov.variant_id = :variantId
+        ");
+        $requete->bindParam(':variantId', $variantId);
+        $requete->execute();
+        $answer = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        $options = [];
+        foreach($answer as $obj) {
+            $option = [
+                "type" => $obj->type_name,
+                "option_value_id" => $obj->option_value_id,
+                "value" => $obj->value,
+                "label" => $obj->label ?? $obj->value
+            ];
+            
+            // Ajouter hex_code uniquement si présent (pour les couleurs)
+            if (!empty($obj->hex_code)) {
+                $option["hex_code"] = $obj->hex_code;
+            }
+            
+            $options[] = $option;
+        }
+
+        return $options;
     }
 }

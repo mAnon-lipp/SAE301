@@ -1,7 +1,7 @@
 /* Styles for profilefield component translated from Tailwind and inline styles */
 
 .profilefield_label_text {
-  color: #5f6368; /* text-[#5f6368] */
+  color: #5f6368; /* text-sm md:text-[#5f6368] */
 }
 
 .profilefield_label_text_black {
@@ -11,9 +11,9 @@
 .profilefield_value_text {
   font-family: 'Instrument Sans', sans-serif; /* font-['Instrument_Sans',_sans-serif] */
   font-weight: 400; /* font-normal */
-  font-size: 14px; /* text-[14px] */
-  color: #5f6368; /* text-[#5f6368] */
-  line-height: 23.1px; /* leading-[23.1px] */
+  font-size: 14px; /* text-sm md:text-[14px] */
+  color: #5f6368; /* text-sm md:text-[#5f6368] */
+  line-height: 23.1px; /* leading-normal md:leading-[23.1px] */
   white-space: nowrap; /* whitespace-nowrap */
 }
 

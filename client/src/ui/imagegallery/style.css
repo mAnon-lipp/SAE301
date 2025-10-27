@@ -1,9 +1,9 @@
 /* Translated styles for ImageGallery (no CSS variables, no @apply) */
 
-/* Thumbnail wrapper (replaces: w-[100px] h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all) */
+/* Thumbnail wrapper (replaces: w-full md:w-[100px] h-auto md:h-[100px] bg-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all) */
 .imagegallery_thumbnail {
-  width: 100px; /* w-[100px] */
-  height: 100px; /* h-[100px] */
+  width: 100px; /* w-full md:w-[100px] */
+  height: 100px; /* h-auto md:h-[100px] */
   background-color: oklch(90% 0 0); /* approx gray-200 */
   overflow: hidden; /* overflow-hidden */
   cursor: pointer; /* cursor-pointer */

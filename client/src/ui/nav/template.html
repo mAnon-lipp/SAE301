@@ -1,19 +1,19 @@
-<nav class="bg-white relative w-full h-[82px] flex items-center justify-between px-8">
+<nav class="bg-white relative w-full h-auto md:h-[82px] flex items-center justify-between px-8">
   <!-- Logo centré -->
-  <div class="absolute left-1/2 transform -translate-x-1/2 h-[42px] w-[140px]">
+  <div class="absolute left-1/2 transform -translate-x-1/2 h-auto md:h-[42px] w-full md:w-[140px]">
     <a href="/" data-link class="block w-full h-full overflow-hidden">
       <img src="/logo.svg" alt="LUKURË" class="w-full h-full object-contain" />
     </a>
   </div>
   
   <!-- Icon user à droite -->
-  <div class="ml-auto z-10 flex items-center gap-[16px]">
-    <a href="/login" data-link class="block w-[30px] h-[30px] flex items-center justify-center">
+  <div class="ml-auto z-10 flex items-center gap-3 md:gap-[16px]">
+    <a href="/login" data-link class="block w-full md:w-[30px] h-auto md:h-[30px] flex items-center justify-center">
       <img src="/icon-user.svg" alt="User" class="w-full h-full object-contain" />
     </a>
-    <button id="open-cart-panel" class="relative block w-[30px] h-[30px] flex items-center justify-center cursor-pointer p-0 border-0 bg-transparent">
+    <button id="open-cart-panel" class="relative block w-full md:w-[30px] h-auto md:h-[30px] flex items-center justify-center cursor-pointer p-0 border-0 bg-transparent">
       <img src="/icon-cart.svg" alt="Cart" class="w-full h-full object-contain" />
-      <span data-cart-count class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
+      <span data-cart-count class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-sm md:text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
     </button>
   </div>
 </nav>

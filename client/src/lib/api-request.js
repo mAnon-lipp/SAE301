@@ -34,11 +34,9 @@ let getRequest = async function(uri){
         var response = await fetch(API_URL+uri, options); // exécution (asynchrone) de la requête et attente de la réponse
     }
     catch(e){
-        console.error("Echec de la requête : "+e); // affichage de l'erreur dans la console
         return false;
     }
     if (response.status != 200){
-        console.error("Erreur de requête : " + response.status); // affichage de l'erreur dans la console
         return false; // si le serveur a renvoyé une erreur, on retourne false
     }  // si le serveur a renvoyé une erreur, on retourne false
     let $obj = await response.json(); // extraction du json retourné par le serveur (opération asynchrone aussi)
@@ -73,21 +71,10 @@ let postRequest = async function(uri, data){
         var response = await fetch(API_URL+uri, options); // exécution (asynchrone) de la requête et attente de la réponse
     }
     catch(e){
-        console.error("Echec de la requête : " + e); // affichage de l'erreur dans la console
         return false;
     }
     // Accepter 200 (OK) et 201 (Created) comme succès
     if (response.status != 200 && response.status != 201){
-        console.error("Erreur de requête : " + response.status); // affichage de l'erreur dans la console
-        
-        // Essayer de lire le message d'erreur du serveur
-        try {
-            const errorData = await response.json();
-            console.error("Détails de l'erreur:", errorData);
-        } catch (e) {
-            console.error("Impossible de lire les détails de l'erreur");
-        }
-        
         return false; // si le serveur a renvoyé une erreur, on retourne false
     }
     let $obj = await response.json(); // extraction du json retourné par le serveur (opération asynchrone aussi)
@@ -109,21 +96,10 @@ let jsonpostRequest = async function(uri, data){
         var response = await fetch(API_URL+uri, options); // exécution (asynchrone) de la requête et attente de la réponse
     }
     catch(e){
-        console.error("Echec de la requête : " + e); // affichage de l'erreur dans la console
         return false;
     }
     // Accepter 200 (OK) et 201 (Created) comme succès
     if (response.status != 200 && response.status != 201){
-        console.error("Erreur de requête : " + response.status); // affichage de l'erreur dans la console
-        
-        // Essayer de lire le message d'erreur du serveur
-        try {
-            const errorData = await response.json();
-            console.error("Détails de l'erreur:", errorData);
-        } catch (e) {
-            console.error("Impossible de lire les détails de l'erreur");
-        }
-        
         return false; // si le serveur a renvoyé une erreur, on retourne false
     }
     let $obj = await response.json(); // extraction du json retourné par le serveur (opération asynchrone aussi)
@@ -151,22 +127,11 @@ let deleteRequest = async function(uri){
         var response = await fetch(API_URL+uri, options); // exécution (asynchrone) de la requête et attente de la réponse
     }
     catch(e){
-        console.error("Echec de la requête : " + e); // affichage de l'erreur dans la console
         return false;
     }
     
     // Accepter 200 (OK) et 204 (No Content) comme succès
     if (response.status != 200 && response.status != 204){
-        console.error("Erreur de requête : " + response.status); // affichage de l'erreur dans la console
-        
-        // Essayer de lire le message d'erreur du serveur
-        try {
-            const errorData = await response.json();
-            console.error("Détails de l'erreur:", errorData);
-        } catch (e) {
-            console.error("Impossible de lire les détails de l'erreur");
-        }
-        
         return false;
     }
     
@@ -211,22 +176,17 @@ let patchRequest = async function(uri, data){
         var response = await fetch(API_URL+uri, options); // exécution (asynchrone) de la requête et attente de la réponse
     }
     catch(e){
-        console.error("Echec de la requête : " + e); // affichage de l'erreur dans la console
         return false;
     }
     
     // Accepter 200 (OK) comme succès
     if (response.status != 200){
-        console.error("Erreur de requête : " + response.status); // affichage de l'erreur dans la console
-        
         // Essayer de lire le message d'erreur du serveur
         try {
             const errorData = await response.json();
-            console.error("Détails de l'erreur:", errorData);
             // Retourner l'erreur structurée pour que l'appelant puisse la gérer
             return { success: false, error: errorData.error || 'Erreur inconnue' };
         } catch (e) {
-            console.error("Impossible de lire les détails de l'erreur");
             return false;
         }
     }

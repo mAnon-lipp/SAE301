@@ -1,38 +1,38 @@
-<div class="fixed top-0 right-0 w-[538px] h-screen bg-[#efefef] z-[100] flex flex-col translate-x-full transition-transform duration-300" data-cart-panel>
+<div class="fixed top-0 right-0 w-full md:w-[538px] h-screen bg-surface z-[100] flex flex-col translate-x-full transition-transform duration-300" data-cart-panel>
   <!-- Header -->
-  <div class="flex items-center justify-between px-[38px] pt-12 pb-[31px] border-b-2 border-[#cfcfcf]">
-    <h2 class="font-sans font-normal text-[32px] tracking-[4.8px] leading-[41.6px] text-black m-0">
+  <div class="flex items-center justify-between px-4 md:px-[38px] pt-12 pb-3 md:pb-[31px] border-b-2 border-muted">
+    <h2 class="font-sans font-normal text-sm md:text-[32px] tracking-normal md:tracking-[4.8px] leading-normal md:leading-[41.6px] text-foreground m-0">
       PANIER
     </h2>
-    <button class="bg-transparent border-0 cursor-pointer p-0 w-[27px] h-[22px] flex items-center justify-center transition-opacity hover:opacity-70" data-close-cart aria-label="Fermer le panier">
+    <button class="bg-transparent border-0 cursor-pointer p-0 w-full md:w-[27px] h-auto md:h-[22px] flex items-center justify-center transition-opacity hover:opacity-70" data-close-cart aria-label="Fermer le panier">
       <svg width="27" height="22" viewBox="0 0 27 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6.75 4.45L20.25 17.95M20.25 4.45L6.75 17.95" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M6.75 4.45L20.25 17.95M20.25 4.45L6.75 17.95" stroke="var(--color-foreground)" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </button>
   </div>
   
   <!-- Items Container -->
-  <div class="flex-1 overflow-y-auto px-[29px] py-8" data-cart-items>
+  <div class="flex-1 overflow-y-auto px-4 md:px-[29px] py-8" data-cart-items>
     <!-- Les articles du panier seront insérés ici -->
   </div>
   
   <!-- Summary -->
-  <div class="px-[29px] pb-[68px]">
+  <div class="px-4 md:px-[29px] pb-3 md:pb-[68px]">
     <!-- Divider -->
-    <div class="h-0 border-b border-[#cfcfcf] mb-8"></div>
+    <div class="h-0 border-b border-muted mb-8"></div>
     
     <!-- Notes -->
     <div class="py-8">
-      <p class="font-sans font-normal text-xs leading-[41.6px] text-[#1c1c1c] m-0">
+      <p class="font-sans font-normal text-xs leading-normal md:leading-[41.6px] text-foreground m-0">
         Ajouter une note de commande
       </p>
-      <p class="font-sans font-normal text-xs leading-[41.6px] text-[#3e3e3e] m-0">
+      <p class="font-sans font-normal text-xs leading-normal md:leading-[41.6px] text-muted m-0">
         Taxes appliquées lors du paiement
       </p>
     </div>
     
     <!-- Checkout Button -->
-    <button class="w-full bg-[#1c1c1c] border border-[#1c1c1c] text-white font-sans font-normal text-[13px] tracking-[2.34px] leading-[21.45px] uppercase py-[10.39px] px-[29px] cursor-pointer text-center flex items-center justify-center gap-1 transition-colors hover:bg-black" data-checkout>
+    <button class="w-full bg-foreground border border-foreground text-background font-sans font-normal text-sm md:text-[13px] tracking-normal md:tracking-[2.34px] leading-normal md:leading-[21.45px] uppercase py-3 md:py-[10.39px] px-4 md:px-[29px] cursor-pointer text-center flex items-center justify-center gap-1 transition-colors hover:bg-primary" data-checkout>
       <span>Finaliser la commande .</span>
       <span data-cart-total>$0.00</span>
     </button>

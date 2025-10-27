@@ -63,6 +63,20 @@ class StockThreshold extends Entity {
     public function setUpdatedAt(string $updatedAt): void {
         $this->updatedAt = $updatedAt;
     }
+
+    /**
+     * Sérialise l'objet en JSON
+     * @return array Représentation de l'objet pour la sérialisation JSON
+     */
+    public function jsonSerialize(): mixed {
+        return [
+            'id' => $this->id,
+            'setting_name' => $this->settingName,
+            'setting_value' => $this->settingValue,
+            'description' => $this->description,
+            'updated_at' => $this->updatedAt
+        ];
+    }
 }
 
 ?>

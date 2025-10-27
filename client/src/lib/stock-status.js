@@ -51,10 +51,10 @@ const STOCK_MESSAGES = {
  * Classes CSS pour les différents états (à utiliser avec Tailwind)
  */
 const STOCK_BADGE_CLASSES = {
-  base: 'flex gap-[10px] items-center justify-center px-[10px] py-[2px] rounded-[7px] flex-shrink-0 w-fit font-[var(--ff-sans)] font-normal text-xs tracking-[2.04px] leading-[28.8px] whitespace-pre',
-  [STOCK_STATUS.IN_STOCK]: 'bg-[rgba(52,168,83,0.15)] text-[#34A853]',      // Vert léger
-  [STOCK_STATUS.LOW_STOCK]: 'bg-[rgba(251,188,5,0.15)] text-[#F59E0B]',    // Orange/jaune
-  [STOCK_STATUS.OUT_OF_STOCK]: 'bg-[rgba(234,67,53,0.15)] text-[#EA4335]'  // Rouge léger
+  base: 'flex gap-3 md:gap-[10px] items-center justify-center px-4 md:px-[10px] py-3 md:py-[2px] rounded-[7px] flex-shrink-0 w-fit font-[var(--ff-sans)] font-normal text-xs tracking-normal md:tracking-[2.04px] leading-normal md:leading-[28.8px] whitespace-pre',
+  [STOCK_STATUS.IN_STOCK]: 'bg-[rgba(52,168,83,0.15)] text-sm md:text-[#34A853]',      // Vert léger
+  [STOCK_STATUS.LOW_STOCK]: 'bg-[rgba(251,188,5,0.15)] text-sm md:text-[#F59E0B]',    // Orange/jaune
+  [STOCK_STATUS.OUT_OF_STOCK]: 'bg-[rgba(234,67,53,0.15)] text-sm md:text-[#EA4335]'  // Rouge léger
 };
 
 /**
@@ -202,7 +202,6 @@ function configureThresholds(thresholds) {
   if (thresholds.CRITICAL_VARIANT_STOCK !== undefined) {
     STOCK_THRESHOLDS.CRITICAL_VARIANT_STOCK = thresholds.CRITICAL_VARIANT_STOCK;
   }
-  console.log('Seuils de stock configurés:', STOCK_THRESHOLDS);
 }
 
 /**

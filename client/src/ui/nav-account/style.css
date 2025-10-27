@@ -14,7 +14,7 @@
 .navaccount_name {
   font-family: 'Instrument Sans', sans-serif; /* font-['Instrument_Sans',_sans-serif] */
   font-weight: 700; /* font-bold */
-  font-size: 12px; /* text-[12px] */
+  font-size: 12px; /* text-sm md:text-[12px] */
   color: #111111; /* text-zinc-900 approximated as #111 */
   margin-bottom: 0; /* mb-0 */
 }
@@ -22,7 +22,7 @@
 .navaccount_email {
   font-family: 'Instrument Sans', sans-serif; /* font-['Instrument_Sans',_sans-serif] */
   font-weight: 400; /* font-normal */
-  font-size: 12px; /* text-[12px] */
+  font-size: 12px; /* text-sm md:text-[12px] */
   color: #111111; /* text-zinc-900 approximated as #111 */
   margin: 0;
 }

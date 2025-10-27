@@ -3,8 +3,8 @@
 .order-summary-item__options {
   font-family: sans-serif; /* font-sans */
   font-weight: 400; /* font-normal */
-  font-size: 12px; /* text-[12px] */
-  letter-spacing: 0.1125rem; /* tracking-[1.8px] ~ 1.8px */
-  color: #5f6368; /* text-[#5f6368] */
+  font-size: 12px; /* text-sm md:text-[12px] */
+  letter-spacing: 0.1125rem; /* tracking-normal md:tracking-[1.8px] ~ 1.8px */
+  color: #5f6368; /* text-sm md:text-[#5f6368] */
   margin: 0; /* m-0 */
 }

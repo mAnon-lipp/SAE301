@@ -129,7 +129,7 @@ class OrderController extends EntityController {
         $order = new Order(0);
         $order->setClientId($_SESSION['auth_user_id']);
         $order->setMontantTotal($obj->montant_total);
-        $order->setStatut('Validée');
+        $order->setStatut('en cours');
         $order->setDateCommande(date('Y-m-d H:i:s'));
         
         // Préparer les items
@@ -213,7 +213,7 @@ class OrderController extends EntityController {
             $order->setStatut($newStatut);
             
             // US011 - Logique de recrédit du stock (Critère 2)
-            if ($newStatut === 'Annulée' && $oldStatut !== 'Annulée') {
+            if ($newStatut === 'annulée' && $oldStatut !== 'annulée') {
                 $orderId = $order->getId();
                 $items = $this->orders->findItemsByOrderId($orderId); // Récupérer les items de la commande
                 
@@ -252,8 +252,8 @@ class OrderController extends EntityController {
             }
         }
         
-        // Si le statut n'est PAS 'Annulée' ou pas de changement de statut, mise à jour standard
-        if (isset($obj->statut) && $obj->statut !== 'Annulée') {
+        // Si le statut n'est PAS 'annulée' ou pas de changement de statut, mise à jour standard
+        if (isset($obj->statut) && $obj->statut !== 'annulée') {
             $success = $this->orders->update($order);
             if ($success) {
                 return $order;
