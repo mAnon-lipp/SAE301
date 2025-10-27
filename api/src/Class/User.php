@@ -11,6 +11,7 @@ class User extends Entity {
     private ?string $password_hash = null;
     private ?string $username = null;
     private ?string $name = null;
+    private ?bool $is_admin = false;
 
     public function __construct(int $id){
         $this->id = $id;
@@ -39,5 +40,9 @@ class User extends Entity {
     public function setPasswordHash(string $password_hash): self { $this->password_hash = $password_hash; return $this; }
     public function setUsername(string $username): self { $this->username = $username; return $this; }
     public function setName(string $name): self { $this->name = $name; return $this; }
+
+    // <-- AJOUTER GETTER ET SETTER POUR is_admin -->
+    public function isAdmin(): ?bool { return $this->is_admin; }
+    public function setIsAdmin(bool $is_admin): self { $this->is_admin = $is_admin; return $this; }
 }
 ?>

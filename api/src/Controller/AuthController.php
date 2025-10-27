@@ -38,9 +38,11 @@ class AuthController extends EntityController {
             $_SESSION['auth_user_id'] = $user->getId();
             $_SESSION['auth_user_email'] = $user->getEmail();
             $_SESSION['auth_username'] = $user->getUsername();
-            
-            // On renvoie les infos non sensibles de l'utilisateur
-            return ["success" => true, "user" => $user];
+            // <-- AJOUTER LA VÉRIFICATION ADMIN -->
+            $_SESSION['is_admin'] = $user->isAdmin(); // Stocke true/false dans la session
+
+            // On renvoie les infos non sensibles de l'utilisateur et le flag is_admin
+            return ["success" => true, "user" => $user, "is_admin" => $user->isAdmin()];
         } else {
             http_response_code(401); // Unauthorized
             return ["error" => "Identifiants incorrects."];
@@ -68,7 +70,8 @@ class AuthController extends EntityController {
         if (isset($_SESSION['auth_user_id'])) {
             $user = $this->users->find($_SESSION['auth_user_id']);
             if ($user) {
-                return ["is_authenticated" => true, "user" => $user];
+                // <-- AJOUTER 'is_admin' -->
+                return ["is_authenticated" => true, "user" => $user, "is_admin" => ($_SESSION['is_admin'] ?? false)];
             } else {
                 session_destroy();
                 return ["is_authenticated" => false];

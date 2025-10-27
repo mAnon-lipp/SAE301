@@ -1,0 +1,14 @@
+<div class="admin-layout">
+  <header class="admin-header bg-foreground text-background p-4 flex justify-between items-center">
+    <h1 class="m-0 font-sans font-medium text-[24px]">Back-Office LUKURË</h1>
+    <nav>
+       <a href="/admin/dashboard" data-link class="text-background no-underline ml-4">Dashboard</a>
+       <a href="/logout" data-link class="text-background no-underline ml-4">Déconnexion</a>
+    </nav>
+  </header>
+  <div class="admin-main-content flex flex-1">
+    <main class="admin-page-content flex-1 p-8">
+      <slot></slot>
+    </main>
+  </div>
+</div>

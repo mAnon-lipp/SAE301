@@ -9,6 +9,11 @@ import { AccountLayout } from "./layouts/account/layout.js";
 import { CheckoutLayout } from "./layouts/checkout/layout.js";
 import { The404Page } from "./pages/404/page.js";
 
+// Admin layout/pages
+import { AdminLayout } from "./layouts/admin/layout.js";
+import { AdminLoginPage } from "./pages/admin-login/page.js";
+import { AdminDashboardPage } from "./pages/admin-dashboard/page.js";
+
 // NOUVELLES PAGES
 import { LoginPage } from "./pages/login/page.js";
 import { SignupPage } from "./pages/signup/page.js";
@@ -39,6 +44,8 @@ router.addLayout("/commandes", AccountLayout); // Layout account pour la page co
 router.addLayout("/orders", AccountLayout); // Layout account pour les pages de détail de commande
 router.addLayout("/checkout", CheckoutLayout); // Layout checkout avec nav simplifiée
 router.addLayout("/order-confirmation", CheckoutLayout); // Layout checkout pour la page de confirmation
+// Layout admin
+router.addLayout("/admin", AdminLayout);
 
 // Routes publiques
 router.addRoute("/", ProductsPage);
@@ -60,6 +67,14 @@ router.addRoute("/logout", async (params, r) => {
     await r.logout();
     return ''; // Retourner une chaîne vide au lieu d'undefined
 }, { useLayout: false }); // Déconnexion (Critère 3)
+
+// --- Routes Admin ---
+// Page de connexion admin (pas de layout)
+router.addRoute("/admin/login", AdminLoginPage, { useLayout: false });
+
+// Dashboard admin (utilise AdminLayout, nécessite d'être admin)
+router.addRoute("/admin", AdminDashboardPage, { requireAdmin: true });
+router.addRoute("/admin/dashboard", AdminDashboardPage, { requireAdmin: true });
 
 // Routes protégées (Critère 6)
 router.addRoute("/account", AccountPage, { requireAuth: true }); // Page d'accueil du compte (avec les cartes)

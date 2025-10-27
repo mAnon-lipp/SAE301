@@ -84,6 +84,17 @@ class ProductRepository extends EntityRepository {
         return $res;
     }
 
+    /**
+     * Compte le nombre total de produits
+     * @return int
+     */
+    public function countAll(): int {
+        $requete = $this->cnx->prepare("SELECT COUNT(*) as c FROM Product");
+        $requete->execute();
+        $answer = $requete->fetch(PDO::FETCH_OBJ);
+        return (int)($answer->c ?? 0);
+    }
+
     public function save($product){
         $requete = $this->cnx->prepare("insert into Product (name, category) values (:name, :idcategory)");
         $name = $product->getName();

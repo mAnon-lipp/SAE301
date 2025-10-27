@@ -67,6 +67,17 @@ class OrderRepository extends EntityRepository {
     }
 
     /**
+     * Compte le nombre total de commandes
+     * @return int
+     */
+    public function countAll(): int {
+        $requete = $this->cnx->prepare("SELECT COUNT(*) as c FROM Commandes");
+        $requete->execute();
+        $answer = $requete->fetch(PDO::FETCH_OBJ);
+        return (int)($answer->c ?? 0);
+    }
+
+    /**
      * Trouve toutes les commandes d'un utilisateur
      */
     public function findAllByUserId($userId): array {

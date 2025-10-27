@@ -47,6 +47,7 @@ require_once "src/Controller/CategoryController.php";
 require_once "src/Controller/ProductImageController.php";
 require_once "src/Controller/UserController.php";
 require_once "src/Controller/AuthController.php";
+require_once "src/Controller/AdminController.php";
 require_once "src/Controller/OrderController.php";
 require_once "src/Controller/ProductVariantController.php";
 require_once "src/Controller/OptionValueImageController.php";
@@ -82,6 +83,7 @@ $router = [
     "user" => new UserController(), // Singulier pour le profil de l'utilisateur connecté
     "users" => new UserController(), // Garder le pluriel pour compatibilité (inscription)
     "auth" => new AuthController(),
+    "admin" => new AdminController(),
     "orders" => new OrderController(), // US007 - Gestion des commandes
     "variants" => new ProductVariantController(), // US008 - Gestion des variants et options
     "optionvalueimages" => new OptionValueImageController(), // US008 - Images par option (couleur)

@@ -26,6 +26,7 @@ class UserRepository extends EntityRepository {
         $u->setPasswordHash($answer->password_hash);
         $u->setUsername($answer->username);
         $u->setName($answer->name ?? '');
+        $u->setIsAdmin((bool)($answer->is_admin ?? false));
         return $u;
     }
     
@@ -43,6 +44,7 @@ class UserRepository extends EntityRepository {
         $u->setPasswordHash($answer->password_hash);
         $u->setUsername($answer->username);
         $u->setName($answer->name ?? '');
+        $u->setIsAdmin((bool)($answer->is_admin ?? false));
         return $u;
     }
 
@@ -116,6 +118,17 @@ class UserRepository extends EntityRepository {
     public function findAll(): array {
         // Non implémenté pour des raisons de sécurité
         return [];
+    }
+
+    /**
+     * Compte le nombre total d'utilisateurs
+     * @return int
+     */
+    public function countAll(): int {
+        $requete = $this->cnx->prepare("SELECT COUNT(*) as c FROM User");
+        $requete->execute();
+        $answer = $requete->fetch(PDO::FETCH_OBJ);
+        return (int)($answer->c ?? 0);
     }
     
     /**

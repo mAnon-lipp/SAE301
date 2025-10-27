@@ -16,7 +16,8 @@ class Router {
     this.layouts = {};
     this.currentRoute = null;
     this.isAuthenticated = false;
-    this.user = null; // NOUVEAU : Stocker l'objet utilisateur
+  this.user = null; // NOUVEAU : Stocker l'objet utilisateur
+  this.isAdmin = false; // NOUVEAU : Stocker si l'utilisateur est admin
     this.loginPath = options.loginPath || '/login';
     this.apiUrl = options.apiUrl || '/api/'; // NOUVEAU : URL de l'API
     
@@ -33,16 +34,19 @@ class Router {
   }
   
   // Définir l'état d'authentification et les données utilisateur
-  setAuth(isAuth, user = null) {
+  setAuth(isAuth, user = null, isAdmin = false) {
     this.isAuthenticated = isAuth;
     this.user = user;
-    
+    this.isAdmin = isAuth && isAdmin; // isAdmin ne peut être true que si isAuth est true
+
     if (isAuth && user) {
       sessionStorage.setItem('auth_user', JSON.stringify(user));
       sessionStorage.setItem('is_authenticated', 'true');
+      sessionStorage.setItem('is_admin', this.isAdmin ? 'true' : 'false');
     } else {
       sessionStorage.removeItem('auth_user');
       sessionStorage.removeItem('is_authenticated');
+      sessionStorage.removeItem('is_admin');
     }
   }
   
@@ -78,6 +82,7 @@ class Router {
       keys, 
       handler,
       requireAuth: options.requireAuth || false,
+      requireAdmin: options.requireAdmin || false,
       useLayout: options.useLayout !== false // true par défaut
     });
     return this;
@@ -134,6 +139,15 @@ class Router {
         // Si l'utilisateur est déjà connecté et essaie d'accéder à login/signup
         if (this.isAuthenticated && (path === '/login' || path === '/signup')) {
           this.navigate('/account');
+          return;
+        }
+        
+        // <-- AJOUT : Vérification requireAdmin -->
+        if (route.requireAdmin && (!this.isAuthenticated || !this.isAdmin)) {
+          // Sauvegarde où on voulait aller
+          sessionStorage.setItem('redirectAfterLogin', path);
+          // Redirige vers la page de login admin
+          this.navigate('/admin/login');
           return;
         }
         
@@ -254,16 +268,27 @@ class Router {
   
   // Se déconnecter avec appel API (Critère 3)
   async logout() {
+    // Déterminer si l'utilisateur était dans la zone admin
+    const wasAdmin = this.isAdmin || (this.currentRoute && this.currentRoute.startsWith('/admin'));
+
     this.setAuth(false); // Déconnexion optimiste côté client
-    
+
     // Appel API pour détruire la session côté serveur
     try {
       await deleteRequest('auth');
-      // Naviguer vers la page de connexion après la déconnexion
-      this.navigate(this.loginPath);
+      // Si c'était un admin, rediriger vers la page de connexion admin
+      if (wasAdmin) {
+        this.navigate('/admin/login');
+      } else {
+        this.navigate(this.loginPath);
+      }
     } catch (error) {
       console.error('Erreur lors de la déconnexion API:', error);
-      this.navigate(this.loginPath);
+      if (wasAdmin) {
+        this.navigate('/admin/login');
+      } else {
+        this.navigate(this.loginPath);
+      }
     }
   }
   
@@ -274,8 +299,8 @@ class Router {
       const data = await getRequest('auth');
       
       if (data && data.is_authenticated && data.user) {
-        // Session valide côté serveur
-        this.setAuth(true, data.user);
+        // Session valide côté serveur — inclut is_admin
+        this.setAuth(true, data.user, data.is_admin ?? false);
       } else {
         // Pas de session côté serveur
         this.setAuth(false);
@@ -284,9 +309,9 @@ class Router {
       // Erreur réseau - fallback sur sessionStorage
       const storedUser = sessionStorage.getItem('auth_user');
       const isAuthenticated = sessionStorage.getItem('is_authenticated') === 'true';
+      const isAdmin = sessionStorage.getItem('is_admin') === 'true';
       if (isAuthenticated && storedUser) {
-        this.isAuthenticated = true;
-        this.user = JSON.parse(storedUser);
+        this.setAuth(true, JSON.parse(storedUser), isAdmin);
       } else {
         this.setAuth(false);
       }
