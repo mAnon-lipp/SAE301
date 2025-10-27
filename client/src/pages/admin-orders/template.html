@@ -1,0 +1,60 @@
+<div>
+  <h2>Gestion des Commandes</h2>
+
+  <div class="admin-filters mb-5">
+    <label for="sort-by" class="font-sans text-foreground">Trier par :</label>
+    <select id="sort-by" class="border border-neutral-200">
+      <option value="date_desc">Date (récente d'abord)</option>
+      <option value="date_asc">Date (ancienne d'abord)</option>
+      <option value="montant_desc">Montant (décroissant)</option>
+      <option value="montant_asc">Montant (croissant)</option>
+      <option value="statut_asc">Statut (A-Z)</option>
+    </select>
+    <label for="filter-status" class="ml-5 font-sans text-foreground">Filtrer par statut :</label>
+    <select id="filter-status" class="border border-neutral-200">
+      <option value="all">Tous</option>
+      <option value="en cours">En cours</option>
+      <option value="disponible">Disponible</option>
+      <option value="retirée">Retirée</option>
+      <option value="annulée">Annulée</option>
+    </select>
+  </div>
+
+  <div id="batch-actions-container" class="admin-batch-actions mb-5" style="display: none;">
+    <div class="p-4 bg-neutral-50 border border-neutral-300 rounded">
+      <p class="mb-2 font-semibold" id="batch-selection-count">0 commande(s) sélectionnée(s)</p>
+      <div class="flex items-center gap-3">
+        <label for="batch-action-status" class="font-sans text-foreground">Changer le statut :</label>
+        <select id="batch-action-status" class="border border-neutral-200 px-2 py-1">
+          <option value="">-- Sélectionner un statut --</option>
+          <option value="en cours">En cours</option>
+          <option value="disponible">Disponible</option>
+          <option value="retirée">Retirée</option>
+          <option value="annulée">Annulée</option>
+        </select>
+        <button id="batch-action-apply" class="px-4 py-2 bg-primary text-background hover:bg-primary-dark rounded">Appliquer aux sélectionnées</button>
+      </div>
+    </div>
+  </div>
+
+  <table id="orders-table" class="w-full border-collapse">
+    <thead>
+      <tr class="bg-neutral-100">
+        <th class="p-2 border border-neutral-200 text-left">
+          <input type="checkbox" id="select-all-orders">
+        </th>
+        <th class="p-2 border border-neutral-200 text-left">ID</th>
+        <th class="p-2 border border-neutral-200 text-left">Date</th>
+        <th class="p-2 border border-neutral-200 text-left">Client</th>
+        <th class="p-2 border border-neutral-200 text-left">Montant</th>
+        <th class="p-2 border border-neutral-200 text-left">Statut</th>
+        <th class="p-2 border border-neutral-200 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="orders-table-body">
+      <tr>
+        <td colspan="7" class="p-2 text-center">Chargement des commandes...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

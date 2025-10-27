@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : lun. 27 oct. 2025 à 08:41
+-- Généré le : lun. 27 oct. 2025 à 11:06
 -- Version du serveur : 10.11.14-MariaDB-0+deb12u2
 -- Version de PHP : 8.3.24
 
@@ -20,6 +20,22 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `lippler1`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `AdminLog`
+--
+
+CREATE TABLE `AdminLog` (
+  `id` int(11) NOT NULL,
+  `admin_user_id` int(11) NOT NULL,
+  `action_type` varchar(50) NOT NULL,
+  `target_entity` varchar(50) DEFAULT NULL,
+  `target_id` int(11) DEFAULT NULL,
+  `details` text DEFAULT NULL,
+  `timestamp` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -51,7 +67,7 @@ CREATE TABLE `Commandes` (
   `id` int(11) NOT NULL,
   `client_id` int(11) NOT NULL,
   `date_commande` datetime NOT NULL DEFAULT current_timestamp(),
-  `statut` varchar(50) NOT NULL DEFAULT 'Validée',
+  `statut` varchar(50) NOT NULL DEFAULT 'en cours',
   `montant_total` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -60,19 +76,19 @@ CREATE TABLE `Commandes` (
 --
 
 INSERT INTO `Commandes` (`id`, `client_id`, `date_commande`, `statut`, `montant_total`) VALUES
-(6, 1, '2025-10-21 13:45:30', 'Validée', '490.00'),
-(7, 1, '2025-10-22 07:04:55', 'Validée', '1190.00'),
-(8, 1, '2025-10-22 09:17:01', 'Validée', '3900.00'),
-(9, 1, '2025-10-22 10:00:54', 'Validée', '1440.00'),
-(11, 1, '2025-10-22 11:38:29', 'Validée', '1180.00'),
-(15, 2, '2025-10-22 11:50:05', 'Validée', '615.00'),
-(16, 2, '2025-10-22 13:20:26', 'Validée', '490.00'),
-(17, 2, '2025-10-22 13:48:12', 'Validée', '490.00'),
-(18, 1, '2025-10-23 08:14:36', 'Validée', '1190.00'),
-(20, 1, '2025-10-23 08:34:09', 'Validée', '1250.00'),
-(26, 1, '2025-10-23 16:02:38', 'Validée', '1715.00'),
-(27, 1, '2025-10-23 16:04:14', 'Validée', '250.00'),
-(28, 1, '2025-10-23 16:04:23', 'Validée', '125.00');
+(6, 1, '2025-10-21 13:45:30', 'retirée', '490.00'),
+(7, 1, '2025-10-22 07:04:55', 'retirée', '1190.00'),
+(8, 1, '2025-10-22 09:17:01', 'retirée', '3900.00'),
+(9, 1, '2025-10-22 10:00:54', 'disponible', '1440.00'),
+(11, 1, '2025-10-22 11:38:29', 'en cours', '1180.00'),
+(15, 2, '2025-10-22 11:50:05', 'en cours', '615.00'),
+(16, 2, '2025-10-22 13:20:26', 'en cours', '490.00'),
+(17, 2, '2025-10-22 13:48:12', 'en cours', '490.00'),
+(18, 1, '2025-10-23 08:14:36', 'en cours', '1190.00'),
+(20, 1, '2025-10-23 08:34:09', 'en cours', '1250.00'),
+(26, 1, '2025-10-23 16:02:38', 'en cours', '1715.00'),
+(27, 1, '2025-10-23 16:04:14', 'en cours', '250.00'),
+(28, 1, '2025-10-23 16:04:23', 'en cours', '125.00');
 
 -- --------------------------------------------------------
 
@@ -471,7 +487,7 @@ INSERT INTO `ProductVariant` (`id`, `product_id`, `sku`, `price`, `stock`) VALUE
 (236, 4, 'BEIGE-39.5', '690.00', 0),
 (237, 4, 'BEIGE-40', '690.00', 0),
 (238, 4, 'BEIGE-40.5', '690.00', 0),
-(239, 4, 'BEIGE-41', '690.00', 0),
+(239, 4, 'BEIGE-41', '690.00', 3),
 (240, 4, 'BEIGE-41.5', '690.00', 0),
 (241, 4, 'BEIGE-42', '690.00', 0),
 (243, 4, 'BLAW-35', '690.00', 0),
@@ -481,7 +497,7 @@ INSERT INTO `ProductVariant` (`id`, `product_id`, `sku`, `price`, `stock`) VALUE
 (247, 4, 'BLAW-37', '690.00', 0),
 (248, 4, 'BLAW-37.5', '690.00', 0),
 (249, 4, 'BLAW-38', '690.00', 0),
-(250, 4, 'BLAW-38.5', '690.00', 0),
+(250, 4, 'BLAW-38.5', '690.00', 5),
 (251, 4, 'BLAW-39', '690.00', 0),
 (252, 4, 'BLAW-39.5', '690.00', 0),
 (253, 4, 'BLAW-40', '690.00', 0),
@@ -489,8 +505,8 @@ INSERT INTO `ProductVariant` (`id`, `product_id`, `sku`, `price`, `stock`) VALUE
 (255, 4, 'BLAW-41', '690.00', 0),
 (256, 4, 'BLAW-41.5', '690.00', 0),
 (257, 4, 'BLAW-42', '690.00', 0),
-(258, 4, 'TANG-35', '690.00', 0),
-(259, 4, 'TANG-35.5', '690.00', 0),
+(258, 4, 'TANG-35', '690.00', 7),
+(259, 4, 'TANG-35.5', '690.00', 7),
 (260, 4, 'TANG-36', '690.00', 0),
 (261, 4, 'TANG-36.5', '690.00', 0),
 (262, 4, 'TANG-37', '690.00', 0),
@@ -682,17 +698,18 @@ CREATE TABLE `User` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
-  `username` varchar(255) DEFAULT NULL
+  `username` varchar(255) DEFAULT NULL,
+  `is_admin` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `User`
 --
 
-INSERT INTO `User` (`id`, `name`, `email`, `password_hash`, `username`) VALUES
-(1, 'Manon', 'manon.lippler3@gmail.com', '$2y$10$QtwyjVQhSfRwJxS4Oa2NBuMurkBUJOVdmUTi1mO/R8hFvOIvtHDvm', 'manon.lippler3'),
-(2, '', 'sandrinesuriano@gmail.com', '$2y$10$r3NA/Ht1MLNkKStiKouJ8.C2Xoe3bzswJBLn5p5T7ilCvMOmTKVSS', 'sandrinesuriano'),
-(3, 'David', 'david.lippler@gmail.com', '$2y$10$YdPZvgNutlat02wC9F5HQus5orGZwmXZBnTdYhBxj08DU13G4c1p6', 'david.lippler');
+INSERT INTO `User` (`id`, `name`, `email`, `password_hash`, `username`, `is_admin`) VALUES
+(1, 'Manon', 'manon.lippler3@gmail.com', '$2y$10$QtwyjVQhSfRwJxS4Oa2NBuMurkBUJOVdmUTi1mO/R8hFvOIvtHDvm', 'manon.lippler3', 1),
+(2, '', 'sandrinesuriano@gmail.com', '$2y$10$r3NA/Ht1MLNkKStiKouJ8.C2Xoe3bzswJBLn5p5T7ilCvMOmTKVSS', 'sandrinesuriano', 0),
+(3, 'David', 'david.lippler@gmail.com', '$2y$10$YdPZvgNutlat02wC9F5HQus5orGZwmXZBnTdYhBxj08DU13G4c1p6', 'david.lippler', 0);
 
 -- --------------------------------------------------------
 
@@ -1289,6 +1306,15 @@ INSERT INTO `VariantOptionValue` (`variant_id`, `option_value_id`) VALUES
 --
 
 --
+-- Index pour la table `AdminLog`
+--
+ALTER TABLE `AdminLog`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_admin_user` (`admin_user_id`),
+  ADD KEY `idx_action` (`action_type`),
+  ADD KEY `idx_target` (`target_entity`,`target_id`);
+
+--
 -- Index pour la table `Category`
 --
 ALTER TABLE `Category`
@@ -1382,6 +1408,12 @@ ALTER TABLE `VariantOptionValue`
 --
 
 --
+-- AUTO_INCREMENT pour la table `AdminLog`
+--
+ALTER TABLE `AdminLog`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `Category`
 --
 ALTER TABLE `Category`
@@ -1450,6 +1482,12 @@ ALTER TABLE `User`
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `AdminLog`
+--
+ALTER TABLE `AdminLog`
+  ADD CONSTRAINT `fk_adminlog_user` FOREIGN KEY (`admin_user_id`) REFERENCES `User` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `Commandes`

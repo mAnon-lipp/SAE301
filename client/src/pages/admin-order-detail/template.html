@@ -1,0 +1,34 @@
+<div>
+  <a href="/admin/orders" data-link>&larr; Retour à la liste</a>
+  <h2 id="order-title">Chargement de la commande...</h2>
+
+  <div id="order-details" class="mt-5">
+    </div>
+
+  <div id="order-items" class="mt-5">
+    <h3 class="font-sans font-medium text-foreground">Articles</h3>
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="bg-neutral-100">
+          <th class="p-2 border border-neutral-200">Produit</th>
+          <th class="p-2 border border-neutral-200">Variant</th>
+          <th class="p-2 border border-neutral-200">Quantité</th>
+          <th class="p-2 border border-neutral-200">Prix Unitaire</th>
+        </tr>
+      </thead>
+      <tbody id="order-items-body"></tbody>
+    </table>
+  </div>
+
+  <div id="admin-actions" class="mt-8 border-t border-neutral-300 pt-5">
+    <h3>Modifier le statut</h3>
+    <select id="status-select">
+      <option value="en cours">En cours</option>
+      <option value="disponible">Disponible</option>
+      <option value="retirée">Retirée</option>
+      <option value="annulée">Annulée</option>
+    </select>
+    <button id="save-status-btn" style="margin-left: 10px;">Enregistrer</button>
+    <p id="save-status-msg" style="color: green; display: none;">Statut mis à jour.</p>
+  </div>
+</div>

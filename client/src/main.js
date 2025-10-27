@@ -13,6 +13,8 @@ import { The404Page } from "./pages/404/page.js";
 import { AdminLayout } from "./layouts/admin/layout.js";
 import { AdminLoginPage } from "./pages/admin-login/page.js";
 import { AdminDashboardPage } from "./pages/admin-dashboard/page.js";
+import { AdminOrdersPage } from "./pages/admin-orders/page.js"; // <-- AJOUT
+import { AdminOrderDetailPage } from "./pages/admin-order-detail/page.js"; // <-- AJOUT
 
 // NOUVELLES PAGES
 import { LoginPage } from "./pages/login/page.js";
@@ -75,6 +77,11 @@ router.addRoute("/admin/login", AdminLoginPage, { useLayout: false });
 // Dashboard admin (utilise AdminLayout, nécessite d'être admin)
 router.addRoute("/admin", AdminDashboardPage, { requireAdmin: true });
 router.addRoute("/admin/dashboard", AdminDashboardPage, { requireAdmin: true });
+
+// --- AJOUTS POUR US015 ---
+router.addRoute("/admin/orders", AdminOrdersPage, { requireAdmin: true });
+router.addRoute("/admin/orders/:id", AdminOrderDetailPage, { requireAdmin: true });
+// --- FIN AJOUTS ---
 
 // Routes protégées (Critère 6)
 router.addRoute("/account", AccountPage, { requireAuth: true }); // Page d'accueil du compte (avec les cartes)

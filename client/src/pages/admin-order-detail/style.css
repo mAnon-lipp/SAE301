@@ -1,0 +1,24 @@
+/* Styles for admin order detail page extracted from inline styles */
+
+.admin-order-detail__error {
+  color: red;
+}
+
+.admin-order-detail__msg {
+  display: none;
+}
+
+.admin-order-detail__msg--success {
+  color: green;
+  display: block;
+}
+
+.admin-order-detail__msg--error {
+  color: red;
+  display: block;
+}
+
+.admin-order-detail__td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}

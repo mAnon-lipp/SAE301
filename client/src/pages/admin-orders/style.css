@@ -1,0 +1,77 @@
+/* Styles for admin orders page extracted from inline styles in page.js */
+
+.admin-orders__td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.admin-orders__td_center {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.admin-orders__error {
+  color: red;
+  text-align: center;
+}
+
+.admin-orders__no-results {
+  text-align: center;
+}
+
+/* Actions en lot */
+.admin-batch-actions {
+  transition: all 0.3s ease;
+}
+
+#batch-selection-count {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+#batch-action-apply {
+  transition: all 0.2s ease;
+}
+
+#batch-action-apply:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#batch-action-apply:active {
+  transform: translateY(0);
+}
+
+/* Statut badges */
+.status-en-cours {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.status-disponible {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.status-retirée {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.status-annulée {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}

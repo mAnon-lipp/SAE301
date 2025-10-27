@@ -67,6 +67,43 @@ class OrderRepository extends EntityRepository {
     }
 
     /**
+     * Trouve TOUTES les commandes (pour l'admin) avec les infos client
+     */
+    public function findAllWithClientInfo(): array {
+        $requete = $this->cnx->prepare(
+            "SELECT c.*, u.name as client_name, u.email as client_email 
+             FROM Commandes c
+             JOIN User u ON c.client_id = u.id
+             ORDER BY c.date_commande DESC"
+        );
+        $requete->execute();
+        $answer = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        $res = [];
+        foreach($answer as $obj){
+            $order = new Order($obj->id);
+            $order->setClientId($obj->client_id);
+            $order->setDateCommande($obj->date_commande);
+            $order->setStatut($obj->statut);
+            $order->setMontantTotal($obj->montant_total);
+
+            // Charger les items
+            $items = $this->findItemsByOrderId($obj->id);
+            $order->setItems($items);
+
+            // Ajouter les infos client (qui ne sont pas dans l'entité Order)
+            // On les ajoute au moment de la sérialisation
+            $orderData = $order->jsonSerialize();
+            $orderData['client_name'] = $obj->client_name ?? 'N/A';
+            $orderData['client_email'] = $obj->client_email ?? 'N/A';
+
+            array_push($res, $orderData);
+        }
+
+        return $res;
+    }
+
+    /**
      * Compte le nombre total de commandes
      * @return int
      */
