@@ -20,6 +20,11 @@ import { CheckoutPage } from "./pages/checkout/page.js";
 import { OrderConfirmationPage } from "./pages/order-confirmation/page.js";
 // ---
 
+// US009 - Initialisation des seuils de stock depuis l'API
+import { StockThresholdData } from "./data/stockThreshold.js";
+import { configureThresholds } from "./lib/stock-status.js";
+// ---
+
 const router = new Router('app', {
     loginPath: '/login',
 });
@@ -64,6 +69,14 @@ router.addRoute("*", The404Page);
 
 // Démarrer le routeur (async pour attendre la vérification de session)
 (async () => {
+    // US009 - Charger les seuils de stock depuis l'API au démarrage
+    try {
+        const thresholds = await StockThresholdData.getThresholds();
+        configureThresholds(thresholds);
+    } catch (error) {
+        console.warn('Impossible de charger les seuils de stock, utilisation des valeurs par défaut:', error);
+    }
+    
     await router.start();
     // --- Initialisation du Panier (overlay + panel) ---
     try {

@@ -3,8 +3,9 @@
  * Fournit des fonctions centralisées pour déterminer et afficher l'état du stock
  */
 
-// Configuration des seuils de stock (configurables)
-const STOCK_THRESHOLDS = {
+// Configuration des seuils de stock (configurables via API)
+// Ces valeurs seront remplacées par les valeurs de l'API au démarrage de l'application
+let STOCK_THRESHOLDS = {
   // Seuil pour "Bientôt épuisé" / "Dernières tailles disponibles"
   LOW_STOCK: 5,
   // Seuil pour le nombre de tailles/variants disponibles
@@ -188,7 +189,7 @@ function getStockBadgeClasses(status) {
 }
 
 /**
- * Configure les seuils de stock (pour l'administration)
+ * Configure les seuils de stock (appelé au démarrage avec les valeurs de l'API)
  * @param {Object} thresholds - Nouveaux seuils { LOW_STOCK, LOW_VARIANT_COUNT, CRITICAL_VARIANT_STOCK }
  */
 function configureThresholds(thresholds) {
@@ -201,6 +202,7 @@ function configureThresholds(thresholds) {
   if (thresholds.CRITICAL_VARIANT_STOCK !== undefined) {
     STOCK_THRESHOLDS.CRITICAL_VARIANT_STOCK = thresholds.CRITICAL_VARIANT_STOCK;
   }
+  console.log('Seuils de stock configurés:', STOCK_THRESHOLDS);
 }
 
 /**

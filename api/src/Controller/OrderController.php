@@ -212,17 +212,15 @@ class OrderController extends EntityController {
             $newStatut = $obj->statut;
             $order->setStatut($newStatut);
             
-            // US011 - TEMPORAIREMENT DÉSACTIVÉ (table StockMovement non créée)
-            // TODO: Réactiver après création de la table StockMovement
-            /*
             // US011 - Logique de recrédit du stock (Critère 2)
             if ($newStatut === 'Annulée' && $oldStatut !== 'Annulée') {
                 $orderId = $order->getId();
-                $items = $this->orders->findItemsByOrderId($orderId);
+                $items = $this->orders->findItemsByOrderId($orderId); // Récupérer les items de la commande
                 
                 require_once "src/Repository/ProductVariantRepository.php";
                 $variantRepo = new ProductVariantRepository();
                 
+                // Créer une transaction spécifique pour le recrédit
                 try {
                     $this->orders->cnx->beginTransaction();
                     
@@ -230,12 +228,13 @@ class OrderController extends EntityController {
                         $variantId = $item->getVariantId();
                         $quantite = $item->getQuantite();
                         
+                        // Incrémenter le stock
                         if (!$variantRepo->incrementStock((int)$variantId, (int)$quantite, (int)$orderId)) {
                             throw new Exception("Échec du recrédit de stock pour le variant " . $variantId);
                         }
                     }
                     
-                    $success = $this->orders->update($order);
+                    $success = $this->orders->update($order); // Mettre à jour le statut dans la même transaction
                     
                     if ($success) {
                         $this->orders->cnx->commit();
@@ -251,11 +250,10 @@ class OrderController extends EntityController {
                 
                 return $order;
             }
-            */
         }
         
-        // Mise à jour standard du statut
-        if (isset($obj->statut)) {
+        // Si le statut n'est PAS 'Annulée' ou pas de changement de statut, mise à jour standard
+        if (isset($obj->statut) && $obj->statut !== 'Annulée') {
             $success = $this->orders->update($order);
             if ($success) {
                 return $order;

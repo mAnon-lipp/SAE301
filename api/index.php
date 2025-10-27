@@ -50,6 +50,7 @@ require_once "src/Controller/AuthController.php";
 require_once "src/Controller/OrderController.php";
 require_once "src/Controller/ProductVariantController.php";
 require_once "src/Controller/OptionValueImageController.php";
+require_once "src/Controller/StockThresholdController.php";
 require_once "src/Class/HttpRequest.php";
 
 
@@ -84,6 +85,7 @@ $router = [
     "orders" => new OrderController(), // US007 - Gestion des commandes
     "variants" => new ProductVariantController(), // US008 - Gestion des variants et options
     "optionvalueimages" => new OptionValueImageController(), // US008 - Images par option (couleur)
+    "stockthresholds" => new StockThresholdController(), // US009 - Seuils de stock configurables
 ];
 
 // objet HttpRequest qui contient toutes les infos utiles sur la requêtes (voir class/HttpRequest.php)
