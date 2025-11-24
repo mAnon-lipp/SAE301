@@ -6,5 +6,5 @@ export default defineConfig({
     target: "esnext", //browsers can handle the latest ES features
   },
   plugins: [tailwindcss()],
-  base: "SAE301",
+  base: "/",
 });
