@@ -3,8 +3,9 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   build: {
-    target: "esnext", //browsers can handle the latest ES features
+    target: "esnext", 
   },
   plugins: [tailwindcss()],
-  base: "/",
+  // IMPORTANT: Set base to your repository name with slashes
+  base: "/SAE301/", 
 });
