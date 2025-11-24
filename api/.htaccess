@@ -1,8 +1,10 @@
 # CORS headers (placed in IfModule to avoid errors if mod_headers is not enabled)
 # Note: Les headers CORS sont gérés dynamiquement dans index.php pour supporter plusieurs origines
 <IfModule mod_headers.c>
-  # Headers CORS gérés dans index.php - commenté pour éviter les conflits
-  # Header always set Access-Control-Allow-Origin "https://mmi.unilim.fr"
+  # Autoriser ton site GitHub ET localhost (pour le dev)
+  SetEnvIf Origin "^https://(manon-lipp\.github\.io|localhost:5173)$" ORIGIN_SUB_DOMAIN=$0
+  Header always set Access-Control-Allow-Origin "%{ORIGIN_SUB_DOMAIN}e" env=ORIGIN_SUB_DOMAIN
+  
   Header always set Access-Control-Allow-Methods "GET,POST,DELETE,PATCH,PUT,OPTIONS"
   Header always set Access-Control-Allow-Headers "Content-Type,Authorization,X-Requested-With"
   Header always set Access-Control-Allow-Credentials "true"
