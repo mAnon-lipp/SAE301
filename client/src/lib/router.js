@@ -21,6 +21,11 @@ class Router {
     this.loginPath = options.loginPath || '/login';
     this.apiUrl = options.apiUrl || '/api/'; // NOUVEAU : URL de l'API
     
+    // NOUVEAU : Gérer le base path pour GitHub Pages
+    // Récupérer le base depuis import.meta.env ou une balise <base>
+    const baseTag = document.querySelector('base');
+    this.basePath = baseTag ? baseTag.getAttribute('href') : (import.meta.env.BASE_URL || '/');
+    
     // Écouter les changements d'URL
     window.addEventListener('popstate', () => this.handleRoute());
     
@@ -125,13 +130,22 @@ class Router {
   
   // Naviguer vers une route
   navigate(path) {
-    window.history.pushState(null, null, path);
+    // Ajouter le basePath si nécessaire
+    const fullPath = this.basePath !== '/' && !path.startsWith(this.basePath) 
+      ? this.basePath.replace(/\/$/, '') + path 
+      : path;
+    window.history.pushState(null, null, fullPath);
     this.handleRoute();
   }
   
   // Gérer la route actuelle
   handleRoute() {
-    const path = window.location.pathname;
+    let path = window.location.pathname;
+    
+    // Retirer le basePath pour la correspondance des routes
+    if (this.basePath !== '/' && path.startsWith(this.basePath)) {
+      path = path.substring(this.basePath.length - 1) || '/';
+    }
     
     // Trouver la route correspondante
     for (const route of this.routes) {

@@ -4,8 +4,8 @@
  */
 
 
-// URL de votre API locale
-let API_URL = "https://mmi.unilim.fr/~lippler1/SAE301/api/";
+// URL de votre API - utilise la variable d'environnement si disponible
+let API_URL = import.meta.env.VITE_API_URL || "https://mmi.unilim.fr/~lippler1/SAE301/api/";
 
 
 /**

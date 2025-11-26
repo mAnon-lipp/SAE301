@@ -90,8 +90,13 @@ let NavAccountView = {
     if (logoutButton) {
       logoutButton.addEventListener('click', (e) => {
         e.preventDefault();
-        // Redirect to logout route
-        window.location.href = '/logout';
+        // Utiliser le routeur global pour la déconnexion
+        if (window.router) {
+          window.router.navigate('/logout');
+        } else {
+          // Fallback si le routeur n'est pas disponible
+          window.location.href = '/logout';
+        }
       });
     }
     
