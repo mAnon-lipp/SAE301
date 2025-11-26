@@ -2,6 +2,9 @@ import { htmlToFragment, processTemplate, genericRenderer } from "../../lib/util
 import template from "./template.html?raw";
 import "./style.css";
 
+// Traiter le template une seule fois au chargement du module
+const processedTemplate = processTemplate(template);
+
 let OrderSummaryItemView = {
   html: function (data) {
     // Si c'est un tableau d'items, générer le HTML pour chacun
@@ -30,7 +33,7 @@ let OrderSummaryItemView = {
           quantity: item.quantity || 1,
           options: optionsHTML
         };
-        htmlString += genericRenderer(template, renderedData);
+        htmlString += genericRenderer(processedTemplate, renderedData);
       }
       return htmlString;
     }
@@ -58,7 +61,7 @@ let OrderSummaryItemView = {
       options: optionsHTML
     };
     
-    return genericRenderer(template, renderedData);
+    return genericRenderer(processedTemplate, renderedData);
   },
 
   dom: function (data) {

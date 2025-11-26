@@ -2,11 +2,14 @@ import { genericRenderer, htmlToFragment, processTemplate } from "../../lib/util
 import template from "./template.html?raw";
 import "./style.css";
 
+// Traiter le template une seule fois au chargement du module
+const processedTemplate = processTemplate(template);
+
 let ProductView = {
   html: function (data) {
   let htmlString = '<div class="product_grid">';
     for (let obj of data) {
-      htmlString  += genericRenderer(template, obj);
+      htmlString  += genericRenderer(processedTemplate, obj);
     }
     return htmlString + '</div>';
   },

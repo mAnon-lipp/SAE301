@@ -2,6 +2,9 @@ import { htmlToFragment, processTemplate, genericRenderer } from "../../lib/util
 import template from "./template.html?raw";
 import "./style.css";
 
+// Traiter le template une seule fois au chargement du module
+const processedTemplate = processTemplate(template);
+
 let ImageGalleryView = {
   html: function (data) {
     // Préparer les images
@@ -22,7 +25,7 @@ let ImageGalleryView = {
       `;
     }
 
-    return genericRenderer(template, {
+    return genericRenderer(processedTemplate, {
       mainImage: images[0].url || images[0],
       productName: data.productName,
       thumbnails: thumbnailsHTML

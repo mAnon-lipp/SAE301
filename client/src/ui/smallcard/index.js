@@ -3,6 +3,9 @@ import { getProductStockStatus, getStockMessage, getStockBadgeClasses } from "..
 import template from "./template.html?raw";
 import "./style.css";
 
+// Traiter le template une seule fois au chargement du module
+const processedTemplate = processTemplate(template);
+
 let SmallCardView = {
   html: function (data) {
     let htmlString = '<div class="small-card-grid">';
@@ -28,7 +31,7 @@ let SmallCardView = {
         stockBadge: stockBadge
       };
       
-      htmlString += genericRenderer(template, productData);
+      htmlString += genericRenderer(processedTemplate, productData);
     }
     return htmlString + '</div>';
   },
