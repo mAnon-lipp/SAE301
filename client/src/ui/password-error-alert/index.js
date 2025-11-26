@@ -1,4 +1,4 @@
-import { genericRenderer, htmlToFragment } from "../../lib/utils.js";
+import { genericRenderer, htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 let PasswordErrorAlertView = {

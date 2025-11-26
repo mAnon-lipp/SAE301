@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 import "./style.css";
 import { CartModel } from "../../data/cart.js";
@@ -6,11 +6,11 @@ import { CartItemView } from "../cart-item/index.js";
 
 let CartPanelView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function () {
-    const fragment = htmlToFragment(template);
+    const fragment = htmlToFragment(processTemplate(template));
     this.updatePanel(fragment);
     this.attachEvents(fragment);
     return fragment;

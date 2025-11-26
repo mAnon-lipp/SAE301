@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 import "./style.css";
 
@@ -7,11 +7,11 @@ import "./style.css";
  */
 let ProfileFieldView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function (label, value, isPassword = false, hasValue = true, fieldName = '') {
-    const fragment = htmlToFragment(template);
+    const fragment = htmlToFragment(processTemplate(template));
     
     // Replace label slot
     const labelSlot = fragment.querySelector('slot[name="label"]');

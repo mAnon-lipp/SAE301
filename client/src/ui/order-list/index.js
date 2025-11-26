@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 import { OrderRowView } from "../order-row/index.js";
 

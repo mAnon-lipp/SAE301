@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import { NavView } from "../nav/index.js";
 import template from "./template.html?raw";
 
@@ -11,7 +11,7 @@ let HeaderView = {
   },
 
   dom: function () {
-    let headerFragment = htmlToFragment(template);
+    let headerFragment = htmlToFragment(processTemplate(template));
     let navDOM = NavView.dom();
     
     // Remplacer le slot par le nav

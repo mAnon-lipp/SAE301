@@ -1,13 +1,13 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 let CartOverlayView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function () {
-    return htmlToFragment(template);
+    return htmlToFragment(processTemplate(template));
   }
 };
 

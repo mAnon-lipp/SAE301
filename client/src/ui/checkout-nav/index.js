@@ -1,14 +1,14 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 // CheckoutNavView est un composant statique pour la navigation lors du checkout
 let CheckoutNavView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function () {
-    const fragment = htmlToFragment(template);
+    const fragment = htmlToFragment(processTemplate(template));
     return fragment;
   }
 };

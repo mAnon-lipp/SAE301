@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 // NavView est un composant statique
@@ -6,11 +6,11 @@ import template from "./template.html?raw";
 // en donnant la possibilité de l'avoir sous forme html ou bien de dom
 let NavView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function () {
-    const fragment = htmlToFragment(template);
+    const fragment = htmlToFragment(this.html());
     // Mettre à jour explicitement le compteur du panier quand le nav est (re)créé.
     // Utiliser un import dynamique pour éviter tout risque de dépendance circulaire.
     import("../../data/cart.js")

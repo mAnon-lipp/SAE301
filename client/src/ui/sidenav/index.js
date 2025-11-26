@@ -1,4 +1,4 @@
-import { genericRenderer, htmlToFragment } from "../../lib/utils.js";
+import { genericRenderer, htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 // Template pour un élément de catégorie
@@ -15,7 +15,7 @@ const categoryItemTemplate = `
 
 let SideNavView = {
   html: function (categories, selectedCategoryId = null) {
-    let fragment = htmlToFragment(template);
+    let fragment = htmlToFragment(processTemplate(template));
     
     // Générer les éléments de catégorie
     let dropdownList = fragment.querySelector('[data-dropdown-list]');

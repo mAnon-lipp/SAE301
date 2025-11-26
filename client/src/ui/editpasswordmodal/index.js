@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 /**
@@ -6,11 +6,11 @@ import template from "./template.html?raw";
  */
 let EditPasswordModalView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function () {
-    const fragment = htmlToFragment(template);
+    const fragment = htmlToFragment(processTemplate(template));
     
     // Add toggle password visibility functionality
     const oldPasswordInput = fragment.querySelector('#old-password-input');

@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 /**
@@ -8,7 +8,7 @@ import template from "./template.html?raw";
  */
 let AccountMainView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function () {

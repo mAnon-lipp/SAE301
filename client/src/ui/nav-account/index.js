@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 import "./style.css";
 
@@ -8,11 +8,11 @@ import "./style.css";
  */
 let NavAccountView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function () {
-    const fragment = htmlToFragment(template);
+    const fragment = htmlToFragment(this.html());
     
     // Get user data from sessionStorage
     const userData = this.getUserData();

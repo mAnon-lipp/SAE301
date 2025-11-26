@@ -1,4 +1,4 @@
-import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate, genericRenderer } from "../../lib/utils.js";
 import template from "./template.html?raw";
 import "./style.css";
 

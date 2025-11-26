@@ -1,4 +1,4 @@
-import { htmlToFragment } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate } from "../../lib/utils.js";
 import template from "./template.html?raw";
 
 /**
@@ -6,11 +6,11 @@ import template from "./template.html?raw";
  */
 let EditNameModalView = {
   html: function () {
-    return template;
+    return processTemplate(template);
   },
 
   dom: function (currentName = '') {
-    const fragment = htmlToFragment(template);
+    const fragment = htmlToFragment(processTemplate(template));
     
     // Set current name in input if provided
     const input = fragment.querySelector('#name-input');

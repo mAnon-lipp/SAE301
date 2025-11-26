@@ -1,4 +1,4 @@
-import { htmlToFragment, genericRenderer } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate, genericRenderer } from "../../lib/utils.js";
 import { VariantData } from "../../data/variant.js";
 import { getVariantStockStatus, getColorStockStatus, getProductStockStatus, getStockMessage, getStockBadgeClasses } from "../../lib/stock-status.js";
 import template from "./template.html?raw";
