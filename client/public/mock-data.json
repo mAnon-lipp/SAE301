@@ -1,0 +1,30 @@
+{
+  "note": "Ce fichier contient des données de démonstration pour GitHub Pages si l'API n'est pas accessible",
+  "products": [
+    {
+      "id": 1,
+      "name": "Marteau",
+      "description": "Marteau de qualité professionnelle",
+      "price": 29.99,
+      "category_id": 1,
+      "stock": 50,
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Tournevis",
+      "description": "Set de tournevis multi-têtes",
+      "price": 19.99,
+      "category_id": 1,
+      "stock": 100,
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Outils",
+      "description": "Outils de bricolage"
+    }
+  ]
+}

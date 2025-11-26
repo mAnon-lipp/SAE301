@@ -31,9 +31,11 @@ class Router {
     
     // Intercepter les clics sur les liens
     document.addEventListener('click', (e) => {
-      if (e.target.matches('[data-link]')) {
+      // Trouver le lien parent avec data-link (peut être plusieurs niveaux au-dessus)
+      const link = e.target.closest('[data-link]');
+      if (link) {
         e.preventDefault();
-        this.navigate(e.target.getAttribute('href'));
+        this.navigate(link.getAttribute('href'));
       }
     });
   }
