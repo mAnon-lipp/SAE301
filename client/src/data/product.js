@@ -1,5 +1,5 @@
 import {getRequest} from '../lib/api-request.js';
-
+import { getAssetPath } from '../lib/utils.js';
 
 let ProductData = {};
 
@@ -114,8 +114,13 @@ ProductData.normalizeProduct = function(product) {
     }
     
     // S'assurer que l'image a le bon préfixe si c'est un chemin relatif
-    if (product.image && !product.image.startsWith('http') && !product.image.startsWith('/')) {
-        product.image = '/' + product.image;
+    if (product.image && !product.image.startsWith('http')) {
+        // Si le chemin ne commence pas par '/', l'ajouter
+        if (!product.image.startsWith('/')) {
+            product.image = '/' + product.image;
+        }
+        // Appliquer getAssetPath pour gérer le base URL
+        product.image = getAssetPath(product.image);
     }
     
     return product;

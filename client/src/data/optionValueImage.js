@@ -1,6 +1,19 @@
 import {getRequest} from '../lib/api-request.js';
+import { getAssetPath } from '../lib/utils.js';
 
 let OptionValueImageData = {};
+
+/**
+ * Normalise un objet image pour s'assurer que le chemin est correct
+ */
+const normalizeImage = function(image) {
+    if (image && image.image_path && !image.image_path.startsWith('http')) {
+        // S'assurer que le chemin commence par /
+        let path = image.image_path.startsWith('/') ? image.image_path : '/' + image.image_path;
+        image.image_path = getAssetPath(path);
+    }
+    return image;
+};
 
 /**
  * Récupère toutes les images pour une option value spécifique (ex: une couleur)
@@ -12,7 +25,7 @@ OptionValueImageData.fetchByOptionValueId = async function(optionValueId) {
     if (data == false) {
         return [];
     }
-    return data;
+    return Array.isArray(data) ? data.map(normalizeImage) : [];
 }
 
 /**
@@ -24,6 +37,14 @@ OptionValueImageData.fetchByProductId = async function(productId) {
     let data = await getRequest('optionvalueimages?product_id=' + productId);
     if (data == false) {
         return {};
+    }
+    // Normaliser les images dans chaque groupe
+    if (typeof data === 'object' && !Array.isArray(data)) {
+        for (let key in data) {
+            if (Array.isArray(data[key])) {
+                data[key] = data[key].map(normalizeImage);
+            }
+        }
     }
     return data;
 }
@@ -38,7 +59,7 @@ OptionValueImageData.fetch = async function(imageId) {
     if (data == false) {
         return null;
     }
-    return data;
+    return normalizeImage(data);
 }
 
 export {OptionValueImageData};

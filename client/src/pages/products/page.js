@@ -137,10 +137,14 @@ V.createPageFragment = function(products, categories, selectedCategoryId, produc
    let sidenavSlot = pageFragment.querySelector('slot[name="sidenav"]');
    if (sidenavSlot) {
        sidenavSlot.replaceWith(sidenavDOM);
-       // Attach sidenav events after inserting it
-       let sidenavElement = pageFragment.querySelector('.flex.flex-col.gap-\\[8px\\]');
+       // Attach sidenav events after inserting it - use data attribute for more reliable selection
+       let sidenavElement = pageFragment.querySelector('[data-category-toggle]');
        if (sidenavElement) {
-           SideNavView.attachEvents(sidenavElement);
+           // Get the parent container (the sidenav root element)
+           let sidenavRoot = sidenavElement.closest('div.flex.flex-col');
+           if (sidenavRoot) {
+               SideNavView.attachEvents(sidenavRoot);
+           }
        }
    }
    

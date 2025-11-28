@@ -1,4 +1,4 @@
-import { htmlToFragment, processTemplate, genericRenderer } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate, genericRenderer, getAssetPath } from "../../lib/utils.js";
 import { VariantData } from "../../data/variant.js";
 import { getVariantStockStatus, getColorStockStatus, getProductStockStatus, getStockMessage, getStockBadgeClasses } from "../../lib/stock-status.js";
 import template from "./template.html?raw";
@@ -394,7 +394,8 @@ let ProductInfoView = {
               // Mettre à jour l'image principale
               const mainImg = document.querySelector('[data-main-image]');
               if (mainImg) {
-                const imagePath = images[0].image_path.startsWith('/') ? images[0].image_path : '/' + images[0].image_path;
+                let imagePath = images[0].image_path.startsWith('/') ? images[0].image_path : '/' + images[0].image_path;
+                imagePath = getAssetPath(imagePath);
                 console.log('Setting main image to:', imagePath);
                 mainImg.src = imagePath;
               } else {
@@ -411,7 +412,8 @@ let ProductInfoView = {
                 
                 // Créer les nouveaux thumbnails
                 for (let k = 0; k < images.length; k++) {
-                  const imagePath = images[k].image_path.startsWith('/') ? images[k].image_path : '/' + images[k].image_path;
+                  let imagePath = images[k].image_path.startsWith('/') ? images[k].image_path : '/' + images[k].image_path;
+                  imagePath = getAssetPath(imagePath);
                   const activeClass = k === 0 ? 'ring-2 ring-black' : '';
                   
                   const thumbDiv = document.createElement('div');

@@ -1,4 +1,4 @@
-import { htmlToFragment, processTemplate, genericRenderer } from "../../lib/utils.js";
+import { htmlToFragment, processTemplate, genericRenderer, getAssetPath } from "../../lib/utils.js";
 import template from "./template.html?raw";
 import "./style.css";
 
@@ -16,7 +16,11 @@ let ImageGalleryView = {
     let thumbnailsHTML = '';
     for (let index = 0; index < images.length; index++) {
       const img = images[index];
-      const url = img.url || img;
+      let url = img.url || img;
+      // Appliquer getAssetPath si c'est un chemin local
+      if (url && !url.startsWith('http')) {
+        url = getAssetPath(url);
+      }
       const activeClass = index === 0 ? 'imagegallery_ring_black' : '';
       thumbnailsHTML += `
         <div class="imagegallery_thumbnail ${activeClass}" data-thumbnail-index="${index}">
@@ -25,8 +29,16 @@ let ImageGalleryView = {
       `;
     }
 
+    const mainImageUrl = (() => {
+      let url = images[0].url || images[0];
+      if (url && !url.startsWith('http')) {
+        url = getAssetPath(url);
+      }
+      return url;
+    })();
+
     return genericRenderer(processedTemplate, {
-      mainImage: images[0].url || images[0],
+      mainImage: mainImageUrl,
       productName: data.productName,
       thumbnails: thumbnailsHTML
     });
@@ -53,7 +65,11 @@ let ImageGalleryView = {
         const index = parseInt(e.currentTarget.dataset.thumbnailIndex);
 
         // Mettre à jour l'image principale
-        mainImage.src = images[index].url || images[index];
+        let imageUrl = images[index].url || images[index];
+        if (imageUrl && !imageUrl.startsWith('http')) {
+          imageUrl = getAssetPath(imageUrl);
+        }
+        mainImage.src = imageUrl;
 
         // Mettre à jour les styles actifs en utilisant nos classes CSS migrées
         for (let j = 0; j < thumbnails.length; j++) {

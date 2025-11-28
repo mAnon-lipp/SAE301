@@ -20,6 +20,10 @@ let SideNavView = {
     // Générer les éléments de catégorie
     let dropdownList = fragment.querySelector('[data-dropdown-list]');
     
+    if (!categories || !Array.isArray(categories)) {
+      return fragment.firstElementChild.outerHTML;
+    }
+    
     for (let idx = 0; idx < categories.length; idx++) {
       const category = categories[idx];
       let categoryHTML = genericRenderer(categoryItemTemplate, category);
