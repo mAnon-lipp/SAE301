@@ -1,63 +1,54 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Validate and deploy
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches:
+      - main
   workflow_dispatch:
 
-# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-# Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  validate:
+    name: Validate PHP
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: 20
-          cache: "npm"
-          # Tell the cache to look for the lockfile inside the client folder
-          cache-dependency-path: client/package-lock.json
+          php-version: "8.3"
 
-      - name: Install dependencies
-        # Go into the client directory
-        working-directory: ./client
-        run: npm ci
+      - name: Check PHP syntax
+        shell: bash
+        run: |
+          find . -type f -name '*.php' -print0 | xargs -0 -n1 php -l
 
-      - name: Build
-        # Go into the client directory
-        working-directory: ./client
-        run: npm run build
+  deploy:
+    name: Deploy to Alwaysdata
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+      - name: Deploy files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          # The dist folder is now inside client/
-          path: "./client/dist"
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          protocol: ftps
+          exclude: |
+            .git/**
+            .git*
+            **/.git*
+            **/.git/**
+            **/.github/**
+            **/DocumentationBD/**
+            **/.env*
+            **/README.md

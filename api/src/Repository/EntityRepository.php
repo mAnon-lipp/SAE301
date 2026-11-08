@@ -20,8 +20,49 @@ abstract class EntityRepository {
     protected $cnx;
 
     protected function __construct(){
-        // Modifiez ici vos informations de BDD et de connexion
-        $this->cnx = new PDO("mysql:host=127.0.0.1:3306;dbname=lippler1", "lippler1", "lippler1");
+        $env = $this->loadEnvironment();
+        $host = $env['DB_HOST'] ?? $env['MYSQL_HOST'] ?? $env['DATABASE_HOST'] ?? null;
+        $port = $env['DB_PORT'] ?? $env['MYSQL_PORT'] ?? $env['DATABASE_PORT'] ?? '3306';
+        $name = $env['DB_NAME'] ?? $env['DB_DATABASE'] ?? $env['MYSQL_DATABASE'] ?? $env['DATABASE_NAME'] ?? null;
+        $user = $env['DB_USER'] ?? $env['DB_USERNAME'] ?? $env['MYSQL_USER'] ?? $env['DATABASE_USER'] ?? null;
+        $password = $env['DB_PASSWORD'] ?? $env['DB_PASS'] ?? $env['DB_PASSWD'] ?? $env['MYSQL_PASSWORD'] ?? $env['DATABASE_PASSWORD'] ?? null;
+
+        if (!$host || !$name || !$user || $password === null) {
+            throw new RuntimeException('La configuration de la base de données est incomplète.');
+        }
+
+        $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', $host, $port, $name);
+        $this->cnx = new PDO($dsn, $user, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+        ]);
+    }
+
+    private function loadEnvironment(): array {
+        $paths = [
+            __DIR__ . '/../../.env',
+            __DIR__ . '/../../../.env',
+            __DIR__ . '/../../../../.env',
+        ];
+
+        foreach ($paths as $path) {
+            if (is_readable($path)) {
+                $values = parse_ini_file($path, false, INI_SCANNER_RAW);
+                if ($values === false) {
+                    throw new RuntimeException('Impossible de lire la configuration de la base de données.');
+                }
+
+                return $values;
+            }
+        }
+
+        return [
+            'DB_HOST' => getenv('DB_HOST') ?: null,
+            'DB_PORT' => getenv('DB_PORT') ?: '3306',
+            'DB_NAME' => getenv('DB_NAME') ?: null,
+            'DB_USER' => getenv('DB_USER') ?: null,
+            'DB_PASSWORD' => getenv('DB_PASSWORD'),
+        ];
     }
 
     /**

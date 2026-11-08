@@ -1,4 +1,4 @@
-# 🚀 Guide Rapide : Déploiement GitHub Pages
+# 🚀 Guide Rapide : Déploiement GitHub Pages + Alwaysdata
 
 ## ✅ Modifications Appliquées Côté Client
 
@@ -22,21 +22,21 @@ Les fichiers suivants ont été modifiés pour fonctionner sur GitHub Pages :
 
 ---
 
-## ⚠️ MODIFICATION REQUISE SUR LE SERVEUR
+## ⚠️ Configuration du serveur
 
-### 📍 Fichier à modifier
+### 📍 Fichier à publier
 ```
 ~/SAE301/api/index.php
 ```
 
-### 🔧 Modification à apporter
+### 🔧 Origine GitHub Pages
 
-**Ligne 21 environ**, dans le tableau `$allowedOrigins`, ajoutez :
+Le tableau `$allowedOrigins` de l'API doit contenir :
 
 ```php
 $allowedOrigins = [
     'https://mmi.unilim.fr',
-    'https://manon-lipp.github.io',  // ← AJOUTEZ CETTE LIGNE
+    'https://manon-lipp.github.io',
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:3000',
@@ -46,6 +46,44 @@ $allowedOrigins = [
 ```
 
 ### 📝 Comment faire ?
+
+Le workflow `Validate and deploy` publie l'API sur Alwaysdata avec les secrets FTP
+`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` et `FTP_SERVER_DIR`.
+Le fichier `.env` doit rester présent sur le serveur et ne doit pas être ajouté au dépôt.
+
+Le `.env` doit contenir au minimum :
+
+```dotenv
+DB_HOST=mysql-xxx.alwaysdata.net
+DB_PORT=3306
+DB_NAME=portfolio-manonlippler_bdd
+DB_USER=portfolio-manonlippler
+DB_PASSWORD=...
+```
+
+Les valeurs exactes sont celles fournies par Alwaysdata. Elles peuvent être placées
+dans `/www/.env` : l'API les recherche dans le dossier du site puis dans ses dossiers parents.
+
+### CORS
+
+L'origine GitHub Pages autorisée est :
+
+```text
+https://manon-lipp.github.io
+```
+
+Le fichier API déployé doit donc être la version actuelle de [api/index.php](api/index.php).
+
+### Configuration GitHub Pages
+
+Dans **Settings > Secrets and variables > Actions > Variables**, créer :
+
+```text
+VITE_API_URL=https://<votre-domaine-alwaysdata>/SAE301/api/
+```
+
+Le workflow `Deploy GitHub Pages` construit `client/dist`, ajoute le fallback SPA
+`404.html`, puis publie uniquement ces fichiers.
 
 **Option 1 : Via SSH**
 ```bash
@@ -189,9 +227,10 @@ fetch('https://mmi.unilim.fr/~lippler1/SAE301/api/auth', {
 - [x] Bouton déconnexion corrigé
 
 ### Sur le Serveur
-- [ ] Modifier `api/index.php`
-- [ ] Ajouter `'https://manon-lipp.github.io'` dans `$allowedOrigins`
-- [ ] Vérifier que `SameSite=None` et `Secure=true` sont configurés
+- [x] Modifier `api/index.php`
+- [x] Ajouter `'https://manon-lipp.github.io'` dans `$allowedOrigins`
+- [ ] Déposer le `.env` de production sur Alwaysdata
+- [ ] Créer la variable GitHub `VITE_API_URL`
 
 ### Sur GitHub
 - [ ] Commit et push des modifications

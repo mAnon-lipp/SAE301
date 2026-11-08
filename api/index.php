@@ -21,6 +21,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Déterminer l'origine autorisée dynamiquement
 $allowedOrigins = [
     'https://mmi.unilim.fr',
+    'https://manon-lipp.github.io',
     'http://localhost:5173',
     'http://localhost:5174',  // Port Vite alternatif
     'http://localhost:3000',
@@ -33,9 +34,9 @@ $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, $allowedOrigins)) {
     header("Access-Control-Allow-Origin: $origin");
 } else {
-    // Par défaut, autoriser mmi.unilim.fr
     header("Access-Control-Allow-Origin: https://mmi.unilim.fr");
 }
+header("Vary: Origin");
 
 header("Access-Control-Allow-Methods: GET, POST, DELETE, PATCH, PUT, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");

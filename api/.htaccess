@@ -35,3 +35,7 @@
   
   RewriteRule .* index.php
 </IfModule>
+
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>

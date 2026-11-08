@@ -1,2 +1,3 @@
 # Ignorer le dossier node_modules du client
 client/node_modules/
+api/.env*
